@@ -1,0 +1,64 @@
+adapter:
+  discord:
+    host: https://discord.com
+    webhook-path: /api/webhooks/${discord.webhook}
+    content-type: application/json
+  objectstorage:
+    minio:
+      node: ${minio.node}
+      access-key: ${minio.access-key}
+      secret-key: ${minio.secret-key}
+      cdn-host: ${cdn.host}
+  auth:
+    kakao:
+      auth-root-url: https://kauth.kakao.com
+      auth-code-path: /oauth/authorize
+      client-id: ${kakao.apikey}
+      redirect-uri: ${kakao.redirect-uri}
+      response-type: code
+      scope: openid
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
+    password: ${redis.password}
+    timeout: 60000
+  borntorun-auth:
+    host: ${authentication.host}
+    client-id: ${authentication.client-id}
+    client-secret: ${authentication.client-secret}
+    grant-type: client_credentials
+    sign-in-path: /oauth2/kakao/sign-in
+    auth-token-path: /oauth2/token
+
+spring:
+  cache:
+    port: 8081
+  datasource:
+    url: jdbc:mariadb://${database.host}:${database.port}/${database.database}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${database.username}
+    password: ${database.password}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        show_sql: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+
+logging:
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level] %logger{50} - %msg%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level] %logger{50} - %msg%n"
+  level:
+    org.mybatis: INFO
+    kr.borntorun.api: DEBUG
+    org.springframework: WARN

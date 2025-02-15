@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,15 +36,13 @@ import lombok.ToString;
 public class ObjectStorageEntity {
 
   @Id
-  @Column(name = "file_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int userId;
   private String fileUri;
   private LocalDateTime uploadAt;
-  private Boolean isDeleted;
 
-  @OneToMany(mappedBy = "objectStorageEntity")
+  @OneToMany(mappedBy = "objectStorageEntity", cascade = CascadeType.REMOVE)
   private Set<FeedImageMappingEntity> feedImageMappingEntities;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -56,8 +55,15 @@ public class ObjectStorageEntity {
   @OneToOne(mappedBy = "logoEntity")
   private CrewEntity crewLogoEntity;
 
-  public void remove() {
-    this.isDeleted = true;
+  @PreRemove
+  private void preRemove() {
+    if (crewImageEntity != null) {
+      crewImageEntity.setImageId(null);
+    }
+
+    if (crewLogoEntity != null) {
+      crewLogoEntity.setLogoId(null);
+    }
   }
 
   public static ObjectStorageEntity defaultEntity() {

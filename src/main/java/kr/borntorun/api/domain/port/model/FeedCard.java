@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FeedCard {
-  private int feedId;
+  private int id;
   private List<String> imageUris;
   private String contents;
   private long viewQty;

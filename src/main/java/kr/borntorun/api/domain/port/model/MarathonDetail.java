@@ -2,7 +2,7 @@ package kr.borntorun.api.domain.port.model;
 
 import java.time.LocalDateTime;
 
-public record MarathonDetail(long marathonId,
+public record MarathonDetail(long id,
                              String title,
                              String owner,
                              String email,

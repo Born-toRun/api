@@ -22,24 +22,23 @@ public class MarathonGateway {
   private final MarathonBookmarkRepository marathonBookmarkRepository;
 
   public List<MarathonEntity> search(SearchMarathonQuery query) {
-    return marathonRepository.findAllByLocationInAndCourseInAndIsDeletedFalse(query.locations(), query.courses());
+    return marathonRepository.findAllByLocationInAndCourseIn(query.locations(), query.courses());
   }
 
   public MarathonEntity detail(long marathonId) {
-    return marathonRepository.findByIdAndIsDeletedFalse(marathonId);
+    return marathonRepository.findById(marathonId)
+      .orElseThrow(() -> new NotFoundException("해당 대회를 찾을 수 없습니다."));
   }
 
   public void bookmark(BookmarkMarathonQuery query) {
     final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(query.getMyUserId(), query.getMarathonId())
-        .orElse(MarathonBookmarkConverter.INSTANCE.toMarathonBookmarkEntity(query, false));
-    marathonBookmarkEntity.setIsDeleted(false);
+        .orElse(MarathonBookmarkConverter.INSTANCE.toMarathonBookmarkEntity(query));
     marathonBookmarkRepository.save(marathonBookmarkEntity);
   }
 
   public void cancelBookmark(BookmarkMarathonQuery query) {
-    final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonIdAndIsDeletedFalse(query.getMyUserId(), query.getMarathonId())
+    final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(query.getMyUserId(), query.getMarathonId())
         .orElseThrow(() -> new NotFoundException("북마크가 되지 않았거나 이미 취소되었습니다."));
-    marathonBookmarkEntity.setIsDeleted(true);
-    marathonBookmarkRepository.save(marathonBookmarkEntity);
+    marathonBookmarkRepository.deleteById(marathonBookmarkEntity.getId());
   }
 }

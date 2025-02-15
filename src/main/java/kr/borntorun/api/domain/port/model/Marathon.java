@@ -1,6 +1,6 @@
 package kr.borntorun.api.domain.port.model;
 
-public record Marathon(long marathonId,
+public record Marathon(long id,
                        String title,
                        String schedule,
                        String venue,

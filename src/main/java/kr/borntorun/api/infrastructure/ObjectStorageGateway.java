@@ -47,7 +47,7 @@ public class ObjectStorageGateway {
   }
 
   public List<ObjectStorageEntity> searchAll(final List<Integer> fileIds) {
-    return objectStorageRepository.findAllByIdInAndIsDeletedFalse(fileIds);
+    return objectStorageRepository.findAllById(fileIds);
   }
 
   public void remove(final RemoveObjectStorageQuery query) {
@@ -64,8 +64,7 @@ public class ObjectStorageGateway {
       }
     }
 
-    objectStorage.remove();
-    objectStorageRepository.save(objectStorage);
+    objectStorageRepository.deleteById(objectStorage.getId());
 
     objectStorageClient.remove(Remove.builder()
         .bucket(query.bucket().getBucketName())
@@ -86,10 +85,10 @@ public class ObjectStorageGateway {
       throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
     }
 
-    for(ObjectStorageEntity objectStorage : objectStorages) {
-      objectStorage.remove();
-    }
     objectStorageRepository.saveAll(objectStorages);
+    objectStorageRepository.deleteAllById(objectStorages.stream()
+      .map(ObjectStorageEntity::getId)
+      .toList());
 
     objectStorageClient.removeAll(RemoveAll.builder()
         .bucket(query.bucket())

@@ -20,7 +20,7 @@ public interface PrivacyConverter {
 
   SearchUserPrivacyResponse toSearchUserPrivacyResponse(final UserPrivacy source);
 
-  @Mapping(target = "privacyId", source = "id")
+  @Mapping(target = "id", source = "id")
   UserPrivacy toUserPrivacy(final UserPrivacyEntity source);
 
   ModifyUserPrivacyQuery toModifyUserPrivacyQuery(final ModifyUserPrivacyCommand source);

@@ -2,7 +2,6 @@ package kr.borntorun.api.domain.entity;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,25 +28,19 @@ import lombok.ToString;
 public class FeedImageMappingEntity {
 
   @Id
-  @Column(name = "mapping_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int feedId;
   private int imageId;
-  private Boolean isDeleted;
 
   @Setter
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "feedId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private FeedEntity feedEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "imageId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private ObjectStorageEntity objectStorageEntity;
-
-  public void remove() {
-    this.isDeleted = true;
-  }
 }
 
 

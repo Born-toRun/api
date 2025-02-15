@@ -32,8 +32,7 @@ public class RecommendationGateway {
 
   public void remove(final RemoveRecommendationQuery query) {
     final RecommendationEntity recommendationEntity = recommendationRepository.findByUserIdAndRecommendationTypeAndContentId(query.myUserId(), query.recommendationType(), query.contentId());
-    recommendationEntity.remove();
-    recommendationRepository.save(recommendationEntity);
+    recommendationRepository.deleteById(recommendationEntity.getId());
   }
 
   public void removeAll(final int userId) {

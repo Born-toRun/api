@@ -39,13 +39,12 @@ public interface CommentConverter {
   @Mapping(target = "parentId", ignore = true)
   @Mapping(target = "registeredAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
-  @Mapping(target = "isDeleted", ignore = true)
   @Mapping(target = "feedEntity", ignore = true)
   @Mapping(target = "userEntity", ignore = true)
   @Mapping(target = "recommendationEntities", ignore = true)
   CommentEntity toCommentEntity(final CreateCommentQuery source);
 
-  @Mapping(target = "commentId", source = "source.id")
+  @Mapping(target = "id", source = "source.id")
   @Mapping(target = "writer", expression = "java(new Comment.Writer(source.getUserId(), user.userName(), user.profileImageUri(), user.crewName(), user.isAdmin(), user.isManager()))")
   @Mapping(target = "reCommentQty", ignore = true)
   @Mapping(target = "isMyComment", source = "source.userId", qualifiedByName = "convertIsMyCommentByBornToRunUser")
@@ -57,7 +56,7 @@ public interface CommentConverter {
 
   List<SearchCommentResponse.Comment> toSearchCommentResponseComment(final List<Comment> source);
 
-  @Mapping(target = "commentId", source = "source.id")
+  @Mapping(target = "id", source = "source.id")
   @Mapping(target = "writer", expression = "java(new CommentDetail.Writer(source.getUserId(), source.getUserEntity().getName(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsAdmin(), source.getUserEntity().getIsManager()))")
   CommentDetail toCommentDetail(final CommentEntity source, final List<Comment> reComments);
 
@@ -74,7 +73,7 @@ public interface CommentConverter {
   ModifyCommentQuery toModifyCommentQuery(final ModifyCommentCommand source);
 
   @Mapping(target = "writer", expression = "java(new Comment.Writer(source.getUserId(), source.getUserEntity().getName(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsAdmin(), source.getUserEntity().getIsManager()))")
-  @Mapping(target = "commentId", source = "id")
+  @Mapping(target = "id", source = "id")
   @Mapping(target = "reCommentQty", ignore = true)
   @Mapping(target = "isMyComment", ignore = true)
   Comment toComment(final CommentEntity source);

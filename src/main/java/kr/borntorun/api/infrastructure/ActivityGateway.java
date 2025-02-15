@@ -40,7 +40,7 @@ public class ActivityGateway {
   }
 
   public void modify(final ModifyActivityQuery modifyActivityQuery) {
-    final ActivityEntity activity = activityRepository.findByIdAndIsDeletedFalse(modifyActivityQuery.activityId())
+    final ActivityEntity activity = activityRepository.findById(modifyActivityQuery.activityId())
         .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
 
     activity.modify(modifyActivityQuery);
@@ -58,11 +58,7 @@ public class ActivityGateway {
   }
 
   public void remove(final int activityId) {
-    final ActivityEntity activity = activityRepository.findByIdAndIsDeletedFalse(activityId)
-        .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
-
-    activity.remove();
-    activityRepository.save(activity);
+    activityRepository.deleteById(activityId);
   }
 
   public void participate(final ParticipateActivityQuery participateActivityQuery) {
@@ -70,11 +66,7 @@ public class ActivityGateway {
   }
 
   public void participateCancel(final int participationId) {
-    final ActivityParticipationEntity activityParticipation =  activityParticipationRepository.findById(participationId)
-        .orElseThrow(() -> new NotFoundException("모임 참여를 하지 않은 상태입니다."));
-
-    activityParticipation.remove();
-    activityParticipationRepository.save(activityParticipation);
+    activityParticipationRepository.deleteById(participationId);
   }
 
   public List<ActivityEntity> searchAll(final SearchAllActivityQuery query) {
@@ -110,12 +102,12 @@ public class ActivityGateway {
   }
 
   public ActivityEntity search(int activityId) {
-    return activityRepository.findByIdAndIsDeletedFalse(activityId)
+    return activityRepository.findById(activityId)
         .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
   }
 
   public ActivityEntity open(final int activityId) {
-    final ActivityEntity activity = activityRepository.findByIdAndIsDeletedFalse(activityId)
+    final ActivityEntity activity = activityRepository.findById(activityId)
         .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
 
     final LocalDateTime now = LocalDateTime.now();
@@ -134,7 +126,7 @@ public class ActivityGateway {
     }
 
     if((int) redisClient.get(ACCESS_CODE_KEY_PREFIX + attendanceActivityQuery.activityId()) == attendanceActivityQuery.accessCode()) {
-      final ActivityParticipationEntity activityParticipation = activityParticipationRepository.findByActivityIdAndUserIdAndIsDeletedFalse(attendanceActivityQuery.activityId(), attendanceActivityQuery.myUserId())
+      final ActivityParticipationEntity activityParticipation = activityParticipationRepository.findByActivityIdAndUserId(attendanceActivityQuery.activityId(), attendanceActivityQuery.myUserId())
           .orElseThrow(() -> new NotFoundException("참여의사를 밝히지 않은 모임에 출석할 수 없습니다."));
       activityParticipation.attendance();
       activityParticipationRepository.save(activityParticipation);
@@ -151,6 +143,6 @@ public class ActivityGateway {
   }
 
   public List<ActivityParticipationEntity> searchParticipation(final int activityId) {
-    return activityParticipationRepository.findAllByActivityIdAndIsDeletedFalse(activityId);
+    return activityParticipationRepository.findAllByActivityId(activityId);
   }
 }

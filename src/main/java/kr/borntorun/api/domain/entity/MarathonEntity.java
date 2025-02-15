@@ -3,6 +3,7 @@ package kr.borntorun.api.domain.entity;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,9 +42,8 @@ public class MarathonEntity {
   private String venueDetail;
   private String remark;
   private LocalDateTime registeredAt;
-  private Boolean isDeleted;
 
-  @OneToMany(mappedBy = "marathonEntity")
+  @OneToMany(mappedBy = "marathonEntity", cascade = CascadeType.REMOVE)
   private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
 }
 

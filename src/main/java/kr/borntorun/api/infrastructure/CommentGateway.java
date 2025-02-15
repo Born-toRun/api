@@ -20,11 +20,11 @@ public class CommentGateway {
   private final CommentRepository commentRepository;
 
   public List<CommentEntity> searchAll(final int feedId) {
-    return commentRepository.findAllByFeedIdAndIsDeletedFalse(feedId);
+    return commentRepository.findAllByFeedId(feedId);
   }
 
   public List<CommentEntity> searchAll(List<Integer> feedIds) {
-    return commentRepository.findAllByFeedIdInAndIsDeletedFalse(feedIds);
+    return commentRepository.findAllByFeedIdIn(feedIds);
   }
 
   public void create(final CreateCommentQuery query) {
@@ -32,30 +32,24 @@ public class CommentGateway {
   }
 
   public int qty(final int feedId) {
-    return commentRepository.countByFeedIdAndIsDeletedFalse(feedId);
+    return commentRepository.countByFeedId(feedId);
   }
 
   public CommentEntity search(final int commentId) {
-    return commentRepository.findByIdAndIsDeletedFalse(commentId)
+    return commentRepository.findById(commentId)
         .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
   }
 
   public List<CommentEntity> searchReComments(int commentId) {
-    return commentRepository.findAllByParentIdAndIsDeletedFalse(commentId);
+    return commentRepository.findAllByParentId(commentId);
   }
 
   public void remove(final int commentId) {
-    final CommentEntity comment = search(commentId);
-
-    comment.remove();
-    commentRepository.save(comment);
+    commentRepository.deleteById(commentId);
   }
 
   public void removeAll(final List<Integer> commentIds) {
-    final List<CommentEntity> comments = commentRepository.findAllById(commentIds);
-
-    comments.forEach(CommentEntity::remove);
-    commentRepository.saveAll(comments);
+    commentRepository.deleteAllById(commentIds);
   }
 
   public void removeAll(final int userId) {

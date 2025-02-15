@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "마라톤 대회 상세 조회")
-public record SearchMarathonDetailResponse(@Schema(description = "마라톤 식별자") long marathonId,
+public record SearchMarathonDetailResponse(@Schema(description = "마라톤 식별자") long id,
                                            @Schema(description = "대화명") String title,
                                            @Schema(description = "대표자명") String owner,
                                            @Schema(description = "대표 이메일") String email,

@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -49,45 +50,43 @@ public class UserEntity {
   private LocalDateTime lastLoginAt;
   private int imageId;
   private int yellowCardQty;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "crewId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private CrewEntity crewEntity;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<FeedEntity> feedEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<ActivityEntity> activityEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<ActivityParticipationEntity> activityParticipationEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<AuthorityEntity> authorityEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<CommentEntity> commentEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<ObjectStorageEntity> objectStorageEntities;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<RecommendationEntity> recommendationEntities;
 
-  @OneToOne(mappedBy = "userEntity")
+  @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private UserPrivacyEntity userPrivacyEntity;
 
-  @OneToMany(mappedBy = "userEntity")
+  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
   private Set<YellowCardEntity> yellowCardEntities;
 
   public String getProfileImageUri() {
     return objectStorageEntities.stream()
-        .filter(e -> !e.getIsDeleted())
         .findFirst()
         .orElse(ObjectStorageEntity.defaultEntity())
         .getFileUri();

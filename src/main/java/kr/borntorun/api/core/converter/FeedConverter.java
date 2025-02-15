@@ -37,7 +37,7 @@ public interface FeedConverter {
 
   SearchFeedDetailCommand toSearchFeedDetailCommand(final Integer feedId, final TokenDetail my);
 
-  @Mapping(target = "feedId", source = "source.id")
+  @Mapping(target = "id", source = "source.id")
   @Mapping(target = "hasMyRecommendation", source = ".", qualifiedByName = "convertHasMyRecommendation")
   @Mapping(target = "hasMyComment", source = ".", qualifiedByName = "convertHasMyComment")
   @Mapping(target = "commentQty", source = "source.commentQty")
@@ -68,7 +68,6 @@ public interface FeedConverter {
   @Mapping(target = "viewQty", ignore = true)
   @Mapping(target = "registeredAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
-  @Mapping(target = "isDeleted", ignore = true)
   @Mapping(target = "commentEntities", ignore = true)
   @Mapping(target = "feedImageMappingEntities", ignore = true)
   @Mapping(target = "userEntity", ignore = true)
@@ -89,7 +88,7 @@ public interface FeedConverter {
   @Mapping(target = "viewer.hasMyComment", source = "hasComment")
   SearchFeedResponse toSearchFeedResponse(final FeedCard source);
 
-  @Mapping(target = "feedId", source = "source.id")
+  @Mapping(target = "id", source = "source.id")
   @Mapping(target = "imageUris", source = "source.imageUris")
   @Mapping(target = "viewQty", source = "source.viewQty")
   @Mapping(target = "contents", source = "source.contents")
@@ -142,9 +141,7 @@ public interface FeedConverter {
   @Named("convertImages")
   default List<Feed.Image> convertImages(final Set<FeedImageMappingEntity> source) {
     return source.stream()
-        .filter(e -> !e.getIsDeleted())
         .map(FeedImageMappingEntity::getObjectStorageEntity)
-        .filter(e -> !e.getIsDeleted())
         .map(e -> new Feed.Image(e.getId(), e.getFileUri()))
         .toList();
   }
@@ -152,7 +149,7 @@ public interface FeedConverter {
   @Named("convertDetailResponseImages")
   default List<DetailFeedResponse.Image> convertDetailResponseImages(final List<Feed.Image> source) {
     return source.stream()
-        .map(e -> new DetailFeedResponse.Image(e.imageId(), e.imageUri()))
+        .map(e -> new DetailFeedResponse.Image(e.id(), e.imageUri()))
         .toList();
   }
 

@@ -1,12 +1,14 @@
 package kr.borntorun.api.adapter.in.web.payload;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Schema(description = "피드 목록 조회")
-public record SearchFeedResponse(@Schema(description = "글 번호") int feedId,
+public record SearchFeedResponse(@Schema(description = "글 번호") int id,
                                  @Schema(description = "이미지 uri 리스트") List<String> imageUris,
                                  @Schema(description = "본문") String contents,
                                  @Schema(description = "조회수") long viewQty,

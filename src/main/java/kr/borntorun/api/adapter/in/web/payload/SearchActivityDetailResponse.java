@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "크루별 행사 조회")
 public record SearchActivityDetailResponse(
+
     @Schema(description = "행사 식별자")
-    int activityId,
+    int id,
 
     @Schema(description = "행사 명칭")
     String title,

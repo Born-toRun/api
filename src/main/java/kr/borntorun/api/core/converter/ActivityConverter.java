@@ -46,7 +46,6 @@ public interface ActivityConverter {
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "registeredAt", ignore = true)
   @Mapping(target = "isOpen", ignore = true)
-  @Mapping(target = "isDeleted", ignore = true)
   @Mapping(target = "userEntity", ignore = true)
   @Mapping(target = "activityParticipationEntities", ignore = true)
   @Mapping(target = "userId", source = "myUserId")
@@ -56,7 +55,7 @@ public interface ActivityConverter {
 
   ModifyActivityQuery toModifyActivityQuery(final ModifyActivityCommand source);
 
-  @Mapping(target = "activityId", source = "source.id")
+  @Mapping(target = "id", source = "source.id")
   @Mapping(target = "host", ignore = true)
   @Mapping(target = "participantsQty", ignore = true)
   @Mapping(target = "recruitmentType", ignore = true)
@@ -66,7 +65,7 @@ public interface ActivityConverter {
 
   @Mapping(target = "recruitmentType", source = ".", qualifiedByName = "convertRecruitmentType")
   @Mapping(target = "attendanceCode", ignore = true)
-  @Mapping(target = "activityId", source = "id")
+  @Mapping(target = "id", source = "id")
   @Mapping(target = "participantsQty", expression = "java(source.getActivityParticipationEntities().size())")
   @Mapping(target = "host", expression = "java(new Activity.Host(source.getUserId(), source.getUserEntity().getCrewEntity().getId(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getName(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsManager(), source.getUserEntity().getIsAdmin()))")
   Activity toActivityByUserId(final ActivityEntity source, @Context final int myUserId);
@@ -76,10 +75,11 @@ public interface ActivityConverter {
   @Mapping(target = "host", expression = "java(new SearchActivityResponse.Host(source.host().userId(), source.host().crewId(), source.host().userProfileUri(), source.host().userName(), source.host().crewName(), source.host().isManager(), source.host().isAdmin()))")
   SearchActivityResponse.Activity toSearchActivityResponseActivity(final Activity source);
 
+  @Mapping(target = "activityId", source = "id")
   OpenActivityResponse toOpenActivityResponse(final Activity source);
 
   @Mapping(target = "myCrewId", source = "my.id")
-  @Mapping(target = "myUserId", source = "my.crewId")
+  @Mapping(target = "myUserId", source = "my.id")
   @Mapping(target = "courses", source = "source.courses")
   @Mapping(target = "recruitmentType", source = "source.recruitmentType")
   SearchAllActivityCommand toSearchAllActivityCommand(final SearchAllActivityRequest source, final TokenDetail my);

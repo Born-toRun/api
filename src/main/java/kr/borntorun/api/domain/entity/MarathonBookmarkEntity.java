@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,17 +31,15 @@ import lombok.ToString;
 public class MarathonBookmarkEntity {
 
   @Id
-  @Column(name = "bookmark_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int userId;
   private long marathonId;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "marathonId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private MarathonEntity marathonEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)

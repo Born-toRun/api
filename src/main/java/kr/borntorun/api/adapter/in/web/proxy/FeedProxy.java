@@ -36,7 +36,7 @@ public class FeedProxy {
     return feedService.searchAll(FeedConverter.INSTANCE.toSearchAllFeedCommand(request, my, lastFeedId), pageable);
   }
 
-  //  @DistributedLock(key = "'FeedView-'.concat(#feedId)", waitTime = 10L)
+  //  @DistributedLock(key = "'FeedView-'.concat(#id)", waitTime = 10L)
   public void increaseViewQty(final int feedId) {
     feedService.increaseViewQty(feedId);
   }

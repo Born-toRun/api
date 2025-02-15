@@ -21,7 +21,7 @@ public record SearchActivityResponse(@Schema(description = "모임 리스트") L
                      @Schema(description = "런에이서 관리자 여부") Boolean isAdmin) {}
 
   @Schema(description = "모임")
-  public record Activity(@Schema(description = "모임 식별자") int activityId,
+  public record Activity(@Schema(description = "모임 식별자") int id,
                          @Schema(description = "모임 명칭") String title,
                          @Schema(description = "모임 호스트") Host host,
                          @Schema(description = "모임 시작 일자") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,

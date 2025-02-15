@@ -10,7 +10,7 @@ import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.constant.FeedCategory;
 
 @Schema(description = "피드 상세 조회")
-public record DetailFeedResponse(@Schema(description = "글 번호") int feedId,
+public record DetailFeedResponse(@Schema(description = "글 번호") int id,
                                  @Schema(description = "내용") String contents,
                                  @Schema(description = "이미지") List<Image> images,
                                  @Schema(description = "카테고리") FeedCategory category,

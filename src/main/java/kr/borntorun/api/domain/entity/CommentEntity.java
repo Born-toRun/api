@@ -6,7 +6,7 @@ import java.util.Set;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +35,6 @@ import lombok.ToString;
 public class CommentEntity {
 
   @Id
-  @Column(name = "comment_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int parentId;
@@ -44,27 +43,21 @@ public class CommentEntity {
   private String contents;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "feedId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private FeedEntity feedEntity;
 
-  @OneToMany(mappedBy = "commentContentsEntity")
+  @OneToMany(mappedBy = "commentContentsEntity", cascade = CascadeType.REMOVE)
   private Set<RecommendationEntity> recommendationEntities;
-
-  public void remove() {
-    this.isDeleted = true;
-  }
 
   public long getRecommendationQty() {
     return recommendationEntities.stream()
         .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
-        .filter(e -> !e.getIsDeleted())
         .count();
   }
 }

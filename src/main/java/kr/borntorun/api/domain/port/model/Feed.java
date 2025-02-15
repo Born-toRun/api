@@ -8,7 +8,7 @@ import kr.borntorun.api.domain.constant.FeedCategory;
 
 
 public record Feed(
-    int feedId,
+    int id,
     String contents,
     List<Image> images,
     FeedCategory category,
@@ -23,7 +23,7 @@ public record Feed(
     Boolean hasMyComment
 ) {
   public record Image(
-      int imageId,
+      int id,
       String imageUri
   ) {}
 

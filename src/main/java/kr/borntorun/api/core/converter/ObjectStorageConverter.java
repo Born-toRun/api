@@ -29,7 +29,7 @@ public interface ObjectStorageConverter {
 
   UploadObjectStorageQuery toUploadObjectStorageQuery(final UploadObjectStorageCommand source);
 
-  @Mapping(target = "fileId", source = "id")
+  @Mapping(target = "id", source = "id")
   ObjectStorage toObjectStorage(final ObjectStorageEntity source);
 
   @Mapping(target = "bucket", source = "bucketName")
@@ -40,6 +40,7 @@ public interface ObjectStorageConverter {
 
   RemoveObjectStorageQuery toRemoveObjectStorageQuery(final RemoveObjectStorageCommand source);
 
+  @Mapping(target = "fileId", source = "id")
   UploadFileResponse toUploadFileResponse(final ObjectStorage source);
 
   @Mapping(target = "objectName", ignore = true)

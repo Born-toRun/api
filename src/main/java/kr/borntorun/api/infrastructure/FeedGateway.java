@@ -55,10 +55,8 @@ public class FeedGateway {
     return feedIds;
   }
 
-  public FeedEntity remove(final int feedId) {
-    final FeedEntity feedEntity = search(feedId);
-    feedEntity.remove();
-    return feedRepository.save(feedEntity);
+  public void remove(final int feedId) {
+    feedRepository.deleteById(feedId);
   }
 
   public FeedEntity modify(final ModifyFeedQuery query) {

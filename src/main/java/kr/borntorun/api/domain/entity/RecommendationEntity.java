@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,7 +32,6 @@ import lombok.ToString;
 public class RecommendationEntity {
 
   @Id
-  @Column(name = "recommendation_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int contentId;
@@ -41,7 +39,6 @@ public class RecommendationEntity {
   @Enumerated(EnumType.STRING)
   private RecommendationType recommendationType;
   private LocalDateTime registeredAt;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
@@ -54,8 +51,4 @@ public class RecommendationEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "contentId", insertable = false, updatable = false)
   private CommentEntity commentContentsEntity;
-
-  public void remove() {
-    isDeleted = true;
-  }
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.ObjectUtils;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +34,6 @@ import lombok.ToString;
 public class ActivityEntity {
 
   @Id
-  @Column(name = "activity_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String title;
@@ -51,18 +50,13 @@ public class ActivityEntity {
   private Boolean isOpen;
   private LocalDateTime updatedAt;
   private LocalDateTime registeredAt;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
 
-  @OneToMany(mappedBy = "activityEntity")
+  @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.REMOVE)
   private Set<ActivityParticipationEntity> activityParticipationEntities;
-
-  public void remove() {
-    this.isDeleted = true;
-  }
 
   public void open() {
     this.isOpen = true;

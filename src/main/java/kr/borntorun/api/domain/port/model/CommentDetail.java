@@ -3,13 +3,12 @@ package kr.borntorun.api.domain.port.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record CommentDetail(int commentId,
+public record CommentDetail(int id,
                             int parentId,
                             int feedId,
                             String contents,
                             LocalDateTime registeredAt,
                             LocalDateTime updatedAt,
-                            Boolean isDeleted,
                             Writer writer,
                             List<Comment> reComments) {
 

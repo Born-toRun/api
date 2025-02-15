@@ -49,7 +49,7 @@ public class CommentService implements CommentPort {
         .collect(Collectors.groupingByConcurrent(Comment::getParentId));
 
     comments.parallelStream().forEach(comment -> {
-      final List<Comment> reComments = commentsByParentId.getOrDefault(comment.getCommentId(), List.of());
+      final List<Comment> reComments = commentsByParentId.getOrDefault(comment.getId(), List.of());
       comment.setReCommentQty(reComments.size());
     });
 
@@ -67,7 +67,7 @@ public class CommentService implements CommentPort {
     List<Comment> reComments = reCommentEntities.stream()
         .map(commentEntity -> CommentConverter.INSTANCE.toComment(commentEntity,
             reCommentWritersByUserId.get(commentEntity.getUserId())))
-        .sorted(Comparator.comparingInt(Comment::getCommentId)
+        .sorted(Comparator.comparingInt(Comment::getId)
             .reversed()).collect(Collectors.toList());
 
     return CommentConverter.INSTANCE.toCommentDetail(parentComment, reComments);

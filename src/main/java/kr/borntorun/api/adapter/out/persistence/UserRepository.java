@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import kr.borntorun.api.domain.entity.UserEntity;
 
@@ -27,7 +26,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
           "LEFT JOIN FETCH u.yellowCardEntities " +
           "WHERE u.id =:id"
   )
-  Optional<UserEntity> findByIdAndIsDeletedFalse(long id);
+  Optional<UserEntity> findById(long id);
 
   @Query(
       "SELECT u FROM UserEntity u " +
@@ -44,5 +43,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
           "LEFT JOIN FETCH u.yellowCardEntities " +
           "WHERE u.name =:userName"
   )
-  List<UserEntity> findAllByNameContainingAndIsDeletedFalse(String userName);
+  List<UserEntity> findAllByNameContaining(String userName);
 }

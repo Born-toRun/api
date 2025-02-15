@@ -3,7 +3,6 @@ package kr.borntorun.api.core.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.borntorun.api.core.converter.FeedConverter;
-import kr.borntorun.api.domain.constant.Bucket;
-import kr.borntorun.api.domain.entity.CommentEntity;
 import kr.borntorun.api.domain.entity.FeedEntity;
 import kr.borntorun.api.domain.entity.FeedImageMappingEntity;
 import kr.borntorun.api.domain.entity.UserEntity;
@@ -31,7 +28,6 @@ import kr.borntorun.api.infrastructure.FeedGateway;
 import kr.borntorun.api.infrastructure.FeedImageMappingGateway;
 import kr.borntorun.api.infrastructure.ObjectStorageGateway;
 import kr.borntorun.api.infrastructure.UserGateway;
-import kr.borntorun.api.infrastructure.model.RemoveAllObjectStorageQuery;
 import lombok.RequiredArgsConstructor;
 
 
@@ -88,19 +84,7 @@ public class FeedService implements FeedPort {
   @Transactional
   @Override
   public void remove(final RemoveFeedCommand command) {
-    final FeedEntity removed = feedGateway.remove(command.feedId());
-
-    final Set<FeedImageMappingEntity> feedImageMappings = removed.getFeedImageMappingEntities();
-    final List<Integer> imageIds = feedImageMappings.stream()
-        .map(FeedImageMappingEntity::getImageId)
-        .collect(Collectors.toList());
-    final Set<CommentEntity> comments = removed.getCommentEntities();
-
-    commentGateway.removeAll(comments.stream()
-        .map(CommentEntity::getId)
-        .collect(Collectors.toList()));
-
-    objectStorageGateway.removeAll(new RemoveAllObjectStorageQuery(command.my(), imageIds, Bucket.FEED));
+    feedGateway.remove(command.feedId());
   }
 
   @Transactional

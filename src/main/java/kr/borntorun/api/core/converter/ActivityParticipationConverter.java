@@ -16,7 +16,6 @@ public interface ActivityParticipationConverter {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "registeredAt", ignore = true)
-  @Mapping(target = "isDeleted", ignore = true)
   @Mapping(target = "isAttendance", ignore = true)
   @Mapping(target = "activityEntity", ignore = true)
   @Mapping(target = "userEntity", ignore = true)

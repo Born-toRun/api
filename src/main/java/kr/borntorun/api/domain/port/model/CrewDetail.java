@@ -1,6 +1,6 @@
 package kr.borntorun.api.domain.port.model;
 
-public record CrewDetail(String crewId,
+public record CrewDetail(String id,
                          String crewName,
                          String contents,
                          String imageUri,

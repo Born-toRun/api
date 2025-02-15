@@ -13,7 +13,7 @@ import lombok.Builder;
 public record SearchCommentResponse(@Schema(description = "댓글") List<Comment> comments) {
 
   @Schema(description = "댓글")
-  public record Comment(@Schema(description = "댓글 번호") int commentId,
+  public record Comment(@Schema(description = "댓글 번호") int id,
                         @Schema(description = "부모 댓글 번호") int parentId,
                         @Schema(description = "대댓글 개수") int reCommentQty,
                         @Schema(description = "작성자") Writer writer,

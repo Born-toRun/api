@@ -8,8 +8,8 @@ import org.springframework.util.ObjectUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.borntorun.api.adapter.repository.entity.QActivityEntity;
 import kr.borntorun.api.domain.entity.ActivityEntity;
+import kr.borntorun.api.domain.entity.QActivityEntity;
 import kr.borntorun.api.infrastructure.model.SearchAllActivityQuery;
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +22,7 @@ public class ActivityQuery {
   public List<ActivityEntity> searchAllByFilter(final SearchAllActivityQuery query) {
     final QActivityEntity activity = QActivityEntity.activityEntity;
 
-    BooleanExpression whereClause = activity.userEntity.crewId.eq(query.myCrewId())
-        .and(activity.isDeleted.eq(false));
+    BooleanExpression whereClause = activity.userEntity.crewId.eq(query.myCrewId());
     BooleanExpression optionalWhereClause = null;
 
 

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,27 +29,21 @@ import lombok.ToString;
 public class ActivityParticipationEntity {
 
   @Id
-  @Column(name = "participation_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int activityId;
   private int userId;
   private LocalDateTime updatedAt;
   private LocalDateTime registeredAt;
-  private Boolean isDeleted;
   private Boolean isAttendance;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "activityId", insertable = false, updatable = false)
+  @JoinColumn(name = "id", insertable = false, updatable = false)
   private ActivityEntity activityEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
-
-  public void remove() {
-    this.isDeleted = true;
-  }
 
   public void attendance() {
     this.isAttendance = true;

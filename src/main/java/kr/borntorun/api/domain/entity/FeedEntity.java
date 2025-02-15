@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,7 +39,6 @@ import lombok.ToString;
 public class FeedEntity {
 
   @Id
-  @Column(name = "feed_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int userId;
@@ -51,19 +50,18 @@ public class FeedEntity {
   private int viewQty;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;
-  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
 
-  @OneToMany(mappedBy = "feedEntity")
+  @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
   private Set<CommentEntity> commentEntities;
 
-  @OneToMany(mappedBy = "feedEntity")
+  @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
   private Set<FeedImageMappingEntity> feedImageMappingEntities;
 
-  @OneToMany(mappedBy = "feedContentsEntity")
+  @OneToMany(mappedBy = "feedContentsEntity", cascade = CascadeType.REMOVE)
   private Set<RecommendationEntity> recommendationEntities;
 
   public void add(final List<FeedImageMappingEntity> feedImageMappingEntities) {
@@ -72,10 +70,6 @@ public class FeedEntity {
     }
 
     this.feedImageMappingEntities.addAll(feedImageMappingEntities);
-  }
-
-  public void remove() {
-    this.isDeleted = true;
   }
 
   public void modify(final ModifyFeedQuery query) {
@@ -87,21 +81,16 @@ public class FeedEntity {
   public long getRecommendationQty() {
     return recommendationEntities.stream()
         .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
-        .filter(e -> !e.getIsDeleted())
         .count();
   }
 
   public long getCommentQty() {
-    return commentEntities.stream()
-        .filter(e -> !e.getIsDeleted())
-        .count();
+    return commentEntities.size();
   }
 
   public List<String> getImageUris() {
     return feedImageMappingEntities.stream()
-        .filter(e -> !e.getIsDeleted())
         .map(FeedImageMappingEntity::getObjectStorageEntity)
-        .filter(e -> !e.getIsDeleted())
         .map(ObjectStorageEntity::getFileUri)
         .toList();
   }
@@ -112,7 +101,6 @@ public class FeedEntity {
     }
 
     return commentEntities.stream()
-        .filter(e -> !e.getIsDeleted())
         .anyMatch(e -> e.getUserId() == myUserId);
   }
 
@@ -122,7 +110,6 @@ public class FeedEntity {
     }
 
     return recommendationEntities.stream()
-        .filter(e -> !e.getIsDeleted())
         .anyMatch(e -> e.getUserId() == myUserId);
   }
 }

@@ -2,7 +2,6 @@ package kr.borntorun.api.domain.entity;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +27,6 @@ import lombok.ToString;
 public class UserPrivacyEntity {
 
   @Id
-  @Column(name = "privacy_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int userId;

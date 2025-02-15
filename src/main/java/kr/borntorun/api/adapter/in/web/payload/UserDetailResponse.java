@@ -1,6 +1,7 @@
 package kr.borntorun.api.adapter.in.web.payload;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "유저 정보 조회")

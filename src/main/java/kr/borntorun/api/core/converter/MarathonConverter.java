@@ -30,23 +30,21 @@ public interface MarathonConverter {
 
   SearchMarathonQuery toSearchMarathonQuery(final SearchMarathonCommand source);
 
-  @Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
-  @Mapping(target = "marathonId", source = "id")
-  Marathon toMarathon(final MarathonEntity source, @Context final int myUserId);
-
   List<Marathon> toMarathon(final List<MarathonEntity> source, @Context final int myUserId);
 
   List<SearchMarathonResponse.marathon> toSearchMarathonResponseMarathon(final List<Marathon> source);
-
-  SearchMarathonResponse.marathon toSearchMarathonResponseMarathon(final Marathon source);
 
   SearchMarathonDetailCommand toSearchMarathonDetailCommand(final Long marathonId, final Integer myUserId);
 
   SearchMarathonDetailResponse toSearchMarathonDetailResponse(final MarathonDetail source);
 
   @Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
-  @Mapping(target = "marathonId", source = "id")
+  @Mapping(target = "id", source = "id")
   MarathonDetail toMarathonDetail(final MarathonEntity source, @Context final int myUserId);
+
+  @Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
+  @Mapping(target = "id", source = "id")
+  Marathon toMarathon(final MarathonEntity source, @Context final int myUserId);
 
   BookmarkMarathonCommand toBookmarkMarathonCommand(final Long marathonId, final Integer myUserId);
 
@@ -59,6 +57,6 @@ public interface MarathonConverter {
   @Named("convertIsBookmarking")
   default Boolean convertIsBookmarking(final MarathonEntity source, @Context final int myUserId) {
     return source.getMarathonBookmarkEntities().stream()
-        .anyMatch(e -> e.getUserId() == myUserId && !e.getIsDeleted());
+        .anyMatch(e -> e.getUserId() == myUserId);
   }
 }

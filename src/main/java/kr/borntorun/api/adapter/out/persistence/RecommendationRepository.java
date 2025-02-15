@@ -12,5 +12,4 @@ public interface RecommendationRepository extends JpaRepository<RecommendationEn
   RecommendationEntity findByUserIdAndRecommendationTypeAndContentId(final int userId, final RecommendationType recommendationType, final int contentId);
   List<RecommendationEntity> findAllByUserId(final int userId);
   List<RecommendationEntity> findAllByRecommendationTypeAndContentIdIn(final RecommendationType recommendationType, final List<Integer> contentIds);
-  List<RecommendationEntity> findByRecommendationTypeAndContentId(final RecommendationType recommendationType, final Integer contentId);
 }

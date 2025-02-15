@@ -12,8 +12,13 @@ import kr.borntorun.api.adapter.in.web.payload.ModifyFeedRequest;
 import kr.borntorun.api.adapter.in.web.payload.SearchFeedRequest;
 import kr.borntorun.api.core.converter.FeedConverter;
 import kr.borntorun.api.core.service.FeedService;
+import kr.borntorun.api.domain.port.model.CreateFeedCommand;
 import kr.borntorun.api.domain.port.model.Feed;
 import kr.borntorun.api.domain.port.model.FeedCard;
+import kr.borntorun.api.domain.port.model.ModifyFeedCommand;
+import kr.borntorun.api.domain.port.model.RemoveFeedCommand;
+import kr.borntorun.api.domain.port.model.SearchAllFeedCommand;
+import kr.borntorun.api.domain.port.model.SearchFeedDetailCommand;
 import kr.borntorun.api.support.TokenDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +33,14 @@ public class FeedProxy {
 
   @Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
   public Feed searchDetail(final TokenDetail my, final int feedId) {
-    return feedService.searchDetail(FeedConverter.INSTANCE.toSearchFeedDetailCommand(feedId, my));
+    SearchFeedDetailCommand command = FeedConverter.INSTANCE.toSearchFeedDetailCommand(feedId, my);
+    return feedService.searchDetail(command);
   }
 
   @Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.pageSize : 'searchAll: ' + #my.id + #request.hashCode() + #pageable.pageSize")
   public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final int lastFeedId, final Pageable pageable) {
-    return feedService.searchAll(FeedConverter.INSTANCE.toSearchAllFeedCommand(request, my, lastFeedId), pageable);
+    SearchAllFeedCommand command = FeedConverter.INSTANCE.toSearchAllFeedCommand(request, my, lastFeedId);
+    return feedService.searchAll(command, pageable);
   }
 
   //  @DistributedLock(key = "'FeedView-'.concat(#id)", waitTime = 10L)
@@ -43,16 +50,19 @@ public class FeedProxy {
 
   @CacheEvict(allEntries = true)
   public void create(final CreateFeedRequest request, final TokenDetail my) {
-    feedService.create(FeedConverter.INSTANCE.toCreateFeedCommand(request, my));
+    CreateFeedCommand command = FeedConverter.INSTANCE.toCreateFeedCommand(request, my);
+    feedService.create(command);
   }
 
   @CacheEvict(allEntries = true)
   public void remove(final int feedId, final TokenDetail my) {
-    feedService.remove(FeedConverter.INSTANCE.toRemoveFeedCommand(feedId, my));
+    RemoveFeedCommand command = FeedConverter.INSTANCE.toRemoveFeedCommand(feedId, my);
+    feedService.remove(command);
   }
 
   @CacheEvict(allEntries = true)
   public void modify(final ModifyFeedRequest request, final int feedId) {
-    feedService.modify(FeedConverter.INSTANCE.toModifyFeedCommand(request, feedId));
+    ModifyFeedCommand command = FeedConverter.INSTANCE.toModifyFeedCommand(request, feedId);
+    feedService.modify(command);
   }
 }

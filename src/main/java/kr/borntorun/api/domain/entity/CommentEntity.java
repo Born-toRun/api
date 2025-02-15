@@ -60,6 +60,10 @@ public class CommentEntity {
         .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
         .count();
   }
+
+  public boolean isRootComment() {
+    return parentId == 0;
+  }
 }
 
 

@@ -14,8 +14,12 @@ import kr.borntorun.api.adapter.in.web.payload.SearchAllActivityRequest;
 import kr.borntorun.api.core.converter.ActivityConverter;
 import kr.borntorun.api.core.service.ActivityService;
 import kr.borntorun.api.domain.port.model.Activity;
+import kr.borntorun.api.domain.port.model.AttendanceActivityCommand;
 import kr.borntorun.api.domain.port.model.AttendanceResult;
+import kr.borntorun.api.domain.port.model.CreateActivityCommand;
+import kr.borntorun.api.domain.port.model.ModifyActivityCommand;
 import kr.borntorun.api.domain.port.model.ParticipateActivityCommand;
+import kr.borntorun.api.domain.port.model.SearchAllActivityCommand;
 import kr.borntorun.api.support.TokenDetail;
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +32,14 @@ public class ActivityProxy {
 
   @CacheEvict(allEntries = true)
   public void create(final TokenDetail my, final CreateActivityRequest request) {
-    activityService.create(ActivityConverter.INSTANCE.toCreateActivityCommand(request, my));
+    CreateActivityCommand command = ActivityConverter.INSTANCE.toCreateActivityCommand(request, my);
+    activityService.create(command);
   }
 
   @CacheEvict(allEntries = true)
   public void modify(final ModifyActivityRequest request, final int activityId) {
-    activityService.modify(ActivityConverter.INSTANCE.toModifyActivityCommand(request, activityId));
+    ModifyActivityCommand command = ActivityConverter.INSTANCE.toModifyActivityCommand(request, activityId);
+    activityService.modify(command);
   }
 
   @CacheEvict(allEntries = true)
@@ -43,7 +49,8 @@ public class ActivityProxy {
 
   @CacheEvict(allEntries = true)
   public void participate(final int activityId, final int myUserId) {
-    activityService.participate(new ParticipateActivityCommand(activityId, myUserId));
+    ParticipateActivityCommand command = new ParticipateActivityCommand(activityId, myUserId);
+    activityService.participate(command);
   }
 
   @CacheEvict(allEntries = true)
@@ -53,7 +60,8 @@ public class ActivityProxy {
 
   @Cacheable(key = "'searchAll: ' + #my.id + #request.hashCode()")
   public List<Activity> searchAll(final SearchAllActivityRequest request, final TokenDetail my) {
-    return activityService.searchAll(ActivityConverter.INSTANCE.toSearchAllActivityCommand(request, my));
+    SearchAllActivityCommand command = ActivityConverter.INSTANCE.toSearchAllActivityCommand(request, my);
+    return activityService.searchAll(command);
   }
 
   @Cacheable(key = "'search: ' + #my.id + #activityId")
@@ -68,7 +76,8 @@ public class ActivityProxy {
 
   @CacheEvict(allEntries = true)
   public void attendance(final AttendanceActivityRequest request, final int activityId, final int myUserId) {
-    activityService.attendance(ActivityConverter.INSTANCE.toAttendanceActivityCommand(request, activityId, myUserId));
+    AttendanceActivityCommand command = ActivityConverter.INSTANCE.toAttendanceActivityCommand(request, activityId, myUserId);
+    activityService.attendance(command);
   }
 
   @Cacheable(key = "'getAttendance: ' + #activityId")

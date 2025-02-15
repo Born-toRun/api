@@ -23,11 +23,12 @@ import kr.borntorun.api.domain.port.model.ModifyFeedCommand;
 import kr.borntorun.api.domain.port.model.RemoveFeedCommand;
 import kr.borntorun.api.domain.port.model.SearchAllFeedCommand;
 import kr.borntorun.api.domain.port.model.SearchFeedDetailCommand;
-import kr.borntorun.api.infrastructure.CommentGateway;
 import kr.borntorun.api.infrastructure.FeedGateway;
 import kr.borntorun.api.infrastructure.FeedImageMappingGateway;
-import kr.borntorun.api.infrastructure.ObjectStorageGateway;
 import kr.borntorun.api.infrastructure.UserGateway;
+import kr.borntorun.api.infrastructure.model.CreateFeedQuery;
+import kr.borntorun.api.infrastructure.model.ModifyFeedQuery;
+import kr.borntorun.api.infrastructure.model.SearchAllFeedQuery;
 import lombok.RequiredArgsConstructor;
 
 
@@ -38,8 +39,6 @@ public class FeedService implements FeedPort {
   private final FeedGateway feedGateway;
   private final FeedImageMappingGateway feedImageMappingGateway;
   private final UserGateway userGateway;
-  private final CommentGateway commentGateway;
-  private final ObjectStorageGateway objectStorageGateway;
 
   @Transactional(readOnly = true)
   @Override
@@ -58,7 +57,8 @@ public class FeedService implements FeedPort {
           .collect(Collectors.toList());
     }
 
-    final Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(FeedConverter.INSTANCE.toSearchAllFeedQuery(command, searchedUserIds), pageable);
+    SearchAllFeedQuery query = FeedConverter.INSTANCE.toSearchAllFeedQuery(command, searchedUserIds);
+    final Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
 
     if(feedPage.isEmpty()) {
       return Page.empty();
@@ -78,7 +78,8 @@ public class FeedService implements FeedPort {
   @Transactional
   @Override
   public void create(final CreateFeedCommand command) {
-    feedGateway.create(FeedConverter.INSTANCE.toCreateFeedQuery(command));
+    CreateFeedQuery query = FeedConverter.INSTANCE.toCreateFeedQuery(command);
+    feedGateway.create(query);
   }
 
   @Transactional
@@ -90,7 +91,8 @@ public class FeedService implements FeedPort {
   @Transactional
   @Override
   public void modify(final ModifyFeedCommand command) {
-    final FeedEntity modified = feedGateway.modify(FeedConverter.INSTANCE.toModifyFeedQuery(command));
+    ModifyFeedQuery query = FeedConverter.INSTANCE.toModifyFeedQuery(command);
+    final FeedEntity modified = feedGateway.modify(query);
 
     final List<Integer> removedImageIds = modified.getFeedImageMappingEntities().stream()
         .map(FeedImageMappingEntity::getImageId)

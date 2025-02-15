@@ -2,9 +2,10 @@ package kr.borntorun.api.adapter.in.web;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,15 +30,15 @@ public class ObjectStorageController {
   private final ObjectStorageProxy objectStorageProxy;
 
   @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
-  @RequestMapping(value = "/{bucket}", method= RequestMethod.POST, produces="application/json;charset=UTF-8", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/{bucket}", produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<UploadFileResponse> removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @RequestParam(value = "file") MultipartFile file) {
     final ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
-
-    return ResponseEntity.ok(ObjectStorageConverter.INSTANCE.toUploadFileResponse(objectStorage));
+    UploadFileResponse response = ObjectStorageConverter.INSTANCE.toUploadFileResponse(objectStorage);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "파일 삭제", description = "파일을 삭제합니다.")
-  @RequestMapping(value = "/{bucket}/{fileId}", method= RequestMethod.DELETE)
+  @DeleteMapping(value = "/{bucket}/{fileId}", produces=MediaType.APPLICATION_JSON_VALUE)
   public void removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @PathVariable int fileId) {
     objectStorageProxy.remove(my, bucket, fileId);
   }

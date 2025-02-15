@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import kr.borntorun.api.adapter.out.persistence.YellowCardRepository;
 import kr.borntorun.api.core.converter.YellowCardConverter;
+import kr.borntorun.api.domain.entity.YellowCardEntity;
 import kr.borntorun.api.infrastructure.model.CreateYellowCardQuery;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ public class YellowCardGateway {
   }
 
   public void create(CreateYellowCardQuery query) {
-    yellowCardRepository.save(YellowCardConverter.INSTANCE.toYellowCardEntity(query));
+    YellowCardEntity yellowCardEntity = YellowCardConverter.INSTANCE.toYellowCardEntity(query);
+    yellowCardRepository.save(yellowCardEntity);
   }
 }

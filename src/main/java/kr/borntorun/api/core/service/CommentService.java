@@ -21,6 +21,8 @@ import kr.borntorun.api.domain.port.model.DetailCommentCommand;
 import kr.borntorun.api.domain.port.model.ModifyCommentCommand;
 import kr.borntorun.api.domain.port.model.SearchAllCommentCommand;
 import kr.borntorun.api.infrastructure.CommentGateway;
+import kr.borntorun.api.infrastructure.model.CreateCommentQuery;
+import kr.borntorun.api.infrastructure.model.ModifyCommentQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,8 +39,8 @@ public class CommentService implements CommentPort {
 
     // 댓글/대댓글 정렬
     final Comparator<CommentEntity> customComparator = Comparator
-            .comparingInt((CommentEntity c) -> c.getParentId() == 0 ? c.getId() : c.getParentId())
-            .thenComparingInt(c -> c.getParentId() == 0 ? 0 : -1)
+            .comparingInt((CommentEntity c) -> c.isRootComment() ? c.getId() : c.getParentId())
+            .thenComparingInt(c -> c.isRootComment() ? 0 : -1)
             .thenComparingInt(CommentEntity::getId)
             .reversed();
     commentEntities.sort(customComparator);
@@ -48,10 +50,9 @@ public class CommentService implements CommentPort {
     final Map<Integer, List<Comment>> commentsByParentId = comments.stream()
         .collect(Collectors.groupingByConcurrent(Comment::getParentId));
 
-    comments.parallelStream().forEach(comment -> {
-      final List<Comment> reComments = commentsByParentId.getOrDefault(comment.getId(), List.of());
-      comment.setReCommentQty(reComments.size());
-    });
+    for (Comment comment: comments) {
+      comment.setReCommentQty(commentsByParentId.getOrDefault(comment.getId(), List.of()).size());
+    }
 
     return comments;
   }
@@ -68,7 +69,7 @@ public class CommentService implements CommentPort {
         .map(commentEntity -> CommentConverter.INSTANCE.toComment(commentEntity,
             reCommentWritersByUserId.get(commentEntity.getUserId())))
         .sorted(Comparator.comparingInt(Comment::getId)
-            .reversed()).collect(Collectors.toList());
+            .reversed()).toList();
 
     return CommentConverter.INSTANCE.toCommentDetail(parentComment, reComments);
   }
@@ -76,7 +77,8 @@ public class CommentService implements CommentPort {
   @Transactional
   @Override
   public void create(final CreateCommentCommand command) {
-    commentGateway.create(CommentConverter.INSTANCE.toCreateCommentQuery(command));
+    CreateCommentQuery query = CommentConverter.INSTANCE.toCreateCommentQuery(command);
+    commentGateway.create(query);
   }
 
   @Transactional(readOnly = true)
@@ -94,7 +96,8 @@ public class CommentService implements CommentPort {
   @Transactional
   @Override
   public Comment modify(final ModifyCommentCommand command) {
-    final CommentEntity modified = commentGateway.modify(CommentConverter.INSTANCE.toModifyCommentQuery(command));
+    ModifyCommentQuery query = CommentConverter.INSTANCE.toModifyCommentQuery(command);
+    final CommentEntity modified = commentGateway.modify(query);
     return CommentConverter.INSTANCE.toComment(modified);
   }
 

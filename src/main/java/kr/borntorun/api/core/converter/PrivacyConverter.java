@@ -16,7 +16,7 @@ public interface PrivacyConverter {
 
   PrivacyConverter INSTANCE = Mappers.getMapper(PrivacyConverter.class);
 
-  ModifyUserPrivacyCommand toSettingUserPrivacyCommand(final SettingUserPrivacyRequest source, final int myUserId);
+  ModifyUserPrivacyCommand toModifyUserPrivacyCommand(final SettingUserPrivacyRequest source, final int myUserId);
 
   SearchUserPrivacyResponse toSearchUserPrivacyResponse(final UserPrivacy source);
 

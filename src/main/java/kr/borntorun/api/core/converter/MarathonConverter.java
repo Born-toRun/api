@@ -8,15 +8,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import kr.borntorun.api.adapter.in.web.payload.SearchAllMarathonRequest;
+import kr.borntorun.api.adapter.in.web.payload.SearchAllMarathonResponse;
 import kr.borntorun.api.adapter.in.web.payload.SearchMarathonDetailResponse;
-import kr.borntorun.api.adapter.in.web.payload.SearchMarathonRequest;
-import kr.borntorun.api.adapter.in.web.payload.SearchMarathonResponse;
 import kr.borntorun.api.domain.entity.MarathonEntity;
 import kr.borntorun.api.domain.port.model.BookmarkMarathonCommand;
 import kr.borntorun.api.domain.port.model.CancelBookmarkMarathonCommand;
 import kr.borntorun.api.domain.port.model.Marathon;
 import kr.borntorun.api.domain.port.model.MarathonDetail;
-import kr.borntorun.api.domain.port.model.SearchMarathonCommand;
+import kr.borntorun.api.domain.port.model.SearchAllMarathonCommand;
 import kr.borntorun.api.domain.port.model.SearchMarathonDetailCommand;
 import kr.borntorun.api.infrastructure.model.BookmarkMarathonQuery;
 import kr.borntorun.api.infrastructure.model.SearchMarathonQuery;
@@ -26,13 +26,13 @@ public interface MarathonConverter {
 
   MarathonConverter INSTANCE = Mappers.getMapper(MarathonConverter.class);
 
-  SearchMarathonCommand toSearchMarathonCommand(final SearchMarathonRequest request, final int myUserId);
+  SearchAllMarathonCommand toSearchAllMarathonCommand(final SearchAllMarathonRequest request, final int myUserId);
 
-  SearchMarathonQuery toSearchMarathonQuery(final SearchMarathonCommand source);
+  SearchMarathonQuery toSearchMarathonQuery(final SearchAllMarathonCommand source);
 
   List<Marathon> toMarathon(final List<MarathonEntity> source, @Context final int myUserId);
 
-  List<SearchMarathonResponse.marathon> toSearchMarathonResponseMarathon(final List<Marathon> source);
+  List<SearchAllMarathonResponse.marathon> toSearchMarathonResponseMarathon(final List<Marathon> source);
 
   SearchMarathonDetailCommand toSearchMarathonDetailCommand(final Long marathonId, final Integer myUserId);
 

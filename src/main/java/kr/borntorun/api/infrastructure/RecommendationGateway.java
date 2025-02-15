@@ -23,11 +23,13 @@ public class RecommendationGateway {
   }
 
   public void create(final CreateRecommendationQuery query) {
-    recommendationRepository.save(RecommendationEntity.builder()
-        .userId(query.myUserId())
-        .contentId(query.contentId())
-        .recommendationType(query.recommendationType())
-        .build());
+    RecommendationEntity recommendationEntity = RecommendationEntity.builder()
+      .userId(query.myUserId())
+      .contentId(query.contentId())
+      .recommendationType(query.recommendationType())
+      .build();
+
+    recommendationRepository.save(recommendationEntity);
   }
 
   public void remove(final RemoveRecommendationQuery query) {

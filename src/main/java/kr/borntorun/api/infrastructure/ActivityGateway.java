@@ -36,15 +36,15 @@ public class ActivityGateway {
   private final RedisClient redisClient;
 
   public void create(final CreateActivityQuery createActivityQuery) {
-    activityRepository.save(ActivityConverter.INSTANCE.toActivityEntity(createActivityQuery));
+    ActivityEntity activityEntity = ActivityConverter.INSTANCE.toActivityEntity(createActivityQuery);
+    activityRepository.save(activityEntity);
   }
 
   public void modify(final ModifyActivityQuery modifyActivityQuery) {
-    final ActivityEntity activity = activityRepository.findById(modifyActivityQuery.activityId())
-        .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
+    final ActivityEntity activityEntity = search(modifyActivityQuery.activityId());
 
-    activity.modify(modifyActivityQuery);
-    activityRepository.save(activity);
+    activityEntity.modify(modifyActivityQuery);
+    activityRepository.save(activityEntity);
   }
 
   public void removeAll(final int userId) {
@@ -62,7 +62,8 @@ public class ActivityGateway {
   }
 
   public void participate(final ParticipateActivityQuery participateActivityQuery) {
-    activityParticipationRepository.save(ActivityParticipationConverter.INSTANCE.toActivityParticipationEntity(participateActivityQuery));
+    ActivityParticipationEntity activityParticipationEntity = ActivityParticipationConverter.INSTANCE.toActivityParticipationEntity(participateActivityQuery);
+    activityParticipationRepository.save(activityParticipationEntity);
   }
 
   public void participateCancel(final int participationId) {
@@ -107,8 +108,7 @@ public class ActivityGateway {
   }
 
   public ActivityEntity open(final int activityId) {
-    final ActivityEntity activity = activityRepository.findById(activityId)
-        .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
+    final ActivityEntity activity = search(activityId);
 
     final LocalDateTime now = LocalDateTime.now();
 
@@ -121,11 +121,11 @@ public class ActivityGateway {
   }
 
   public void attendance(final AttendanceActivityQuery attendanceActivityQuery) {
-    if(!redisClient.exist(ACCESS_CODE_KEY_PREFIX + attendanceActivityQuery.activityId())) {
+    if (!redisClient.exist(ACCESS_CODE_KEY_PREFIX + attendanceActivityQuery.activityId())) {
       throw new InvalidException("참여코드가 만료되었습니다.");
     }
 
-    if((int) redisClient.get(ACCESS_CODE_KEY_PREFIX + attendanceActivityQuery.activityId()) == attendanceActivityQuery.accessCode()) {
+    if ((int) redisClient.get(ACCESS_CODE_KEY_PREFIX + attendanceActivityQuery.activityId()) == attendanceActivityQuery.accessCode()) {
       final ActivityParticipationEntity activityParticipation = activityParticipationRepository.findByActivityIdAndUserId(attendanceActivityQuery.activityId(), attendanceActivityQuery.myUserId())
           .orElseThrow(() -> new NotFoundException("참여의사를 밝히지 않은 모임에 출석할 수 없습니다."));
       activityParticipation.attendance();

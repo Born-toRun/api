@@ -22,12 +22,12 @@ public class UserGateway {
         .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
   }
 
-  public String modify(ModifyUserQuery query) {
+  public UserEntity modify(ModifyUserQuery query) {
     final UserEntity userEntity = userRepository.findById(query.userId())
         .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
 
     userEntity.modify(query.instagramId(), query.profileImageId());
-    return userRepository.save(userEntity).getName();
+    return userRepository.save(userEntity);
   }
 
   public String modify(SignUpUserQuery query) {
@@ -40,5 +40,9 @@ public class UserGateway {
 
   public List<UserEntity> searchByUserName(String userName) {
     return userRepository.findAllByNameContaining(userName);
+  }
+
+  public void remove(int userId) {
+    userRepository.deleteById(userId);
   }
 }

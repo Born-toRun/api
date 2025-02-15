@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import kr.borntorun.api.adapter.in.web.payload.SettingUserPrivacyRequest;
 import kr.borntorun.api.core.converter.PrivacyConverter;
 import kr.borntorun.api.core.service.PrivacyService;
+import kr.borntorun.api.domain.port.model.ModifyUserPrivacyCommand;
 import kr.borntorun.api.domain.port.model.UserPrivacy;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,8 @@ public class PrivacyProxy {
 
   @CacheEvict(allEntries = true)
   public void modifyUserPrivacy(final SettingUserPrivacyRequest request, final int myUserId) {
-    privacyService.modifyUserPrivacy(PrivacyConverter.INSTANCE.toSettingUserPrivacyCommand(request, myUserId));
+    ModifyUserPrivacyCommand command = PrivacyConverter.INSTANCE.toModifyUserPrivacyCommand(request, myUserId);
+    privacyService.modifyUserPrivacy(command);
   }
 
   @Cacheable(key = "'searchUserPrivacy: ' + #userId")

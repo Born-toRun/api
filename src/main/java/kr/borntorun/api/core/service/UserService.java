@@ -9,6 +9,7 @@ import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInResponse;
 import kr.borntorun.api.adapter.out.thirdparty.model.AuthTokenResponse;
 import kr.borntorun.api.config.properties.KakaoProperties;
 import kr.borntorun.api.core.converter.UserConverter;
+import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.LoginResult;
@@ -16,6 +17,8 @@ import kr.borntorun.api.domain.port.model.ModifyUserCommand;
 import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.infrastructure.UserGateway;
+import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
+import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 import lombok.RequiredArgsConstructor;
 
 @EnableConfigurationProperties({KakaoProperties.class})
@@ -43,13 +46,14 @@ public class UserService implements UserPort {
   @Transactional
   @Override
   public String signUp(final SignUpCommand command) {
-    return userGateway.modify(UserConverter.INSTANCE.toSignUpUserQuery(command));
+    SignUpUserQuery query = UserConverter.INSTANCE.toSignUpUserQuery(command);
+    return userGateway.modify(query);
   }
 
   @Transactional
   @Override
   public void remove(final int userId) {
-    // TODO
+    userGateway.remove(userId);
   }
 
   @Transactional(readOnly = true)
@@ -60,7 +64,10 @@ public class UserService implements UserPort {
 
   @Transactional
   @Override
-  public String modify(final ModifyUserCommand command) {
-    return userGateway.modify(UserConverter.INSTANCE.toModifyUserQuery(command));
+  public BornToRunUser modify(final ModifyUserCommand command) {
+    ModifyUserQuery query = UserConverter.INSTANCE.toModifyUserQuery(command);
+
+    UserEntity modifiedUser = userGateway.modify(query);
+    return UserConverter.INSTANCE.toBornToRunUser(modifiedUser);
   }
 }

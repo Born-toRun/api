@@ -2,12 +2,16 @@ package kr.borntorun.api.adapter.in.web;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,69 +42,70 @@ public class ActivityController {
   private final ActivityProxy activityProxy;
 
   @Operation(summary = "모임 생성", description = "모임 참여/불참을 받기 위해 생성합니다.")
-  @RequestMapping(value = "", method= RequestMethod.POST)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public void create(@AuthUser TokenDetail my, @RequestBody @Valid CreateActivityRequest request) {
     activityProxy.create(my, request);
   }
 
   @Operation(summary = "모임 수정", description = "모임를 수정합니다.")
-  @RequestMapping(value = "/{activityId}", method= RequestMethod.PUT)
+  @PutMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public void modify(@AuthUser TokenDetail my, @PathVariable int activityId, @RequestBody @Valid ModifyActivityRequest request) {
     activityProxy.modify(request, activityId);
   }
 
   @Operation(summary = "모임 삭제", description = "모임를 삭제합니다.")
-  @RequestMapping(value = "/{activityId}", method= RequestMethod.DELETE)
+  @DeleteMapping(value = "/{activityId}")
   public void remove(@AuthUser TokenDetail my, @PathVariable int activityId) {
     activityProxy.remove(activityId);
   }
 
   @Operation(summary = "모임 참여", description = "모임에 참여할 예정입니다.")
-  @RequestMapping(value = "/participation/{activityId}", method= RequestMethod.POST)
+  @PostMapping(value = "/participation/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public void participate(@AuthUser TokenDetail my, @PathVariable int activityId) {
     activityProxy.participate(activityId, my.getId());
   }
 
   @Operation(summary = "모임 불참", description = "모임에 불참할 예정입니다.")
-  @RequestMapping(value = "/participation-cancel/{participationId}", method= RequestMethod.POST)
+  @PostMapping(value = "/participation-cancel/{participationId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public void participateCancel(@AuthUser TokenDetail my, @PathVariable int participationId) {
     activityProxy.participateCancel(participationId);
   }
 
   @Operation(summary = "모임 목록 조회", description = "모임 목록을 조회합니다.")
-  @RequestMapping(value = "", method= RequestMethod.GET)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchActivityResponse> searchAll(@AuthUser TokenDetail my, @ModelAttribute @Valid SearchAllActivityRequest request) {
     final List<Activity> activityEntities = activityProxy.searchAll(request, my);
-
-    return ResponseEntity.ok(new SearchActivityResponse(ActivityConverter.INSTANCE.toSearchActivityResponseActivity(activityEntities)));
+    List<SearchActivityResponse.Activity> activities = ActivityConverter.INSTANCE.toSearchActivityResponseActivity(activityEntities);
+    SearchActivityResponse response = new SearchActivityResponse(activities);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "모임 상세 조회", description = "모임 상세를 조회합니다.")
-  @RequestMapping(value = "/{activityId}", method= RequestMethod.GET)
+  @GetMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchActivityDetailResponse> search(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final Activity activity = activityProxy.search(activityId, my);
-
-    return ResponseEntity.ok(ActivityConverter.INSTANCE.toSearchActivityDetailResponse(activity));
+    SearchActivityDetailResponse response = ActivityConverter.INSTANCE.toSearchActivityDetailResponse(activity);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "모임 오픈", description = "모임를 오픈합니다.")
-  @RequestMapping(value = "/open/{activityId}", method= RequestMethod.PUT)
+  @PutMapping(value = "/open/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<OpenActivityResponse> open(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final Activity activity = activityProxy.open(activityId);
-
-    return ResponseEntity.ok(ActivityConverter.INSTANCE.toOpenActivityResponse(activity));
+    OpenActivityResponse response = ActivityConverter.INSTANCE.toOpenActivityResponse(activity);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "출석 현황", description = "모임의 출석 현황을 조회합니다.")
-  @RequestMapping(value = "/attendance/{activityId}", method= RequestMethod.GET)
+  @GetMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AttendanceActivityResponse> searchAttendance(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final AttendanceResult attendanceResult = activityProxy.getAttendance(activityId);
-
-    return ResponseEntity.ok(ActivityConverter.INSTANCE.toAttendanceActivityResponse(attendanceResult));
+    AttendanceActivityResponse response = ActivityConverter.INSTANCE.toAttendanceActivityResponse(attendanceResult);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "모임 출석", description = "모임에 출석합니다.")
-  @RequestMapping(value = "/attendance/{activityId}", method= RequestMethod.POST)
+  @PostMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public void attendance(@AuthUser TokenDetail my, @PathVariable int activityId, @RequestBody @Valid AttendanceActivityRequest request) {
     activityProxy.attendance(request, activityId, my.getId());
   }

@@ -28,7 +28,8 @@ public class CommentGateway {
   }
 
   public void create(final CreateCommentQuery query) {
-    commentRepository.save(CommentConverter.INSTANCE.toCommentEntity(query));
+    CommentEntity commentEntity = CommentConverter.INSTANCE.toCommentEntity(query);
+    commentRepository.save(commentEntity);
   }
 
   public int qty(final int feedId) {

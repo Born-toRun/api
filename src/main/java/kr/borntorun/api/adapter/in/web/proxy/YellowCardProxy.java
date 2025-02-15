@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import kr.borntorun.api.adapter.in.web.payload.CreateYellowCardRequest;
 import kr.borntorun.api.core.converter.YellowCardConverter;
 import kr.borntorun.api.core.service.YellowCardService;
+import kr.borntorun.api.domain.port.model.CreateYellowCardCommand;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class YellowCardProxy {
   private final YellowCardService yellowCardService;
 
   public void create(final int myUserId, final CreateYellowCardRequest request) {
-    yellowCardService.create(YellowCardConverter.INSTANCE.toCreateYellowCardCommand(request, myUserId));
+    CreateYellowCardCommand command = YellowCardConverter.INSTANCE.toCreateYellowCardCommand(request, myUserId);
+    yellowCardService.create(command);
   }
 }

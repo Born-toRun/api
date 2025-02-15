@@ -1,8 +1,9 @@
 package kr.borntorun.api.adapter.in.web;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +24,7 @@ public class YellowCardController {
   private final YellowCardProxy yellowCardProxy;
 
   @Operation(summary = "유저 신고하기", description = "해당 유저를 신고합니다.")
-  @RequestMapping(value = "", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+  @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
   public void CreateYellowCard(@AuthUser TokenDetail my, @RequestBody @Valid CreateYellowCardRequest request) {
     yellowCardProxy.create(my.getId(), request);
   }

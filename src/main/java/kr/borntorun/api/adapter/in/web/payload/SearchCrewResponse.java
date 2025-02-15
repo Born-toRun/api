@@ -5,7 +5,7 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "크루 조회")
-public record SearchCrewResponse(@Schema(description = "크루") List<CrewDetail> crews) {
+public record SearchCrewResponse(@Schema(description = "크루") List<CrewDetail> crewDetails) {
 
   public record CrewDetail(@Schema(description = "크루 식별자") String id,
                            @Schema(description = "크루 명") String crewName,

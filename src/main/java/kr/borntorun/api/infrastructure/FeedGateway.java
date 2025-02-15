@@ -35,11 +35,14 @@ public class FeedGateway {
 
   public FeedEntity create(final CreateFeedQuery query) {
     final FeedEntity feedEntity = FeedConverter.INSTANCE.toFeedEntity(query);
-    feedEntity.add(query.imageIds().stream()
-        .map(imageId -> FeedImageMappingEntity.builder()
-            .imageId(imageId)
-            .build())
-        .collect(Collectors.toList()));
+
+    List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
+      .map(imageId -> FeedImageMappingEntity.builder()
+        .imageId(imageId)
+        .build())
+      .toList();
+
+    feedEntity.add(feedImageMappingEntities);
 
     return feedRepository.save(feedEntity);
   }

@@ -13,6 +13,10 @@ import kr.borntorun.api.core.converter.CommentConverter;
 import kr.borntorun.api.core.service.CommentService;
 import kr.borntorun.api.domain.port.model.Comment;
 import kr.borntorun.api.domain.port.model.CommentDetail;
+import kr.borntorun.api.domain.port.model.CreateCommentCommand;
+import kr.borntorun.api.domain.port.model.DetailCommentCommand;
+import kr.borntorun.api.domain.port.model.ModifyCommentCommand;
+import kr.borntorun.api.domain.port.model.SearchAllCommentCommand;
 import kr.borntorun.api.support.TokenDetail;
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +29,20 @@ public class CommentProxy {
 
   @Cacheable(key = "'searchAll: ' + #feedId + #my.id")
   public List<Comment> searchAll(final int feedId, final TokenDetail my) {
-    return commentService.searchAll(CommentConverter.INSTANCE.toSearchAllCommentCommand(feedId, my.getId()));
+    SearchAllCommentCommand command = CommentConverter.INSTANCE.toSearchAllCommentCommand(feedId, my.getId());
+    return commentService.searchAll(command);
   }
 
   @Cacheable(key = "'detail: ' + #commentId + #my.id")
   public CommentDetail detail(final int commentId, final TokenDetail my) {
-    return commentService.detail(CommentConverter.INSTANCE.toDetailCommentCommand(commentId, my.getId()));
+    DetailCommentCommand command = CommentConverter.INSTANCE.toDetailCommentCommand(commentId, my.getId());
+    return commentService.detail(command);
   }
 
   @CacheEvict(allEntries = true, cacheNames = {"comment", "feed"})
   public void create(final TokenDetail my, final int feedId, final CreateCommentRequest request) {
-    commentService.create(CommentConverter.INSTANCE.toCreateCommentCommand(my.getId(), feedId, request));
+    CreateCommentCommand command = CommentConverter.INSTANCE.toCreateCommentCommand(my.getId(), feedId, request);
+    commentService.create(command);
   }
 
   @Cacheable(key = "'qty: ' + #feedId")
@@ -50,6 +57,7 @@ public class CommentProxy {
 
   @CacheEvict(allEntries = true)
   public Comment modify(final int commentId, final ModifyCommentRequest request) {
-    return commentService.modify(CommentConverter.INSTANCE.toModifyCommentCommand(request, commentId));
+    ModifyCommentCommand command = CommentConverter.INSTANCE.toModifyCommentCommand(request, commentId);
+    return commentService.modify(command);
   }
 }

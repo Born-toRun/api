@@ -8,6 +8,8 @@ import kr.borntorun.api.domain.port.RecommendationPort;
 import kr.borntorun.api.domain.port.model.CreateRecommendationCommand;
 import kr.borntorun.api.domain.port.model.RemoveRecommendationCommand;
 import kr.borntorun.api.infrastructure.RecommendationGateway;
+import kr.borntorun.api.infrastructure.model.CreateRecommendationQuery;
+import kr.borntorun.api.infrastructure.model.RemoveRecommendationQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,12 +21,14 @@ public class RecommendationService implements RecommendationPort {
   @Transactional
   @Override
   public void create(final CreateRecommendationCommand command) {
-    recommendationGateway.create(RecommendationConverter.INSTANCE.toCreateRecommendationQuery(command));
+    CreateRecommendationQuery query = RecommendationConverter.INSTANCE.toCreateRecommendationQuery(command);
+    recommendationGateway.create(query);
   }
 
   @Transactional
   @Override
   public void remove(final RemoveRecommendationCommand command) {
-    recommendationGateway.remove(RecommendationConverter.INSTANCE.toRemoveRecommendationQuery(command));
+    RemoveRecommendationQuery query = RecommendationConverter.INSTANCE.toRemoveRecommendationQuery(command);
+    recommendationGateway.remove(query);
   }
 }

@@ -19,6 +19,11 @@ import kr.borntorun.api.domain.port.model.ModifyActivityCommand;
 import kr.borntorun.api.domain.port.model.ParticipateActivityCommand;
 import kr.borntorun.api.domain.port.model.SearchAllActivityCommand;
 import kr.borntorun.api.infrastructure.ActivityGateway;
+import kr.borntorun.api.infrastructure.model.AttendanceActivityQuery;
+import kr.borntorun.api.infrastructure.model.CreateActivityQuery;
+import kr.borntorun.api.infrastructure.model.ModifyActivityQuery;
+import kr.borntorun.api.infrastructure.model.ParticipateActivityQuery;
+import kr.borntorun.api.infrastructure.model.SearchAllActivityQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,13 +35,15 @@ public class ActivityService implements ActivityPort {
   @Transactional
   @Override
   public void create(final CreateActivityCommand command) {
-    activityGateway.create(ActivityConverter.INSTANCE.toCreateActivityQuery(command));
+    CreateActivityQuery query = ActivityConverter.INSTANCE.toCreateActivityQuery(command);
+    activityGateway.create(query);
   }
 
   @Transactional
   @Override
   public void modify(final ModifyActivityCommand command) {
-    activityGateway.modify(ActivityConverter.INSTANCE.toModifyActivityQuery(command));
+    ModifyActivityQuery query = ActivityConverter.INSTANCE.toModifyActivityQuery(command);
+    activityGateway.modify(query);
   }
 
   @Transactional
@@ -54,7 +61,8 @@ public class ActivityService implements ActivityPort {
   @Transactional
   @Override
   public void participate(final ParticipateActivityCommand command) {
-    activityGateway.participate(ActivityParticipationConverter.INSTANCE.toParticipateActivityQuery(command));
+    ParticipateActivityQuery query = ActivityParticipationConverter.INSTANCE.toParticipateActivityQuery(command);
+    activityGateway.participate(query);
   }
 
   @Transactional
@@ -66,7 +74,8 @@ public class ActivityService implements ActivityPort {
   @Transactional(readOnly = true)
   @Override
   public List<Activity> searchAll(final SearchAllActivityCommand command) {
-    final List<ActivityEntity> activityEntities = activityGateway.searchAll(ActivityConverter.INSTANCE.toSearchActivityQuery(command));
+    SearchAllActivityQuery query = ActivityConverter.INSTANCE.toSearchAllActivityQuery(command);
+    final List<ActivityEntity> activityEntities = activityGateway.searchAll(query);
 
     return ActivityConverter.INSTANCE.toActivityByUserId(activityEntities, command.myUserId());
   }
@@ -74,35 +83,42 @@ public class ActivityService implements ActivityPort {
   @Transactional(readOnly = true)
   @Override
   public Activity search(final int activityId, final int myUserId) {
-    return ActivityConverter.INSTANCE.toActivityByUserId(activityGateway.search(activityId), myUserId);
+    ActivityEntity activityEntity = activityGateway.search(activityId);
+    return ActivityConverter.INSTANCE.toActivityByUserId(activityEntity, myUserId);
   }
 
   @Transactional
   @Override
   public Activity open(final int activityId) {
     final ActivityEntity opened = activityGateway.open(activityId);
-    return ActivityConverter.INSTANCE.toActivity(opened, activityGateway.initAccessCode(activityId));
+    int accessCode = activityGateway.initAccessCode(activityId);
+    return ActivityConverter.INSTANCE.toActivity(opened, accessCode);
   }
 
   @Transactional
   @Override
   public void attendance(final AttendanceActivityCommand command) {
-    activityGateway.attendance(ActivityConverter.INSTANCE.toAttendanceActivityQuery(command));
+    AttendanceActivityQuery query = ActivityConverter.INSTANCE.toAttendanceActivityQuery(command);
+    activityGateway.attendance(query);
   }
 
   @Transactional(readOnly = true)
   @Override
   public AttendanceResult getAttendance(final int activityId) {
     final List<ActivityParticipationEntity> activityParticipationEntities = activityGateway.searchParticipation(activityId);
-    final List<UserEntity> participants = activityParticipationEntities.stream().map(ActivityParticipationEntity::getUserEntity).toList();
+    final List<UserEntity> participants = activityParticipationEntities.stream()
+      .map(ActivityParticipationEntity::getUserEntity)
+      .toList();
 
-    final List<AttendanceResult.Person> participantDetails = participants.stream().map(participant -> new AttendanceResult.Person(participant.getId(),
+    final List<AttendanceResult.Person> participantDetails = participants.stream()
+      .map(participant -> new AttendanceResult.Person(participant.getId(),
         participant.getName(),
         participant.getCrewEntity().getName(),
         participant.getProfileImageUri())
         ).toList();
 
-    final UserEntity host = activityGateway.search(activityId).getUserEntity();
+    final UserEntity host = activityGateway.search(activityId)
+      .getUserEntity();
 
     return new AttendanceResult(new AttendanceResult.Person(host.getId(),
         host.getName(),

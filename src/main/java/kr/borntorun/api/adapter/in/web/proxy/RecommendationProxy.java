@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import kr.borntorun.api.core.converter.RecommendationConverter;
 import kr.borntorun.api.core.service.RecommendationService;
 import kr.borntorun.api.domain.constant.RecommendationType;
+import kr.borntorun.api.domain.port.model.CreateRecommendationCommand;
+import kr.borntorun.api.domain.port.model.RemoveRecommendationCommand;
 import kr.borntorun.api.support.TokenDetail;
 import lombok.RequiredArgsConstructor;
 
@@ -19,11 +21,13 @@ public class RecommendationProxy {
 
   @CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
   public void create(final TokenDetail my, final RecommendationType recommendationType, final int contentId) {
-    recommendationService.create(RecommendationConverter.INSTANCE.toCreateRecommendationCommand(my.getId(), recommendationType, contentId));
+    CreateRecommendationCommand command = RecommendationConverter.INSTANCE.toCreateRecommendationCommand(my.getId(), recommendationType, contentId);
+    recommendationService.create(command);
   }
 
   @CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
   public void remove(final TokenDetail my, final RecommendationType recommendationType, final int contentId) {
-    recommendationService.remove(RecommendationConverter.INSTANCE.toRemoveRecommendationCommand(my.getId(), recommendationType, contentId));
+    RemoveRecommendationCommand command = RecommendationConverter.INSTANCE.toRemoveRecommendationCommand(my.getId(), recommendationType, contentId);
+    recommendationService.remove(command);
   }
 }

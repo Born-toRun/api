@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import kr.borntorun.api.adapter.out.persistence.UserPrivacyRepository;
 import kr.borntorun.api.domain.entity.UserPrivacyEntity;
 import kr.borntorun.api.infrastructure.model.ModifyUserPrivacyQuery;
+import kr.borntorun.api.support.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -20,17 +21,13 @@ public class PrivacyGateway {
     userPrivacyRepository.save(userPrivacy);
   }
 
-  public void initUserPrivacy(final int userId) {
-    userPrivacyRepository.save(UserPrivacyEntity.builder()
-        .userId(userId)
-        .build());
-  }
-
   public UserPrivacyEntity searchUserPrivacy(final int userId) {
-    return userPrivacyRepository.findByUserId(userId);
+    return userPrivacyRepository.findByUserId(userId)
+      .orElseThrow(() -> new NotFoundException("정보 노출 동의 내용을 찾을 수 없습니다."));
   }
 
   public void remove(final int userId) {
-    userPrivacyRepository.deleteById(userPrivacyRepository.findByUserId(userId).getId());
+    UserPrivacyEntity userPrivacyEntity = searchUserPrivacy(userId);
+    userPrivacyRepository.deleteById(userPrivacyEntity.getId());
   }
 }

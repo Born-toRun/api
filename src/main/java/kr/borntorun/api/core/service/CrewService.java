@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.borntorun.api.core.converter.CrewConverter;
+import kr.borntorun.api.domain.entity.CrewEntity;
 import kr.borntorun.api.domain.port.CrewPort;
 import kr.borntorun.api.domain.port.model.Crew;
 import kr.borntorun.api.infrastructure.CrewGateway;
@@ -20,6 +21,7 @@ public class CrewService implements CrewPort {
   @Transactional(readOnly = true)
   @Override
   public List<Crew> searchAll() {
-    return CrewConverter.INSTANCE.toCrew(crewGateway.searchAll());
+    List<CrewEntity> crewEntities = crewGateway.searchAll();
+    return CrewConverter.INSTANCE.toCrew(crewEntities);
   }
 }

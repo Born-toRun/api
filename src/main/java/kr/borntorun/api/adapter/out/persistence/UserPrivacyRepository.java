@@ -1,5 +1,7 @@
 package kr.borntorun.api.adapter.out.persistence;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,5 +15,5 @@ public interface UserPrivacyRepository extends JpaRepository<UserPrivacyEntity, 
           "JOIN FETCH u.userEntity " +
           "WHERE u.userId =:userId"
   )
-  UserPrivacyEntity findByUserId(final int userId);
+  Optional<UserPrivacyEntity> findByUserId(final int userId);
 }

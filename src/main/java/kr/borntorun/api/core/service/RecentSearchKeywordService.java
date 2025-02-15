@@ -40,8 +40,8 @@ public class RecentSearchKeywordService implements RecentSearchKeywordPort {
 
     final List<Object> recentSearchKeywords = redisClient.getList(key);
 
-    final int RECENT_SEARCH_KEYWORD_MAX_SIZE = 10;
-    if(recentSearchKeywords.size() > RECENT_SEARCH_KEYWORD_MAX_SIZE) {
+    final int recentSearchKeywordMaxSize = 10;
+    if(recentSearchKeywords.size() > recentSearchKeywordMaxSize) {
       recentSearchKeywords.remove(0);
     }
   }

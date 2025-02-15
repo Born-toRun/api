@@ -12,6 +12,9 @@ import kr.borntorun.api.core.converter.UserConverter;
 import kr.borntorun.api.core.service.UserService;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.LoginResult;
+import kr.borntorun.api.domain.port.model.ModifyUserCommand;
+import kr.borntorun.api.domain.port.model.SignInCommand;
+import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.support.TokenDetail;
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +31,14 @@ public class UserProxy {
   }
 
   public LoginResult signIn(final SignInRequest request) {
-    return userService.signIn(UserConverter.INSTANCE.toSignInCommand(request));
+    SignInCommand command = UserConverter.INSTANCE.toSignInCommand(request);
+    return userService.signIn(command);
   }
 
   @CacheEvict(allEntries = true)
   public String signUp(final TokenDetail my, final SignUpRequest request) {
-    return userService.signUp(UserConverter.INSTANCE.toSignUpCommand(request, my.getId()));
+    SignUpCommand command = UserConverter.INSTANCE.toSignUpCommand(request, my.getId());
+    return userService.signUp(command);
   }
 
   @CacheEvict(allEntries = true)
@@ -52,7 +57,8 @@ public class UserProxy {
   }
 
   @CacheEvict(allEntries = true)
-  public String modify(final TokenDetail my, final ModifyUserRequest request) {
-    return userService.modify(UserConverter.INSTANCE.toModifyUserCommand(request, my.getId()));
+  public BornToRunUser modify(final TokenDetail my, final ModifyUserRequest request) {
+    ModifyUserCommand command = UserConverter.INSTANCE.toModifyUserCommand(request, my.getId());
+    return userService.modify(command);
   }
 }

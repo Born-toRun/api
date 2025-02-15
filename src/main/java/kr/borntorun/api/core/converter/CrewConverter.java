@@ -15,7 +15,6 @@ public interface CrewConverter {
 
   CrewConverter INSTANCE = Mappers.getMapper(CrewConverter.class);
 
-  @Mapping(target = "id", source = "id")
   @Mapping(target = "imageUri", source = "imageEntity.fileUri")
   @Mapping(target = "logoUri", source = "logoEntity.fileUri")
   Crew toCrew(final CrewEntity source);
@@ -25,5 +24,6 @@ public interface CrewConverter {
   @Mapping(target = "crewName", source = "name")
   @Mapping(target = "crewSnsUri", source = "sns")
   SearchCrewResponse.CrewDetail toSearchCrewResponseCrewDetail(final Crew source);
+
   List<SearchCrewResponse.CrewDetail> toSearchCrewResponseCrewDetail(final List<Crew> source);
 }

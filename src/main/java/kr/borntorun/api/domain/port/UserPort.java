@@ -13,5 +13,5 @@ public interface UserPort {
   String signUp(final SignUpCommand command);
   void remove(final int userId);
   BornToRunUser search(final int userId);
-  String modify(final ModifyUserCommand command);
+  BornToRunUser modify(final ModifyUserCommand command);
 }

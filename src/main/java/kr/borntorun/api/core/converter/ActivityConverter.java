@@ -84,7 +84,7 @@ public interface ActivityConverter {
   @Mapping(target = "recruitmentType", source = "source.recruitmentType")
   SearchAllActivityCommand toSearchAllActivityCommand(final SearchAllActivityRequest source, final TokenDetail my);
 
-  SearchAllActivityQuery toSearchActivityQuery(final SearchAllActivityCommand source);
+  SearchAllActivityQuery toSearchAllActivityQuery(final SearchAllActivityCommand source);
 
   @Mapping(target = "host", expression = "java(new SearchActivityDetailResponse.Host(source.host().userId(), source.host().crewId(), source.host().userProfileUri(), source.host().userName(), source.host().crewName(), source.host().isManager(), source.host().isAdmin()))")
   SearchActivityDetailResponse toSearchActivityDetailResponse(final Activity source);

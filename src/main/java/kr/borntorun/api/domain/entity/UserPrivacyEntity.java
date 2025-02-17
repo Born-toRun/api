@@ -30,17 +30,13 @@ public class UserPrivacyEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int userId;
-  private Boolean isGenderPublic;
-  private Boolean isBirthdayPublic;
   private Boolean isInstagramIdPublic;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
 
-  public void change(final boolean isGenderPublic, boolean isBirthdayPublic, boolean isInstagramIdPublic) {
-    this.isBirthdayPublic = isBirthdayPublic;
-    this.isGenderPublic = isGenderPublic;
+  public void change(boolean isInstagramIdPublic) {
     this.isInstagramIdPublic = isInstagramIdPublic;
   }
 }

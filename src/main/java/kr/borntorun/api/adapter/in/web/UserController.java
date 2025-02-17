@@ -70,7 +70,7 @@ public class UserController {
   }
 
   @Operation(summary = "회원가입", description = "회원가입 합니다.")
-  @PostMapping(value = "/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(value = "/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SignUpResponse> signUp(@AuthUser TokenDetail my, @RequestBody @Valid SignUpRequest request) {
     final String createdUserName = userProxy.signUp(my, request);
     return ResponseEntity.ok(new SignUpResponse(createdUserName));

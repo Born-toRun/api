@@ -16,7 +16,7 @@ public class PrivacyGateway {
 
   public void modifyUserPrivacy(final ModifyUserPrivacyQuery query) {
     final UserPrivacyEntity userPrivacy = searchUserPrivacy(query.myUserId());
-    userPrivacy.change(query.isGenderPublic(), query.isBirthdayPublic(), query.isInstagramIdPublic());
+    userPrivacy.change(query.isInstagramIdPublic());
 
     userPrivacyRepository.save(userPrivacy);
   }

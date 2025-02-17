@@ -10,12 +10,6 @@ public record ModifyUserResponse(
     @Schema(description = "크루 명")
     String crewName,
 
-    @Schema(description = "생일")
-    String birthday,
-
-    @Schema(description = "성별")
-    String gender,
-
     @Schema(description = "인스타그램 아이디")
     String instagramId,
 

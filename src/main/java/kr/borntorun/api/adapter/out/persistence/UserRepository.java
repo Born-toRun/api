@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
   @Query(
       "SELECT u FROM UserEntity u " +
-          "JOIN FETCH u.crewEntity " +
+          "LEFT JOIN FETCH u.crewEntity " +
           "LEFT JOIN FETCH u.feedEntities " +
           "LEFT JOIN FETCH u.activityEntities " +
           "LEFT JOIN FETCH u.activityParticipationEntities " +

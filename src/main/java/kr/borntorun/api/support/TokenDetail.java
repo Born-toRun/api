@@ -21,6 +21,9 @@ public class TokenDetail {
   private int id;
   private String userName;
   private List<String> authorities;
+  private Integer crewId;
+  private Boolean isAdmin;
+  private Boolean isManager;
 
   public static TokenDetail defaultUser() {
     return TokenDetail.builder().id(-1).build();
@@ -34,6 +37,9 @@ public class TokenDetail {
     this.authorities = token.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toList());
+    this.crewId = jwt.getClaimAsString("crewId") == null ? null : Integer.valueOf(jwt.getClaimAsString("crewId"));
+    this.isAdmin = jwt.getClaimAsBoolean("isAdmin");
+    this.isManager = jwt.getClaimAsBoolean("isManager");
   }
 
   public boolean isLogin() {

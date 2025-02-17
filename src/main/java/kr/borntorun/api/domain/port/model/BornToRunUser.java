@@ -14,9 +14,6 @@ public record BornToRunUser(
     String userName,
     int crewId,
     String crewName,
-    String ageRange,
-    String birthday,
-    String gender,
     String instagramId,
     int imageId,
     String profileImageUri,
@@ -26,8 +23,6 @@ public record BornToRunUser(
     Boolean isAdmin,
     Boolean isManager,
     int yellowCardQty,
-    Boolean isGenderPublic,
-    Boolean isBirthdayPublic,
     Boolean isInstagramIdPublic
 ) {
 }

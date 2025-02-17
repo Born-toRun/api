@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+// TODO: 캡슐화, 꼭 필요한 애노테이션만 쓰기!!!
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
@@ -41,14 +42,11 @@ public class UserEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String socialId;
-  private String ageRange;
   private String name;
-  private int crewId;
-  private String birthday;
-  private String gender;
+  private Integer crewId;
   private String instagramId;
   private LocalDateTime lastLoginAt;
-  private int imageId;
+  private Integer imageId;
   private int yellowCardQty;
 
   @ManyToOne(fetch = FetchType.LAZY)

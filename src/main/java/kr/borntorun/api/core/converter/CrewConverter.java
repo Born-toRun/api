@@ -6,9 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.borntorun.api.adapter.in.web.payload.CreateCrewRequest;
 import kr.borntorun.api.adapter.in.web.payload.SearchCrewResponse;
 import kr.borntorun.api.domain.entity.CrewEntity;
+import kr.borntorun.api.domain.port.model.CreateCrewCommand;
 import kr.borntorun.api.domain.port.model.Crew;
+import kr.borntorun.api.infrastructure.model.CreateCrewQuery;
 
 @Mapper
 public interface CrewConverter {
@@ -26,4 +29,10 @@ public interface CrewConverter {
   SearchCrewResponse.CrewDetail toSearchCrewResponseCrewDetail(final Crew source);
 
   List<SearchCrewResponse.CrewDetail> toSearchCrewResponseCrewDetail(final List<Crew> source);
+
+  CreateCrewCommand toCreateCrewCommand(CreateCrewRequest source);
+
+  CreateCrewQuery toCreateCrewQuery(CreateCrewCommand source);
+
+  CrewEntity toCrewEntity(CreateCrewQuery source);
 }

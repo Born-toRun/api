@@ -15,15 +15,6 @@ public record UserDetailResponse(
     @Schema(description = "소속 크루명")
     String crewName,
 
-    @Schema(description = "나이대")
-    String ageRange,
-
-    @Schema(description = "생일")
-    String birthday,
-
-    @Schema(description = "성별")
-    String gender,
-
     @Schema(description = "프로필 이미지")
     String profileImageUri,
 
@@ -38,12 +29,6 @@ public record UserDetailResponse(
 
     @JsonIgnore
     String instagramId,
-
-    @Schema(description = "성별 공개 여부")
-    Boolean isGenderPublic,
-
-    @Schema(description = "생일 공개 여부")
-    Boolean isBirthdayPublic,
 
     @Schema(description = "인스타그램 계정 공개 여부")
     Boolean isInstagramIdPublic

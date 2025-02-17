@@ -33,8 +33,6 @@ public interface UserConverter {
   @Mapping(target = "userId", source = "id")
   @Mapping(target = "userName", source = "name")
   @Mapping(target = "crewName", source = "crewEntity.name")
-  @Mapping(target = "isGenderPublic", source = "userPrivacyEntity.isGenderPublic")
-  @Mapping(target = "isBirthdayPublic", source = "userPrivacyEntity.isBirthdayPublic")
   @Mapping(target = "isInstagramIdPublic", source = "userPrivacyEntity.isInstagramIdPublic")
   BornToRunUser toBornToRunUser(final UserEntity source);
 

@@ -75,6 +75,7 @@ public interface FeedConverter {
   @Mapping(target = "imageUris", ignore = true)
   FeedEntity toFeedEntity(final CreateFeedQuery source);
 
+  @Mapping(target = "isMyCrew", source = "request.myCrew")
   SearchAllFeedCommand toSearchAllFeedCommand(final SearchFeedRequest request, final TokenDetail my, final int lastFeedId);
 
   SearchAllFeedQuery toSearchAllFeedQuery(final SearchAllFeedCommand source, final List<Integer> searchedUserIds);

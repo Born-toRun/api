@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.borntorun.api.core.converter.CrewConverter;
 import kr.borntorun.api.domain.entity.CrewEntity;
 import kr.borntorun.api.domain.port.CrewPort;
+import kr.borntorun.api.domain.port.model.CreateCrewCommand;
 import kr.borntorun.api.domain.port.model.Crew;
 import kr.borntorun.api.infrastructure.CrewGateway;
+import kr.borntorun.api.infrastructure.model.CreateCrewQuery;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,5 +25,11 @@ public class CrewService implements CrewPort {
   public List<Crew> searchAll() {
     List<CrewEntity> crewEntities = crewGateway.searchAll();
     return CrewConverter.INSTANCE.toCrew(crewEntities);
+  }
+
+  @Override
+  public void create(CreateCrewCommand command) {
+    CreateCrewQuery query = CrewConverter.INSTANCE.toCreateCrewQuery(command);
+    crewGateway.create(query);
   }
 }

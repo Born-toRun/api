@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import kr.borntorun.api.adapter.out.persistence.CrewRepository;
+import kr.borntorun.api.core.converter.CrewConverter;
 import kr.borntorun.api.domain.entity.CrewEntity;
+import kr.borntorun.api.infrastructure.model.CreateCrewQuery;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -16,5 +18,10 @@ public class CrewGateway {
 
   public List<CrewEntity> searchAll() {
     return crewRepository.findAll();
+  }
+
+  public void create(CreateCrewQuery query) {
+    CrewEntity crewEntity = CrewConverter.INSTANCE.toCrewEntity(query);
+    crewRepository.save(crewEntity);
   }
 }

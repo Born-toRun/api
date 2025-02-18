@@ -1,5 +1,6 @@
 package kr.borntorun.api.core.service;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -42,20 +43,20 @@ public class CommentService implements CommentPort {
     final Map<Integer, BornToRunUser> writersByUserIdMapping = getWritersByUserId(commentEntities);
 
     // 댓글/대댓글 정렬
-    final Comparator<CommentEntity> customComparator = Comparator
-            .comparingInt((CommentEntity c) -> c.isRootComment() ? c.getId() : c.getParentId())
-            .thenComparingInt(c -> c.isRootComment() ? 0 : -1)
-            .thenComparingInt(CommentEntity::getId)
-            .reversed();
-    commentEntities.sort(customComparator);
+    commentEntities.sort(Comparator
+      .comparingInt((CommentEntity c) -> c.isRootComment() ? c.getId() : c.getParentId())
+      .thenComparingInt(c -> c.isRootComment() ? 0 : -1)
+      .thenComparingInt(CommentEntity::getId)
+      .reversed()
+    );
 
     final List<Comment> comments = commentConverter.toComments(commentEntities, writersByUserIdMapping, command.myUserId());
 
     final Map<Integer, List<Comment>> commentsByParentId = comments.stream()
-        .collect(Collectors.groupingByConcurrent(Comment::getParentId));
+      .collect(Collectors.groupingBy(Comment::getParentId));
 
-    for (Comment comment: comments) {
-      comment.setReCommentQty(commentsByParentId.getOrDefault(comment.getId(), List.of()).size());
+    for (Comment comment : comments) {
+      comment.setReCommentQty(commentsByParentId.getOrDefault(comment.getId(), Collections.emptyList()).size());
     }
 
     return comments;

@@ -95,7 +95,7 @@ public interface ActivityConverter {
   AttendanceActivityResponse toAttendanceActivityResponse(final AttendanceResult source);
 
   @Named("convertParticipants")
-  default List<AttendanceActivityResponse.Person> convertParticipants(final List<AttendanceResult.Person> source) {
+  default List<AttendanceActivityResponse.Person> convertParticipants(final List<AttendanceResult.Participant> source) {
     return source.stream()
         .map(e -> new AttendanceActivityResponse.Person(e.userId(),
             e.userName(),

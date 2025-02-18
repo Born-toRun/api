@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class YellowCardGateway {
 
+  private final YellowCardConverter yellowCardConverter;
+
   private final YellowCardRepository yellowCardRepository;
 
   public boolean exists(final int sourceUserId, final int targetUserId) {
@@ -19,7 +21,7 @@ public class YellowCardGateway {
   }
 
   public void create(CreateYellowCardQuery query) {
-    YellowCardEntity yellowCardEntity = YellowCardConverter.INSTANCE.toYellowCardEntity(query);
+    YellowCardEntity yellowCardEntity = yellowCardConverter.toYellowCardEntity(query);
     yellowCardRepository.save(yellowCardEntity);
   }
 }

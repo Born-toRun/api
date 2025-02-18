@@ -113,21 +113,9 @@ public class ActivityService implements ActivityPort {
     final List<UserEntity> participants = activityParticipationEntities.stream()
       .map(ActivityParticipationEntity::getUserEntity)
       .toList();
-
-    final List<AttendanceResult.Person> participantDetails = participants.stream()
-      .map(participant -> new AttendanceResult.Person(participant.getId(),
-        participant.getName(),
-        participant.getCrewEntity().getName(),
-        participant.getProfileImageUri())
-        ).toList();
-
     final UserEntity host = activityGateway.search(activityId)
       .getUserEntity();
 
-    return new AttendanceResult(new AttendanceResult.Person(host.getId(),
-        host.getName(),
-        host.getCrewEntity().getName(),
-        host.getProfileImageUri()
-    ), participantDetails);
+    return activityParticipationConverter.toAttendanceResult(host, participants);
   }
 }

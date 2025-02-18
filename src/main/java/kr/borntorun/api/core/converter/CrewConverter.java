@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.CreateCrewRequest;
 import kr.borntorun.api.adapter.in.web.payload.SearchCrewResponse;
@@ -13,10 +12,8 @@ import kr.borntorun.api.domain.port.model.CreateCrewCommand;
 import kr.borntorun.api.domain.port.model.Crew;
 import kr.borntorun.api.infrastructure.model.CreateCrewQuery;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CrewConverter {
-
-  CrewConverter INSTANCE = Mappers.getMapper(CrewConverter.class);
 
   @Mapping(target = "imageUri", source = "imageEntity.fileUri")
   @Mapping(target = "logoUri", source = "logoEntity.fileUri")
@@ -34,5 +31,11 @@ public interface CrewConverter {
 
   CreateCrewQuery toCreateCrewQuery(CreateCrewCommand source);
 
+  @Mapping(target ="id", ignore = true)
+  @Mapping(target ="imageId", ignore = true)
+  @Mapping(target ="logoId", ignore = true)
+  @Mapping(target ="userEntities", ignore = true)
+  @Mapping(target ="imageEntity", ignore = true)
+  @Mapping(target ="logoEntity", ignore = true)
   CrewEntity toCrewEntity(CreateCrewQuery source);
 }

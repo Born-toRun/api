@@ -2,7 +2,6 @@ package kr.borntorun.api.core.converter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.ModifyUserRequest;
 import kr.borntorun.api.adapter.in.web.payload.ModifyUserResponse;
@@ -18,10 +17,8 @@ import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
 import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserConverter {
-
-  UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
   SignInCommand toSignInCommand(final SignInRequest source);
 

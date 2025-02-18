@@ -24,29 +24,31 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "marathon")
 public class MarathonProxy {
 
+  private final MarathonConverter marathonConverter;
+
   private final MarathonService marathonService;
 
   @Cacheable(key = "'searchAll: ' + #request.hashCode() + #my.id")
   public List<Marathon> search(final SearchAllMarathonRequest request, final TokenDetail my) {
-    SearchAllMarathonCommand command = MarathonConverter.INSTANCE.toSearchAllMarathonCommand(request, my.getId());
+    SearchAllMarathonCommand command = marathonConverter.toSearchAllMarathonCommand(request, my.getId());
     return marathonService.search(command);
   }
 
   @Cacheable(key = "'search: ' + #marathonId + #my.id")
   public MarathonDetail detail(final long marathonId, final TokenDetail my) {
-    SearchMarathonDetailCommand command = MarathonConverter.INSTANCE.toSearchMarathonDetailCommand(marathonId, my.getId());
+    SearchMarathonDetailCommand command = marathonConverter.toSearchMarathonDetailCommand(marathonId, my.getId());
     return marathonService.detail(command);
   }
 
   @CacheEvict(allEntries = true)
   public long bookmark(final long marathonId, final TokenDetail my) {
-    BookmarkMarathonCommand command = MarathonConverter.INSTANCE.toBookmarkMarathonCommand(marathonId, my.getId());
+    BookmarkMarathonCommand command = marathonConverter.toBookmarkMarathonCommand(marathonId, my.getId());
     return marathonService.bookmark(command);
   }
 
   @CacheEvict(allEntries = true)
   public long cancelBookmark(final long marathonId, final TokenDetail my) {
-    CancelBookmarkMarathonCommand command = MarathonConverter.INSTANCE.toCancelBookmarkMarathonCommand(marathonId, my.getId());
+    CancelBookmarkMarathonCommand command = marathonConverter.toCancelBookmarkMarathonCommand(marathonId, my.getId());
     return marathonService.cancelBookmark(command);
   }
 }

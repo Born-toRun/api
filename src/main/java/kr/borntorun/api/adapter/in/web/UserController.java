@@ -42,6 +42,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
+  private final UserConverter userConverter;
+
   private final UserProxy userProxy;
 
   @Value("${cors.origin}")
@@ -87,14 +89,14 @@ public class UserController {
   public ResponseEntity<UserDetailResponse> detail(@AuthUser TokenDetail my) {
     final BornToRunUser user = userProxy.search(my);
     return ResponseEntity.ok(
-        UserConverter.INSTANCE.toUserDetailResponse(user));
+        userConverter.toUserDetailResponse(user));
   }
 
   @Operation(summary = "회원 정보 조회", description = "회원정보를 조회합니다.")
   @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserDetailResponse> detail(@PathVariable int userId) {
     final BornToRunUser user = userProxy.search(userId);
-    UserDetailResponse userDetailResponse = UserConverter.INSTANCE.toUserDetailResponse(user);
+    UserDetailResponse userDetailResponse = userConverter.toUserDetailResponse(user);
     return ResponseEntity.ok(userDetailResponse);
   }
 
@@ -102,7 +104,7 @@ public class UserController {
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ModifyUserResponse> modify(@AuthUser TokenDetail my, @Valid @RequestBody ModifyUserRequest request) {
     BornToRunUser modifiedUser = userProxy.modify(my, request);
-    ModifyUserResponse modifyUserResponse = UserConverter.INSTANCE.toModifyUserResponse(modifiedUser);
+    ModifyUserResponse modifyUserResponse = userConverter.toModifyUserResponse(modifiedUser);
     return ResponseEntity.ok(modifyUserResponse);
   }
 }

@@ -24,13 +24,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ObjectStorageGateway {
 
+  private final ObjectStorageConverter objectStorageConverter;
   private final ObjectStorageClient objectStorageClient;
   private final MinioProperties minioProperties;
   private final ObjectStorageRepository objectStorageRepository;
 
   public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
     final String uploadedFileName = objectStorageClient.upload(
-        ObjectStorageConverter.INSTANCE.toUpload(query));
+        objectStorageConverter.toUpload(query));
 
     final String cdnUri = minioProperties.getCdnHost()
         + "/"
@@ -108,7 +109,7 @@ public class ObjectStorageGateway {
       }
     }
 
-    final String uploadedFileName = objectStorageClient.upload(ObjectStorageConverter.INSTANCE.toUpload(query));
+    final String uploadedFileName = objectStorageClient.upload(objectStorageConverter.toUpload(query));
 
     final String targetCdnUri = objectStorage.getFileUri();
     final String cdnUri = minioProperties.getCdnHost()
@@ -119,7 +120,7 @@ public class ObjectStorageGateway {
 
     objectStorage.setFileUri(cdnUri);
 
-    final Remove remove = ObjectStorageConverter.INSTANCE.toRemove(query);
+    final Remove remove = objectStorageConverter.toRemove(query);
     remove.setObjectName(targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1)));
 
     objectStorageClient.remove(remove);

@@ -29,6 +29,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CommentService implements CommentPort {
 
+  private final UserConverter userConverter;
+
+  private final CommentConverter commentConverter;
+
   private final CommentGateway commentGateway;
 
   @Transactional(readOnly = true)
@@ -45,7 +49,7 @@ public class CommentService implements CommentPort {
             .reversed();
     commentEntities.sort(customComparator);
 
-    final List<Comment> comments = CommentConverter.INSTANCE.toComments(commentEntities, writersByUserIdMapping, command.myUserId());
+    final List<Comment> comments = commentConverter.toComments(commentEntities, writersByUserIdMapping, command.myUserId());
 
     final Map<Integer, List<Comment>> commentsByParentId = comments.stream()
         .collect(Collectors.groupingByConcurrent(Comment::getParentId));
@@ -66,18 +70,18 @@ public class CommentService implements CommentPort {
     final Map<Integer, BornToRunUser> reCommentWritersByUserId = getWritersByUserId(reCommentEntities);
 
     List<Comment> reComments = reCommentEntities.stream()
-        .map(commentEntity -> CommentConverter.INSTANCE.toComment(commentEntity,
+        .map(commentEntity -> commentConverter.toComment(commentEntity,
             reCommentWritersByUserId.get(commentEntity.getUserId())))
         .sorted(Comparator.comparingInt(Comment::getId)
             .reversed()).toList();
 
-    return CommentConverter.INSTANCE.toCommentDetail(parentComment, reComments);
+    return commentConverter.toCommentDetail(parentComment, reComments);
   }
 
   @Transactional
   @Override
   public void create(final CreateCommentCommand command) {
-    CreateCommentQuery query = CommentConverter.INSTANCE.toCreateCommentQuery(command);
+    CreateCommentQuery query = commentConverter.toCreateCommentQuery(command);
     commentGateway.create(query);
   }
 
@@ -96,9 +100,9 @@ public class CommentService implements CommentPort {
   @Transactional
   @Override
   public Comment modify(final ModifyCommentCommand command) {
-    ModifyCommentQuery query = CommentConverter.INSTANCE.toModifyCommentQuery(command);
+    ModifyCommentQuery query = commentConverter.toModifyCommentQuery(command);
     final CommentEntity modified = commentGateway.modify(query);
-    return CommentConverter.INSTANCE.toComment(modified);
+    return commentConverter.toComment(modified);
   }
 
   @Transactional(readOnly = true)
@@ -113,6 +117,6 @@ public class CommentService implements CommentPort {
         .toList();
 
     return writers.stream()
-        .collect(Collectors.toMap(UserEntity::getId, UserConverter.INSTANCE::toBornToRunUser));
+        .collect(Collectors.toMap(UserEntity::getId, userConverter::toBornToRunUser));
   }
 }

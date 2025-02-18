@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedGateway {
 
+  private final FeedConverter feedConverter;
   private final FeedRepository feedRepository;
   private final FeedQuery feedQuery;
 
@@ -34,7 +35,7 @@ public class FeedGateway {
   }
 
   public FeedEntity create(final CreateFeedQuery query) {
-    final FeedEntity feedEntity = FeedConverter.INSTANCE.toFeedEntity(query);
+    final FeedEntity feedEntity = feedConverter.toFeedEntity(query);
 
     List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
       .map(imageId -> FeedImageMappingEntity.builder()

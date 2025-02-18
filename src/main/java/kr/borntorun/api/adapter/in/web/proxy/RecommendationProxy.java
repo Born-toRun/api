@@ -17,17 +17,19 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "recommendation")
 public class RecommendationProxy {
 
+  private final RecommendationConverter recommendationConverter;
+
   private final RecommendationService recommendationService;
 
   @CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
   public void create(final TokenDetail my, final RecommendationType recommendationType, final int contentId) {
-    CreateRecommendationCommand command = RecommendationConverter.INSTANCE.toCreateRecommendationCommand(my.getId(), recommendationType, contentId);
+    CreateRecommendationCommand command = recommendationConverter.toCreateRecommendationCommand(my.getId(), recommendationType, contentId);
     recommendationService.create(command);
   }
 
   @CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
   public void remove(final TokenDetail my, final RecommendationType recommendationType, final int contentId) {
-    RemoveRecommendationCommand command = RecommendationConverter.INSTANCE.toRemoveRecommendationCommand(my.getId(), recommendationType, contentId);
+    RemoveRecommendationCommand command = recommendationConverter.toRemoveRecommendationCommand(my.getId(), recommendationType, contentId);
     recommendationService.remove(command);
   }
 }

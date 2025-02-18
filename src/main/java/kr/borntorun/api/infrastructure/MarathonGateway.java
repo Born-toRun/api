@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MarathonGateway {
 
+  private final MarathonBookmarkConverter marathonBookmarkConverter;
   private final MarathonRepository marathonRepository;
   private final MarathonBookmarkRepository marathonBookmarkRepository;
 
@@ -32,7 +33,7 @@ public class MarathonGateway {
 
   public void bookmark(BookmarkMarathonQuery query) {
     final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(query.getMyUserId(), query.getMarathonId())
-        .orElse(MarathonBookmarkConverter.INSTANCE.toMarathonBookmarkEntity(query));
+        .orElse(marathonBookmarkConverter.toMarathonBookmarkEntity(query));
     marathonBookmarkRepository.save(marathonBookmarkEntity);
   }
 

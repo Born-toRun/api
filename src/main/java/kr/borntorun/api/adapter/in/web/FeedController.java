@@ -37,6 +37,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/feeds")
 public class FeedController {
 
+  private final FeedConverter feedConverter;
+
   private final FeedProxy feedProxy;
 
   @Operation(summary = "피드 상세 보기", description = "특정 피드를 조회합니다.")
@@ -45,7 +47,7 @@ public class FeedController {
     final Feed feed = feedProxy.searchDetail(my, feedId);
     feedProxy.increaseViewQty(feedId);
 
-    return ResponseEntity.ok(FeedConverter.INSTANCE.toDetailFeedResponse(feed));
+    return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feed));
   }
 
   @Operation(summary = "피드 작성", description = "피드를 작성합니다.")
@@ -74,7 +76,7 @@ public class FeedController {
       @RequestParam(defaultValue = "10") int size) {
     final Page<FeedCard> feedPage = feedProxy.searchAll(request, my, lastFeedId, PageRequest.of(0, size));
 
-    return ResponseEntity.ok(feedPage.map(FeedConverter.INSTANCE::toSearchFeedResponse));
+    return ResponseEntity.ok(feedPage.map(feedConverter::toSearchFeedResponse));
   }
 }
 

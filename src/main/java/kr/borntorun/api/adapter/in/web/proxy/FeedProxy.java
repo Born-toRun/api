@@ -29,17 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FeedProxy {
 
+  private final FeedConverter feedConverter;
+
   private final FeedService feedService;
 
   @Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
   public Feed searchDetail(final TokenDetail my, final int feedId) {
-    SearchFeedDetailCommand command = FeedConverter.INSTANCE.toSearchFeedDetailCommand(feedId, my);
+    SearchFeedDetailCommand command = feedConverter.toSearchFeedDetailCommand(feedId, my);
     return feedService.searchDetail(command);
   }
 
   @Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.pageSize : 'searchAll: ' + #my.id + #request.hashCode() + #pageable.pageSize")
   public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final int lastFeedId, final Pageable pageable) {
-    SearchAllFeedCommand command = FeedConverter.INSTANCE.toSearchAllFeedCommand(request, my, lastFeedId);
+    SearchAllFeedCommand command = feedConverter.toSearchAllFeedCommand(request, my, lastFeedId);
     return feedService.searchAll(command, pageable);
   }
 
@@ -50,19 +52,19 @@ public class FeedProxy {
 
   @CacheEvict(allEntries = true)
   public void create(final CreateFeedRequest request, final TokenDetail my) {
-    CreateFeedCommand command = FeedConverter.INSTANCE.toCreateFeedCommand(request, my);
+    CreateFeedCommand command = feedConverter.toCreateFeedCommand(request, my);
     feedService.create(command);
   }
 
   @CacheEvict(allEntries = true)
   public void remove(final int feedId, final TokenDetail my) {
-    RemoveFeedCommand command = FeedConverter.INSTANCE.toRemoveFeedCommand(feedId, my);
+    RemoveFeedCommand command = feedConverter.toRemoveFeedCommand(feedId, my);
     feedService.remove(command);
   }
 
   @CacheEvict(allEntries = true)
   public void modify(final ModifyFeedRequest request, final int feedId) {
-    ModifyFeedCommand command = FeedConverter.INSTANCE.toModifyFeedCommand(request, feedId);
+    ModifyFeedCommand command = feedConverter.toModifyFeedCommand(request, feedId);
     feedService.modify(command);
   }
 }

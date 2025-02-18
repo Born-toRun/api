@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "crew")
 public class CrewProxy {
 
+  private final CrewConverter crewConverter;
+
   private final CrewService crewService;
 
   @Cacheable(key = "'searchAll'")
@@ -28,7 +30,7 @@ public class CrewProxy {
 
   @CacheEvict(allEntries = true)
   public void create(CreateCrewRequest request) {
-    CreateCrewCommand command = CrewConverter.INSTANCE.toCreateCrewCommand(request);
+    CreateCrewCommand command = crewConverter.toCreateCrewCommand(request);
     crewService.create(command);
   }
 }

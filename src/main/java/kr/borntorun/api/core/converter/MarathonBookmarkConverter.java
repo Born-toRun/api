@@ -2,15 +2,12 @@ package kr.borntorun.api.core.converter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.domain.entity.MarathonBookmarkEntity;
 import kr.borntorun.api.infrastructure.model.BookmarkMarathonQuery;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MarathonBookmarkConverter {
-
-  MarathonBookmarkConverter INSTANCE = Mappers.getMapper(MarathonBookmarkConverter.class);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "registeredAt", ignore = true)

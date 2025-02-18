@@ -29,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ActivityGateway {
 
+  private final ActivityParticipationConverter activityParticipationConverter;
+  private final ActivityConverter activityConverter;
   private final String ACCESS_CODE_KEY_PREFIX = "accessCode";
   private final ActivityRepository activityRepository;
   private final ActivityParticipationRepository activityParticipationRepository;
@@ -36,7 +38,7 @@ public class ActivityGateway {
   private final RedisClient redisClient;
 
   public void create(final CreateActivityQuery createActivityQuery) {
-    ActivityEntity activityEntity = ActivityConverter.INSTANCE.toActivityEntity(createActivityQuery);
+    ActivityEntity activityEntity = activityConverter.toActivityEntity(createActivityQuery);
     activityRepository.save(activityEntity);
   }
 
@@ -62,7 +64,7 @@ public class ActivityGateway {
   }
 
   public void participate(final ParticipateActivityQuery participateActivityQuery) {
-    ActivityParticipationEntity activityParticipationEntity = ActivityParticipationConverter.INSTANCE.toActivityParticipationEntity(participateActivityQuery);
+    ActivityParticipationEntity activityParticipationEntity = activityParticipationConverter.toActivityParticipationEntity(participateActivityQuery);
     activityParticipationRepository.save(activityParticipationEntity);
   }
 

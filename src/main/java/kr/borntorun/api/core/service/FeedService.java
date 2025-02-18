@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class FeedService implements FeedPort {
 
+  private final FeedConverter feedConverter;
   private final FeedGateway feedGateway;
   private final FeedImageMappingGateway feedImageMappingGateway;
   private final UserGateway userGateway;
@@ -44,7 +45,7 @@ public class FeedService implements FeedPort {
   @Override
   public Feed searchDetail(final SearchFeedDetailCommand command) {
     final FeedEntity feedEntity = feedGateway.search(command.feedId());
-    return FeedConverter.INSTANCE.toFeed(feedEntity, command.my());
+    return feedConverter.toFeed(feedEntity, command.my());
   }
 
   @Transactional(readOnly = true)
@@ -57,14 +58,14 @@ public class FeedService implements FeedPort {
           .collect(Collectors.toList());
     }
 
-    SearchAllFeedQuery query = FeedConverter.INSTANCE.toSearchAllFeedQuery(command, searchedUserIds);
+    SearchAllFeedQuery query = feedConverter.toSearchAllFeedQuery(command, searchedUserIds);
     final Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
 
     if(feedPage.isEmpty()) {
       return Page.empty();
     }
 
-    return feedPage.map(entity -> FeedConverter.INSTANCE.toFeedCard(entity,
+    return feedPage.map(entity -> feedConverter.toFeedCard(entity,
         entity.hasComment(command.my().getId()),
         entity.hasRecommendation(command.my().getId())));
   }
@@ -78,7 +79,7 @@ public class FeedService implements FeedPort {
   @Transactional
   @Override
   public void create(final CreateFeedCommand command) {
-    CreateFeedQuery query = FeedConverter.INSTANCE.toCreateFeedQuery(command);
+    CreateFeedQuery query = feedConverter.toCreateFeedQuery(command);
     feedGateway.create(query);
   }
 
@@ -91,7 +92,7 @@ public class FeedService implements FeedPort {
   @Transactional
   @Override
   public void modify(final ModifyFeedCommand command) {
-    ModifyFeedQuery query = FeedConverter.INSTANCE.toModifyFeedQuery(command);
+    ModifyFeedQuery query = feedConverter.toModifyFeedQuery(command);
     final FeedEntity modified = feedGateway.modify(query);
 
     final List<Integer> removedImageIds = modified.getFeedImageMappingEntities().stream()

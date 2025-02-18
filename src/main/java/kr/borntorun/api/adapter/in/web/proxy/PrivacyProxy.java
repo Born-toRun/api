@@ -17,12 +17,13 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "privacy")
 public class PrivacyProxy {
 
-  private final PrivacyService privacyService;
+  private final PrivacyConverter privacyConverter;
 
+  private final PrivacyService privacyService;
 
   @CacheEvict(allEntries = true)
   public void modifyUserPrivacy(final SettingUserPrivacyRequest request, final int myUserId) {
-    ModifyUserPrivacyCommand command = PrivacyConverter.INSTANCE.toModifyUserPrivacyCommand(request, myUserId);
+    ModifyUserPrivacyCommand command = privacyConverter.toModifyUserPrivacyCommand(request, myUserId);
     privacyService.modifyUserPrivacy(command);
   }
 

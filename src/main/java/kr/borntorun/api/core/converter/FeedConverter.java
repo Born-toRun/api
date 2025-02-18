@@ -7,7 +7,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.CreateFeedRequest;
 import kr.borntorun.api.adapter.in.web.payload.DetailFeedResponse;
@@ -30,10 +29,8 @@ import kr.borntorun.api.infrastructure.model.SearchAllFeedQuery;
 import kr.borntorun.api.support.TokenDetail;
 import kr.borntorun.api.support.exception.InvalidException;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface FeedConverter {
-
-  FeedConverter INSTANCE = Mappers.getMapper(FeedConverter.class);
 
   SearchFeedDetailCommand toSearchFeedDetailCommand(final Integer feedId, final TokenDetail my);
 

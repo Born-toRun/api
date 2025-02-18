@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CrewGateway {
 
+  private final CrewConverter crewConverter;
+
   private final CrewRepository crewRepository;
 
   public List<CrewEntity> searchAll() {
@@ -21,7 +23,7 @@ public class CrewGateway {
   }
 
   public void create(CreateCrewQuery query) {
-    CrewEntity crewEntity = CrewConverter.INSTANCE.toCrewEntity(query);
+    CrewEntity crewEntity = crewConverter.toCrewEntity(query);
     crewRepository.save(crewEntity);
   }
 }

@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService implements UserPort {
 
+  private final UserConverter userConverter;
   private final BornToRunAuthAdapter borntorunAuthAdapter;
   private final KakaoProperties kakaoProperties;
   private final UserGateway userGateway;
@@ -37,7 +38,7 @@ public class UserService implements UserPort {
 
   @Override
   public LoginResult signIn(final SignInCommand command) {
-    final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(UserConverter.INSTANCE.toAuthSignUpRequest(command));
+    final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(userConverter.toAuthSignUpRequest(command));
     final AuthTokenResponse authTokenResponse = borntorunAuthAdapter.getToken(authSignInResponse.kakaoId());
 
     return new LoginResult(authTokenResponse.accessToken(), authSignInResponse.isMember());
@@ -46,7 +47,7 @@ public class UserService implements UserPort {
   @Transactional
   @Override
   public String signUp(final SignUpCommand command) {
-    SignUpUserQuery query = UserConverter.INSTANCE.toSignUpUserQuery(command);
+    SignUpUserQuery query = userConverter.toSignUpUserQuery(command);
     return userGateway.modify(query);
   }
 
@@ -59,15 +60,15 @@ public class UserService implements UserPort {
   @Transactional(readOnly = true)
   @Override
   public BornToRunUser search(final int userId) {
-    return UserConverter.INSTANCE.toBornToRunUser(userGateway.search(userId));
+    return userConverter.toBornToRunUser(userGateway.search(userId));
   }
 
   @Transactional
   @Override
   public BornToRunUser modify(final ModifyUserCommand command) {
-    ModifyUserQuery query = UserConverter.INSTANCE.toModifyUserQuery(command);
+    ModifyUserQuery query = userConverter.toModifyUserQuery(command);
 
     UserEntity modifiedUser = userGateway.modify(query);
-    return UserConverter.INSTANCE.toBornToRunUser(modifiedUser);
+    return userConverter.toBornToRunUser(modifiedUser);
   }
 }

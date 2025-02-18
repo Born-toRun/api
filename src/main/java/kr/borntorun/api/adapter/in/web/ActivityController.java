@@ -39,6 +39,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/activities")
 public class ActivityController {
 
+  private final ActivityConverter activityConverter;
+
   private final ActivityProxy activityProxy;
 
   @Operation(summary = "모임 생성", description = "모임 참여/불참을 받기 위해 생성합니다.")
@@ -75,7 +77,7 @@ public class ActivityController {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchActivityResponse> searchAll(@AuthUser TokenDetail my, @ModelAttribute @Valid SearchAllActivityRequest request) {
     final List<Activity> activityEntities = activityProxy.searchAll(request, my);
-    List<SearchActivityResponse.Activity> activities = ActivityConverter.INSTANCE.toSearchActivityResponseActivity(activityEntities);
+    List<SearchActivityResponse.Activity> activities = activityConverter.toSearchActivityResponseActivity(activityEntities);
     SearchActivityResponse response = new SearchActivityResponse(activities);
     return ResponseEntity.ok(response);
   }
@@ -84,7 +86,7 @@ public class ActivityController {
   @GetMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchActivityDetailResponse> search(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final Activity activity = activityProxy.search(activityId, my);
-    SearchActivityDetailResponse response = ActivityConverter.INSTANCE.toSearchActivityDetailResponse(activity);
+    SearchActivityDetailResponse response = activityConverter.toSearchActivityDetailResponse(activity);
     return ResponseEntity.ok(response);
   }
 
@@ -92,7 +94,7 @@ public class ActivityController {
   @PutMapping(value = "/open/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<OpenActivityResponse> open(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final Activity activity = activityProxy.open(activityId);
-    OpenActivityResponse response = ActivityConverter.INSTANCE.toOpenActivityResponse(activity);
+    OpenActivityResponse response = activityConverter.toOpenActivityResponse(activity);
     return ResponseEntity.ok(response);
   }
 
@@ -100,7 +102,7 @@ public class ActivityController {
   @GetMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AttendanceActivityResponse> searchAttendance(@AuthUser TokenDetail my, @PathVariable int activityId) {
     final AttendanceResult attendanceResult = activityProxy.getAttendance(activityId);
-    AttendanceActivityResponse response = ActivityConverter.INSTANCE.toAttendanceActivityResponse(attendanceResult);
+    AttendanceActivityResponse response = activityConverter.toAttendanceActivityResponse(attendanceResult);
     return ResponseEntity.ok(response);
   }
 

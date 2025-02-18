@@ -27,13 +27,15 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/object-storage")
 public class ObjectStorageController {
 
+  private final ObjectStorageConverter objectStorageConverter;
+
   private final ObjectStorageProxy objectStorageProxy;
 
   @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
   @PostMapping(value = "/{bucket}", produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<UploadFileResponse> removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @RequestParam(value = "file") MultipartFile file) {
     final ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
-    UploadFileResponse response = ObjectStorageConverter.INSTANCE.toUploadFileResponse(objectStorage);
+    UploadFileResponse response = objectStorageConverter.toUploadFileResponse(objectStorage);
     return ResponseEntity.ok(response);
   }
 

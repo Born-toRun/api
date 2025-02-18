@@ -6,7 +6,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.SearchAllMarathonRequest;
 import kr.borntorun.api.adapter.in.web.payload.SearchAllMarathonResponse;
@@ -21,10 +20,8 @@ import kr.borntorun.api.domain.port.model.SearchMarathonDetailCommand;
 import kr.borntorun.api.infrastructure.model.BookmarkMarathonQuery;
 import kr.borntorun.api.infrastructure.model.SearchMarathonQuery;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MarathonConverter {
-
-  MarathonConverter INSTANCE = Mappers.getMapper(MarathonConverter.class);
 
   SearchAllMarathonCommand toSearchAllMarathonCommand(final SearchAllMarathonRequest request, final int myUserId);
 

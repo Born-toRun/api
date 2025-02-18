@@ -30,19 +30,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ActivityService implements ActivityPort {
 
+  private final ActivityParticipationConverter activityParticipationConverter;
+
+  private final ActivityConverter activityConverter;
+
   private final ActivityGateway activityGateway;
 
   @Transactional
   @Override
   public void create(final CreateActivityCommand command) {
-    CreateActivityQuery query = ActivityConverter.INSTANCE.toCreateActivityQuery(command);
+    CreateActivityQuery query = activityConverter.toCreateActivityQuery(command);
     activityGateway.create(query);
   }
 
   @Transactional
   @Override
   public void modify(final ModifyActivityCommand command) {
-    ModifyActivityQuery query = ActivityConverter.INSTANCE.toModifyActivityQuery(command);
+    ModifyActivityQuery query = activityConverter.toModifyActivityQuery(command);
     activityGateway.modify(query);
   }
 
@@ -61,7 +65,7 @@ public class ActivityService implements ActivityPort {
   @Transactional
   @Override
   public void participate(final ParticipateActivityCommand command) {
-    ParticipateActivityQuery query = ActivityParticipationConverter.INSTANCE.toParticipateActivityQuery(command);
+    ParticipateActivityQuery query = activityParticipationConverter.toParticipateActivityQuery(command);
     activityGateway.participate(query);
   }
 
@@ -74,17 +78,17 @@ public class ActivityService implements ActivityPort {
   @Transactional(readOnly = true)
   @Override
   public List<Activity> searchAll(final SearchAllActivityCommand command) {
-    SearchAllActivityQuery query = ActivityConverter.INSTANCE.toSearchAllActivityQuery(command);
+    SearchAllActivityQuery query = activityConverter.toSearchAllActivityQuery(command);
     final List<ActivityEntity> activityEntities = activityGateway.searchAll(query);
 
-    return ActivityConverter.INSTANCE.toActivityByUserId(activityEntities, command.myUserId());
+    return activityConverter.toActivityByUserId(activityEntities, command.myUserId());
   }
 
   @Transactional(readOnly = true)
   @Override
   public Activity search(final int activityId, final int myUserId) {
     ActivityEntity activityEntity = activityGateway.search(activityId);
-    return ActivityConverter.INSTANCE.toActivityByUserId(activityEntity, myUserId);
+    return activityConverter.toActivityByUserId(activityEntity, myUserId);
   }
 
   @Transactional
@@ -92,13 +96,13 @@ public class ActivityService implements ActivityPort {
   public Activity open(final int activityId) {
     final ActivityEntity opened = activityGateway.open(activityId);
     int accessCode = activityGateway.initAccessCode(activityId);
-    return ActivityConverter.INSTANCE.toActivity(opened, accessCode);
+    return activityConverter.toActivity(opened, accessCode);
   }
 
   @Transactional
   @Override
   public void attendance(final AttendanceActivityCommand command) {
-    AttendanceActivityQuery query = ActivityConverter.INSTANCE.toAttendanceActivityQuery(command);
+    AttendanceActivityQuery query = activityConverter.toAttendanceActivityQuery(command);
     activityGateway.attendance(query);
   }
 

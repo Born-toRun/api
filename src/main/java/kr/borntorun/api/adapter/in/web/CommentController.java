@@ -36,13 +36,15 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/comments")
 public class CommentController {
 
+  private final CommentConverter commentConverter;
+
   private final CommentProxy commentProxy;
 
   @Operation(summary = "댓글 목록 조회", description = "모든 댓글을 조회합니다.")
   @GetMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchCommentResponse> searchAll(@AuthUser TokenDetail my, @PathVariable int feedId) {
     List<Comment> comments = commentProxy.searchAll(feedId, my);
-    List<SearchCommentResponse.Comment> searchCommentResponseComments = CommentConverter.INSTANCE.toSearchCommentResponseComment(comments);
+    List<SearchCommentResponse.Comment> searchCommentResponseComments = commentConverter.toSearchCommentResponseComment(comments);
     SearchCommentResponse response = new SearchCommentResponse(searchCommentResponseComments);
     return ResponseEntity.ok(response);
   }
@@ -51,7 +53,7 @@ public class CommentController {
   @GetMapping(value = "/detail/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchCommentDetailResponse> detail(@AuthUser TokenDetail my, @PathVariable int commentId) {
     final CommentDetail commentDetail = commentProxy.detail(commentId, my);
-    SearchCommentDetailResponse response = CommentConverter.INSTANCE.toSearchCommentDetailResponse(commentDetail, my.getId());
+    SearchCommentDetailResponse response = commentConverter.toSearchCommentDetailResponse(commentDetail, my.getId());
     return ResponseEntity.ok(response);
   }
 
@@ -71,7 +73,7 @@ public class CommentController {
   @PutMapping(value = "/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ModifyCommentResponse> modify(@AuthUser TokenDetail my, @PathVariable int commentId, @RequestBody @Valid ModifyCommentRequest request) {
     final Comment comment = commentProxy.modify(commentId, request);
-    ModifyCommentResponse response = CommentConverter.INSTANCE.toModifyCommentResponse(comment);
+    ModifyCommentResponse response = commentConverter.toModifyCommentResponse(comment);
     return ResponseEntity.ok(response);
   }
 

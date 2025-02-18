@@ -2,7 +2,6 @@ package kr.borntorun.api.core.converter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.borntorun.api.adapter.in.web.payload.UploadFileResponse;
@@ -18,10 +17,8 @@ import kr.borntorun.api.infrastructure.model.RemoveObjectStorageQuery;
 import kr.borntorun.api.infrastructure.model.UploadObjectStorageQuery;
 import kr.borntorun.api.support.TokenDetail;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ObjectStorageConverter {
-
-  ObjectStorageConverter INSTANCE = Mappers.getMapper(ObjectStorageConverter.class);
 
   UploadObjectStorageCommand toUploadObjectStorageCommand(final Integer myUserId, final MultipartFile file, final Bucket bucket);
 

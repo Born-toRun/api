@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentGateway {
 
+  private final CommentConverter commentConverter;
+
   private final CommentRepository commentRepository;
 
   public List<CommentEntity> searchAll(final int feedId) {
@@ -28,7 +30,7 @@ public class CommentGateway {
   }
 
   public void create(final CreateCommentQuery query) {
-    CommentEntity commentEntity = CommentConverter.INSTANCE.toCommentEntity(query);
+    CommentEntity commentEntity = commentConverter.toCommentEntity(query);
     commentRepository.save(commentEntity);
   }
 

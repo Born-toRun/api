@@ -19,21 +19,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ObjectStorageService implements ObjectStoragePort {
 
+  private final ObjectStorageConverter objectStorageConverter;
+
   private final ObjectStorageGateway objectStorageGateway;
 
   @Transactional
   @Override
   public ObjectStorage upload(final UploadObjectStorageCommand command) {
-    UploadObjectStorageQuery query = ObjectStorageConverter.INSTANCE.toUploadObjectStorageQuery(command);
+    UploadObjectStorageQuery query = objectStorageConverter.toUploadObjectStorageQuery(command);
     ObjectStorageEntity uploaded = objectStorageGateway.upload(query);
-    return ObjectStorageConverter.INSTANCE.toObjectStorage(uploaded);
+    return objectStorageConverter.toObjectStorage(uploaded);
 
   }
 
   @Transactional
   @Override
   public void remove(final RemoveObjectStorageCommand command) {
-    RemoveObjectStorageQuery query = ObjectStorageConverter.INSTANCE.toRemoveObjectStorageQuery(command);
+    RemoveObjectStorageQuery query = objectStorageConverter.toRemoveObjectStorageQuery(command);
     objectStorageGateway.remove(query);
   }
 }

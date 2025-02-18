@@ -28,17 +28,19 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "activity")
 public class ActivityProxy {
 
+  private final ActivityConverter activityConverter;
+
   private final ActivityService activityService;
 
   @CacheEvict(allEntries = true)
   public void create(final TokenDetail my, final CreateActivityRequest request) {
-    CreateActivityCommand command = ActivityConverter.INSTANCE.toCreateActivityCommand(request, my);
+    CreateActivityCommand command = activityConverter.toCreateActivityCommand(request, my);
     activityService.create(command);
   }
 
   @CacheEvict(allEntries = true)
   public void modify(final ModifyActivityRequest request, final int activityId) {
-    ModifyActivityCommand command = ActivityConverter.INSTANCE.toModifyActivityCommand(request, activityId);
+    ModifyActivityCommand command = activityConverter.toModifyActivityCommand(request, activityId);
     activityService.modify(command);
   }
 
@@ -60,7 +62,7 @@ public class ActivityProxy {
 
   @Cacheable(key = "'searchAll: ' + #my.id + #request.hashCode()")
   public List<Activity> searchAll(final SearchAllActivityRequest request, final TokenDetail my) {
-    SearchAllActivityCommand command = ActivityConverter.INSTANCE.toSearchAllActivityCommand(request, my);
+    SearchAllActivityCommand command = activityConverter.toSearchAllActivityCommand(request, my);
     return activityService.searchAll(command);
   }
 
@@ -76,7 +78,7 @@ public class ActivityProxy {
 
   @CacheEvict(allEntries = true)
   public void attendance(final AttendanceActivityRequest request, final int activityId, final int myUserId) {
-    AttendanceActivityCommand command = ActivityConverter.INSTANCE.toAttendanceActivityCommand(request, activityId, myUserId);
+    AttendanceActivityCommand command = activityConverter.toAttendanceActivityCommand(request, activityId, myUserId);
     activityService.attendance(command);
   }
 

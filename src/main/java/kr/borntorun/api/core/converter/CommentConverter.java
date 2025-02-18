@@ -7,7 +7,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.CreateCommentRequest;
 import kr.borntorun.api.adapter.in.web.payload.ModifyCommentRequest;
@@ -25,10 +24,8 @@ import kr.borntorun.api.domain.port.model.SearchAllCommentCommand;
 import kr.borntorun.api.infrastructure.model.CreateCommentQuery;
 import kr.borntorun.api.infrastructure.model.ModifyCommentQuery;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentConverter {
-
-  CommentConverter INSTANCE = Mappers.getMapper(CommentConverter.class);
 
   CreateCommentCommand toCreateCommentCommand(final int myUserId, final int feedId, final CreateCommentRequest source);
 

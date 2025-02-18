@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "user")
 public class UserProxy {
 
+  private final UserConverter userConverter;
+
   private final UserService userService;
 
   @Cacheable(key = "'kakaoAuthCode'")
@@ -31,13 +33,13 @@ public class UserProxy {
   }
 
   public LoginResult signIn(final SignInRequest request) {
-    SignInCommand command = UserConverter.INSTANCE.toSignInCommand(request);
+    SignInCommand command = userConverter.toSignInCommand(request);
     return userService.signIn(command);
   }
 
   @CacheEvict(allEntries = true)
   public String signUp(final TokenDetail my, final SignUpRequest request) {
-    SignUpCommand command = UserConverter.INSTANCE.toSignUpCommand(request, my.getId());
+    SignUpCommand command = userConverter.toSignUpCommand(request, my.getId());
     return userService.signUp(command);
   }
 
@@ -58,7 +60,7 @@ public class UserProxy {
 
   @CacheEvict(allEntries = true)
   public BornToRunUser modify(final TokenDetail my, final ModifyUserRequest request) {
-    ModifyUserCommand command = UserConverter.INSTANCE.toModifyUserCommand(request, my.getId());
+    ModifyUserCommand command = userConverter.toModifyUserCommand(request, my.getId());
     return userService.modify(command);
   }
 }

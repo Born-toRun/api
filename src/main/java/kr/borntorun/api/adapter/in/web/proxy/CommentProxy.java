@@ -25,23 +25,25 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "comment")
 public class CommentProxy {
 
+  private final CommentConverter commentConverter;
+
   private final CommentService commentService;
 
   @Cacheable(key = "'searchAll: ' + #feedId + #my.id")
   public List<Comment> searchAll(final int feedId, final TokenDetail my) {
-    SearchAllCommentCommand command = CommentConverter.INSTANCE.toSearchAllCommentCommand(feedId, my.getId());
+    SearchAllCommentCommand command = commentConverter.toSearchAllCommentCommand(feedId, my.getId());
     return commentService.searchAll(command);
   }
 
   @Cacheable(key = "'detail: ' + #commentId + #my.id")
   public CommentDetail detail(final int commentId, final TokenDetail my) {
-    DetailCommentCommand command = CommentConverter.INSTANCE.toDetailCommentCommand(commentId, my.getId());
+    DetailCommentCommand command = commentConverter.toDetailCommentCommand(commentId, my.getId());
     return commentService.detail(command);
   }
 
   @CacheEvict(allEntries = true, cacheNames = {"comment", "feed"})
   public void create(final TokenDetail my, final int feedId, final CreateCommentRequest request) {
-    CreateCommentCommand command = CommentConverter.INSTANCE.toCreateCommentCommand(my.getId(), feedId, request);
+    CreateCommentCommand command = commentConverter.toCreateCommentCommand(my.getId(), feedId, request);
     commentService.create(command);
   }
 
@@ -57,7 +59,7 @@ public class CommentProxy {
 
   @CacheEvict(allEntries = true)
   public Comment modify(final int commentId, final ModifyCommentRequest request) {
-    ModifyCommentCommand command = CommentConverter.INSTANCE.toModifyCommentCommand(request, commentId);
+    ModifyCommentCommand command = commentConverter.toModifyCommentCommand(request, commentId);
     return commentService.modify(command);
   }
 }

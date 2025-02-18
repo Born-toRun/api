@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class YellowCardProxy {
 
+  private final YellowCardConverter yellowCardConverter;
+
   private final YellowCardService yellowCardService;
 
   public void create(final int myUserId, final CreateYellowCardRequest request) {
-    CreateYellowCardCommand command = YellowCardConverter.INSTANCE.toCreateYellowCardCommand(request, myUserId);
+    CreateYellowCardCommand command = yellowCardConverter.toCreateYellowCardCommand(request, myUserId);
     yellowCardService.create(command);
   }
 }

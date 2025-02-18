@@ -8,7 +8,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import kr.borntorun.api.adapter.in.web.payload.AttendanceActivityRequest;
 import kr.borntorun.api.adapter.in.web.payload.AttendanceActivityResponse;
@@ -32,10 +31,8 @@ import kr.borntorun.api.infrastructure.model.ModifyActivityQuery;
 import kr.borntorun.api.infrastructure.model.SearchAllActivityQuery;
 import kr.borntorun.api.support.TokenDetail;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ActivityConverter {
-
-  ActivityConverter INSTANCE = Mappers.getMapper(ActivityConverter.class);
 
   @Mapping(target = "myUserId", source = "my.id")
   CreateActivityCommand toCreateActivityCommand(final CreateActivityRequest source, final TokenDetail my);

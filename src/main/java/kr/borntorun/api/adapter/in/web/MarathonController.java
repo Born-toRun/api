@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/marathons")
 public class MarathonController {
 
+  private final MarathonConverter marathonConverter;
+
   private final MarathonProxy marathonProxy;
 
   @Operation(summary = "마라톤 리스트 조회", description = "마라톤 대회 리스트를 조회합니다.")
@@ -40,7 +42,7 @@ public class MarathonController {
   public ResponseEntity<SearchAllMarathonResponse> searchAll(@AuthUser TokenDetail my,
     @Valid @ModelAttribute SearchAllMarathonRequest request) {
     List<Marathon> marathons = marathonProxy.search(request, my);
-    List<SearchAllMarathonResponse.marathon> searchAllMarathonResponseMarathon = MarathonConverter.INSTANCE.toSearchMarathonResponseMarathon(marathons);
+    List<SearchAllMarathonResponse.marathon> searchAllMarathonResponseMarathon = marathonConverter.toSearchMarathonResponseMarathon(marathons);
     SearchAllMarathonResponse response = new SearchAllMarathonResponse(searchAllMarathonResponseMarathon);
     return ResponseEntity.ok(response);
   }
@@ -49,7 +51,7 @@ public class MarathonController {
   @GetMapping(value = "/{marathonId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SearchMarathonDetailResponse> search(@AuthUser TokenDetail my, @PathVariable long marathonId) {
     MarathonDetail marathonDetail = marathonProxy.detail(marathonId, my);
-    SearchMarathonDetailResponse response = MarathonConverter.INSTANCE.toSearchMarathonDetailResponse(marathonDetail);
+    SearchMarathonDetailResponse response = marathonConverter.toSearchMarathonDetailResponse(marathonDetail);
     return ResponseEntity.ok(response);
   }
 

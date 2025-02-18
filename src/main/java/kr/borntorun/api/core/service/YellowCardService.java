@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class YellowCardService implements YellowCardPort {
 
+  private final YellowCardConverter yellowCardConverter;
+
   private final YellowCardGateway yellowCardGateway;
 
   @Transactional
@@ -25,7 +27,7 @@ public class YellowCardService implements YellowCardPort {
       throw new DuplicationException("이미 신고한 사용자입니다. [{" + command.sourceUserId() + " to " + command.targetUserId() + "}]");
     }
 
-    CreateYellowCardQuery query = YellowCardConverter.INSTANCE.toCreateYellowCardQuery(command);
+    CreateYellowCardQuery query = yellowCardConverter.toCreateYellowCardQuery(command);
     yellowCardGateway.create(query);
   }
 }

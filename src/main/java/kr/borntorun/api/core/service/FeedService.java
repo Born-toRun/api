@@ -3,6 +3,7 @@ package kr.borntorun.api.core.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -51,19 +52,13 @@ public class FeedService implements FeedPort {
   @Transactional(readOnly = true)
   @Override
   public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
-    List<Integer> searchedUserIds = Collections.emptyList();
-    if(Objects.nonNull(command.searchKeyword())) {
-      searchedUserIds = userGateway.searchByUserName(command.searchKeyword()).stream()
-          .map(UserEntity::getId)
-          .collect(Collectors.toList());
-    }
+    List<Integer> searchedUserIds = Optional.ofNullable(command.searchKeyword())
+      .map(userGateway::searchByUserName)
+      .map(users -> users.stream().map(UserEntity::getId).toList())
+      .orElseGet(Collections::emptyList);
 
     SearchAllFeedQuery query = feedConverter.toSearchAllFeedQuery(command, searchedUserIds);
-    final Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
-
-    if(feedPage.isEmpty()) {
-      return Page.empty();
-    }
+    Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
 
     return feedPage.map(entity -> feedConverter.toFeedCard(entity,
         entity.hasComment(command.my().getId()),

@@ -13,11 +13,7 @@ public class FeedImageMappingGateway {
 
   private final FeedImageMappingRepository feedImageMappingRepository;
 
-  public void remove(Integer fileId) {
-    feedImageMappingRepository.deleteById(fileId);
-  }
-
   public void removeAllByFileId(List<Integer> imageIds) {
-    feedImageMappingRepository.deleteAllById(imageIds);
+    feedImageMappingRepository.deleteAllByImageIdIn(imageIds);
   }
 }

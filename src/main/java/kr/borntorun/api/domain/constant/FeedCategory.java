@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum FeedCategory {
 
-  COMMUNITY("커뮤니티"),
-  MARKET("마켓");
+	COMMUNITY("커뮤니티"),
+	MARKET("마켓");
 
-  private final String descryption;
+	private final String descryption;
 }

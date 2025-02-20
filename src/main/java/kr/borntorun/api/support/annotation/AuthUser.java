@@ -14,5 +14,5 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(hidden = true)
 public @interface AuthUser {
 
-  boolean errorOnInvalidType() default true;
+	boolean errorOnInvalidType() default true;
 }

@@ -5,6 +5,6 @@ import kr.borntorun.api.support.TokenDetail;
 
 public record RemoveObjectStorageCommand(TokenDetail my,
 										 long targetFileId,
-                                         Bucket bucket) {
+										 Bucket bucket) {
 
 }

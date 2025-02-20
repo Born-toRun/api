@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
 public class ForBiddenException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public ForBiddenException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public ForBiddenException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

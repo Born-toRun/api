@@ -23,37 +23,37 @@ import kr.borntorun.api.infrastructure.model.SearchMarathonQuery;
 @Mapper(componentModel = "spring")
 public interface MarathonConverter {
 
-  SearchAllMarathonCommand toSearchAllMarathonCommand(final SearchAllMarathonRequest request, final long myUserId);
+	SearchAllMarathonCommand toSearchAllMarathonCommand(final SearchAllMarathonRequest request, final long myUserId);
 
-  SearchMarathonQuery toSearchMarathonQuery(final SearchAllMarathonCommand source);
+	SearchMarathonQuery toSearchMarathonQuery(final SearchAllMarathonCommand source);
 
-  List<Marathon> toMarathon(final List<MarathonEntity> source, @Context final long myUserId);
+	List<Marathon> toMarathon(final List<MarathonEntity> source, @Context final long myUserId);
 
-  List<SearchAllMarathonResponse.marathon> toSearchMarathonResponseMarathon(final List<Marathon> source);
+	List<SearchAllMarathonResponse.marathon> toSearchMarathonResponseMarathon(final List<Marathon> source);
 
-  SearchMarathonDetailCommand toSearchMarathonDetailCommand(final Long marathonId, final long myUserId);
+	SearchMarathonDetailCommand toSearchMarathonDetailCommand(final Long marathonId, final long myUserId);
 
-  SearchMarathonDetailResponse toSearchMarathonDetailResponse(final MarathonDetail source);
+	SearchMarathonDetailResponse toSearchMarathonDetailResponse(final MarathonDetail source);
 
-  @Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
-  @Mapping(target = "id", source = "id")
-  MarathonDetail toMarathonDetail(final MarathonEntity source, @Context final long myUserId);
+	@Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
+	@Mapping(target = "id", source = "id")
+	MarathonDetail toMarathonDetail(final MarathonEntity source, @Context final long myUserId);
 
-  @Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
-  @Mapping(target = "id", source = "id")
-  Marathon toMarathon(final MarathonEntity source, @Context final long myUserId);
+	@Mapping(target = "isBookmarking", source = ".", qualifiedByName = "convertIsBookmarking")
+	@Mapping(target = "id", source = "id")
+	Marathon toMarathon(final MarathonEntity source, @Context final long myUserId);
 
-  BookmarkMarathonCommand toBookmarkMarathonCommand(final Long marathonId, final long myUserId);
+	BookmarkMarathonCommand toBookmarkMarathonCommand(final Long marathonId, final long myUserId);
 
-  CancelBookmarkMarathonCommand toCancelBookmarkMarathonCommand(final Long marathonId, final long myUserId);
+	CancelBookmarkMarathonCommand toCancelBookmarkMarathonCommand(final Long marathonId, final long myUserId);
 
-  BookmarkMarathonQuery toBookmarkMarathonQuery(final BookmarkMarathonCommand source);
+	BookmarkMarathonQuery toBookmarkMarathonQuery(final BookmarkMarathonCommand source);
 
-  BookmarkMarathonQuery toBookmarkMarathonQuery(final CancelBookmarkMarathonCommand source);
+	BookmarkMarathonQuery toBookmarkMarathonQuery(final CancelBookmarkMarathonCommand source);
 
-  @Named("convertIsBookmarking")
-  default Boolean convertIsBookmarking(final MarathonEntity source, @Context final long myUserId) {
-    return source.getMarathonBookmarkEntities().stream()
-        .anyMatch(e -> e.getUserId() == myUserId);
-  }
+	@Named("convertIsBookmarking")
+	default Boolean convertIsBookmarking(final MarathonEntity source, @Context final long myUserId) {
+		return source.getMarathonBookmarkEntities().stream()
+		  .anyMatch(e -> e.getUserId() == myUserId);
+	}
 }

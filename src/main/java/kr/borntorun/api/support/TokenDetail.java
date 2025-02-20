@@ -19,31 +19,31 @@ import lombok.Getter;
 @Builder
 public class TokenDetail {
 
-  private long id;
-  private String userName;
-  private List<String> authorities;
-  private Long crewId;
-  private Boolean isAdmin;
-  private Boolean isManager;
+	private long id;
+	private String userName;
+	private List<String> authorities;
+	private Long crewId;
+	private Boolean isAdmin;
+	private Boolean isManager;
 
-  public static TokenDetail defaultUser() {
-    return TokenDetail.builder().id(-1).build();
-  }
+	public static TokenDetail defaultUser() {
+		return TokenDetail.builder().id(-1).build();
+	}
 
-  public TokenDetail(JwtAuthenticationToken token) {
-    final Jwt jwt = token.getToken();
+	public TokenDetail(JwtAuthenticationToken token) {
+		final Jwt jwt = token.getToken();
 
-    this.id = Integer.parseInt(jwt.getClaimAsString("id"));
-    this.userName = jwt.getClaimAsString("userName");
-    this.authorities = token.getAuthorities().stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(Collectors.toList());
-    this.crewId = jwt.getClaimAsString("crewId") == null ? null : Long.valueOf(jwt.getClaimAsString("crewId"));
-    this.isAdmin = this.authorities.contains(RoleType.ADMIN.name());
-    this.isManager = this.authorities.contains(RoleType.MANAGER.name());
-  }
+		this.id = Integer.parseInt(jwt.getClaimAsString("id"));
+		this.userName = jwt.getClaimAsString("userName");
+		this.authorities = token.getAuthorities().stream()
+		  .map(GrantedAuthority::getAuthority)
+		  .collect(Collectors.toList());
+		this.crewId = jwt.getClaimAsString("crewId") == null ? null : Long.valueOf(jwt.getClaimAsString("crewId"));
+		this.isAdmin = this.authorities.contains(RoleType.ADMIN.name());
+		this.isManager = this.authorities.contains(RoleType.MANAGER.name());
+	}
 
-  public boolean isLogin() {
-    return id > 0;
-  }
+	public boolean isLogin() {
+		return id > 0;
+	}
 }

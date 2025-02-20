@@ -26,22 +26,22 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/crews")
 public class CrewController {
 
-  private final CrewConverter crewConverter;
+	private final CrewConverter crewConverter;
 
-  private final CrewProxy crewProxy;
+	private final CrewProxy crewProxy;
 
-  @Operation(summary = "크루 조회", description = "등록된 모든 크루를 조회합니다.")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SearchCrewResponse> searchAll() {
-    List<Crew> crews = crewProxy.searchAll();
-    List<SearchCrewResponse.CrewDetail> crewDetails = crewConverter.toSearchCrewResponseCrewDetail(crews);
-    return ResponseEntity.ok(new SearchCrewResponse(crewDetails));
-  }
+	@Operation(summary = "크루 조회", description = "등록된 모든 크루를 조회합니다.")
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SearchCrewResponse> searchAll() {
+		List<Crew> crews = crewProxy.searchAll();
+		List<SearchCrewResponse.CrewDetail> crewDetails = crewConverter.toSearchCrewResponseCrewDetail(crews);
+		return ResponseEntity.ok(new SearchCrewResponse(crewDetails));
+	}
 
-  // TODO; 관리자 권한
-  @Operation(summary = "크루 등록", description = "크루를 등록합니다.")
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public void create(@RequestBody @Valid CreateCrewRequest request) {
-    crewProxy.create(request);
-  }
+	// TODO; 관리자 권한
+	@Operation(summary = "크루 등록", description = "크루를 등록합니다.")
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public void create(@RequestBody @Valid CreateCrewRequest request) {
+		crewProxy.create(request);
+	}
 }

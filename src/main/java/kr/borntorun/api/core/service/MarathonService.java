@@ -23,42 +23,42 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class MarathonService implements MarathonPort {
 
-  private final MarathonConverter marathonConverter;
+	private final MarathonConverter marathonConverter;
 
-  private final MarathonGateway marathonGateway;
+	private final MarathonGateway marathonGateway;
 
-  @Transactional(readOnly = true)
-  @Override
-  public List<Marathon> search(final SearchAllMarathonCommand command) {
-    SearchMarathonQuery query = marathonConverter.toSearchMarathonQuery(command);
-    final List<MarathonEntity> marathons = marathonGateway.search(query);
+	@Transactional(readOnly = true)
+	@Override
+	public List<Marathon> search(final SearchAllMarathonCommand command) {
+		SearchMarathonQuery query = marathonConverter.toSearchMarathonQuery(command);
+		final List<MarathonEntity> marathons = marathonGateway.search(query);
 
-    return marathonConverter.toMarathon(marathons, command.myUserId());
-  }
+		return marathonConverter.toMarathon(marathons, command.myUserId());
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public MarathonDetail detail(final SearchMarathonDetailCommand command) {
-    final MarathonEntity marathonEntity = marathonGateway.detail(command.marathonId());
+	@Transactional(readOnly = true)
+	@Override
+	public MarathonDetail detail(final SearchMarathonDetailCommand command) {
+		final MarathonEntity marathonEntity = marathonGateway.detail(command.marathonId());
 
-    return marathonConverter.toMarathonDetail(marathonEntity, command.myUserId());
-  }
+		return marathonConverter.toMarathonDetail(marathonEntity, command.myUserId());
+	}
 
-  @Transactional
-  @Override
-  public long bookmark(final BookmarkMarathonCommand command) {
-    BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
-    marathonGateway.bookmark(query);
+	@Transactional
+	@Override
+	public long bookmark(final BookmarkMarathonCommand command) {
+		BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
+		marathonGateway.bookmark(query);
 
-    return command.marathonId();
-  }
+		return command.marathonId();
+	}
 
-  @Transactional
-  @Override
-  public long cancelBookmark(final CancelBookmarkMarathonCommand command) {
-    BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
-    marathonGateway.cancelBookmark(query);
+	@Transactional
+	@Override
+	public long cancelBookmark(final CancelBookmarkMarathonCommand command) {
+		BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
+		marathonGateway.cancelBookmark(query);
 
-    return command.marathonId();
-  }
+		return command.marathonId();
+	}
 }

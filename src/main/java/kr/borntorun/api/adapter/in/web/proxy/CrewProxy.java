@@ -19,18 +19,18 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "crew")
 public class CrewProxy {
 
-  private final CrewConverter crewConverter;
+	private final CrewConverter crewConverter;
 
-  private final CrewService crewService;
+	private final CrewService crewService;
 
-  @Cacheable(key = "'searchAll'")
-  public List<Crew> searchAll() {
-    return crewService.searchAll();
-  }
+	@Cacheable(key = "'searchAll'")
+	public List<Crew> searchAll() {
+		return crewService.searchAll();
+	}
 
-  @CacheEvict(allEntries = true)
-  public void create(CreateCrewRequest request) {
-    CreateCrewCommand command = crewConverter.toCreateCrewCommand(request);
-    crewService.create(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void create(CreateCrewRequest request) {
+		CreateCrewCommand command = crewConverter.toCreateCrewCommand(request);
+		crewService.create(command);
+	}
 }

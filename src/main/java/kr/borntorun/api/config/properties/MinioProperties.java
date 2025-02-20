@@ -12,8 +12,8 @@ import lombok.ToString;
 @ConfigurationProperties("adapter.objectstorage.minio")
 public class MinioProperties {
 
-  private final String node;
-  private final String accessKey;
-  private final String secretKey;
-  private final String cdnHost;
+	private final String node;
+	private final String accessKey;
+	private final String secretKey;
+	private final String cdnHost;
 }

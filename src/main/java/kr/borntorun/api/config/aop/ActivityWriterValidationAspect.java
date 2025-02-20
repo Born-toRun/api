@@ -17,41 +17,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ActivityWriterValidationAspect {
 
-  private final ActivityRepository activityRepository;
+	private final ActivityRepository activityRepository;
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.open(..))")
-  public void onOpenUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.open(..))")
+	public void onOpenUser() {
+	}
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.modify(..))")
-  public void onModifyUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.modify(..))")
+	public void onModifyUser() {
+	}
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.remove(..))")
-  public void onDeleteUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.remove(..))")
+	public void onDeleteUser() {
+	}
 
-  @Before("onOpenUser() && args(my, activityId, ..)")
-  public void validateOpen(final TokenDetail my, final long activityId) throws IllegalArgumentException {
-    validate(my.getId(), activityId);
-  }
+	@Before("onOpenUser() && args(my, activityId, ..)")
+	public void validateOpen(final TokenDetail my, final long activityId) throws IllegalArgumentException {
+		validate(my.getId(), activityId);
+	}
 
-  @Before("onModifyUser() && args(my, activityId, request, ..)")
-  public void validateModify(final TokenDetail my, final long activityId, final ModifyActivityRequest request) throws IllegalArgumentException {
-    validate(my.getId(), activityId);
-  }
+	@Before("onModifyUser() && args(my, activityId, request, ..)")
+	public void validateModify(final TokenDetail my, final long activityId, final ModifyActivityRequest request) throws
+	  IllegalArgumentException {
+		validate(my.getId(), activityId);
+	}
 
-  @Before("onDeleteUser() && args(my, activityId, ..)")
-  public void validateDelete(final TokenDetail my, final long activityId) throws IllegalArgumentException {
-    validate(my.getId(), activityId);
-  }
+	@Before("onDeleteUser() && args(my, activityId, ..)")
+	public void validateDelete(final TokenDetail my, final long activityId) throws IllegalArgumentException {
+		validate(my.getId(), activityId);
+	}
 
-  private void validate(final long userId, final long activityId) {
-    if (!isValid(userId, activityId)) {
-      throw new ForBiddenException("잘못된 접근입니다.");
-    }
-  }
+	private void validate(final long userId, final long activityId) {
+		if (!isValid(userId, activityId)) {
+			throw new ForBiddenException("잘못된 접근입니다.");
+		}
+	}
 
-  private boolean isValid(final long userId, final long activityId) {
-    return activityRepository.findById(activityId)
-        .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."))
-        .getUserId() == userId;
-  }
+	private boolean isValid(final long userId, final long activityId) {
+		return activityRepository.findById(activityId)
+		  .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."))
+		  .getUserId() == userId;
+	}
 }

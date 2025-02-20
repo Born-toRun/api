@@ -17,33 +17,36 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentWriterValidationAspect {
 
-  private final CommentRepository componentRepository;
+	private final CommentRepository componentRepository;
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.CommentController.modify(..))")
-  public void onModifyUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.CommentController.modify(..))")
+	public void onModifyUser() {
+	}
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.CommentController.remove(..))")
-  public void onDeleteUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.CommentController.remove(..))")
+	public void onDeleteUser() {
+	}
 
-  @Before("onModifyUser() && args(my, commentId, request, ..)")
-  public void validateModify(final TokenDetail my, final long commentId, final ModifyCommentRequest request) throws IllegalArgumentException {
-    validate(my.getId(), commentId);
-  }
+	@Before("onModifyUser() && args(my, commentId, request, ..)")
+	public void validateModify(final TokenDetail my, final long commentId, final ModifyCommentRequest request) throws
+	  IllegalArgumentException {
+		validate(my.getId(), commentId);
+	}
 
-  @Before("onDeleteUser() && args(my, commentId, ..)")
-  public void validateDelete(final TokenDetail my, final long commentId) throws IllegalArgumentException {
-    validate(my.getId(), commentId);
-  }
+	@Before("onDeleteUser() && args(my, commentId, ..)")
+	public void validateDelete(final TokenDetail my, final long commentId) throws IllegalArgumentException {
+		validate(my.getId(), commentId);
+	}
 
-  private void validate(final long userId, final long feedId) {
-    if (!isValid(userId, feedId)) {
-      throw new ForBiddenException("잘못된 접근입니다.");
-    }
-  }
+	private void validate(final long userId, final long feedId) {
+		if (!isValid(userId, feedId)) {
+			throw new ForBiddenException("잘못된 접근입니다.");
+		}
+	}
 
-  private boolean isValid(final long userId, final long commentId) {
-    return componentRepository.findById(commentId)
-        .orElseThrow(() -> new NotFoundException("댓글를 찾을 수 없습니다."))
-        .getUserId() == userId;
-  }
+	private boolean isValid(final long userId, final long commentId) {
+		return componentRepository.findById(commentId)
+		  .orElseThrow(() -> new NotFoundException("댓글를 찾을 수 없습니다."))
+		  .getUserId() == userId;
+	}
 }

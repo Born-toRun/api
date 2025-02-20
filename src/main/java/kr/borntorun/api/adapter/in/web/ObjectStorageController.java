@@ -27,23 +27,24 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/object-storage")
 public class ObjectStorageController {
 
-  private final ObjectStorageConverter objectStorageConverter;
+	private final ObjectStorageConverter objectStorageConverter;
 
-  private final ObjectStorageProxy objectStorageProxy;
+	private final ObjectStorageProxy objectStorageProxy;
 
-  @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
-  @PostMapping(value = "/{bucket}", produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<UploadFileResponse> removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @RequestParam(value = "file") MultipartFile file) {
-    final ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
-    UploadFileResponse response = objectStorageConverter.toUploadFileResponse(objectStorage);
-    return ResponseEntity.ok(response);
-  }
+	@Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
+	@PostMapping(value = "/{bucket}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<UploadFileResponse> removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket,
+	  @RequestParam(value = "file") MultipartFile file) {
+		final ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
+		UploadFileResponse response = objectStorageConverter.toUploadFileResponse(objectStorage);
+		return ResponseEntity.ok(response);
+	}
 
-  @Operation(summary = "파일 삭제", description = "파일을 삭제합니다.")
-  @DeleteMapping(value = "/{bucket}/{fileId}", produces=MediaType.APPLICATION_JSON_VALUE)
-  public void removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @PathVariable long fileId) {
-    objectStorageProxy.remove(my, bucket, fileId);
-  }
+	@Operation(summary = "파일 삭제", description = "파일을 삭제합니다.")
+	@DeleteMapping(value = "/{bucket}/{fileId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public void removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @PathVariable long fileId) {
+		objectStorageProxy.remove(my, bucket, fileId);
+	}
 }
 
 

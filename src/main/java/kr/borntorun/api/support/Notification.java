@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Notification {
 
-  private final DiscordAdapter discordAdapter;
+	private final DiscordAdapter discordAdapter;
 
-  public void send(final String message) {
-    discordAdapter.send(message);
-  }
+	public void send(final String message) {
+		discordAdapter.send(message);
+	}
 }

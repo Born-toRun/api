@@ -42,91 +42,91 @@ import lombok.ToString;
 @ToString
 public class UserEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private String socialId;
-  @Enumerated(EnumType.STRING)
-  private ProviderType providerType;
-  @Enumerated(EnumType.STRING)
-  private RoleType roleType;
-  private String name;
-  private Long crewId;
-  private String instagramId;
-  private LocalDateTime lastLoginAt;
-  private long imageId;
-  private int yellowCardQty;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String socialId;
+	@Enumerated(EnumType.STRING)
+	private ProviderType providerType;
+	@Enumerated(EnumType.STRING)
+	private RoleType roleType;
+	private String name;
+	private Long crewId;
+	private String instagramId;
+	private LocalDateTime lastLoginAt;
+	private long imageId;
+	private int yellowCardQty;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id", insertable = false, updatable = false)
-  private CrewEntity crewEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private CrewEntity crewEntity;
 
-  @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private UserRefreshTokenEntity userRefreshTokenEntity;
+	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private UserRefreshTokenEntity userRefreshTokenEntity;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<FeedEntity> feedEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<FeedEntity> feedEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<ActivityEntity> activityEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<ActivityEntity> activityEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<ActivityParticipationEntity> activityParticipationEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<ActivityParticipationEntity> activityParticipationEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<CommentEntity> commentEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<CommentEntity> commentEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<ObjectStorageEntity> objectStorageEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<ObjectStorageEntity> objectStorageEntities;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<RecommendationEntity> recommendationEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<RecommendationEntity> recommendationEntities;
 
-  @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private UserPrivacyEntity userPrivacyEntity;
+	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private UserPrivacyEntity userPrivacyEntity;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-  private Set<YellowCardEntity> yellowCardEntities;
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	private Set<YellowCardEntity> yellowCardEntities;
 
-  public String getProfileImageUri() {
-    return objectStorageEntities.stream()
-        .findFirst()
-        .orElse(ObjectStorageEntity.defaultEntity())
-        .getFileUri();
-  }
+	public String getProfileImageUri() {
+		return objectStorageEntities.stream()
+		  .findFirst()
+		  .orElse(ObjectStorageEntity.defaultEntity())
+		  .getFileUri();
+	}
 
-  public Boolean getIsAdmin() {
-    return roleType.equals(RoleType.ADMIN);
-  }
+	public Boolean getIsAdmin() {
+		return roleType.equals(RoleType.ADMIN);
+	}
 
-  public Boolean getIsManager() {
-    return roleType.equals(RoleType.MANAGER);
-  }
+	public Boolean getIsManager() {
+		return roleType.equals(RoleType.MANAGER);
+	}
 
-  public void modify(String instagramId, long profileImageId) {
-    if(profileImageId != 0) {
-      this.imageId = profileImageId;
-    }
+	public void modify(String instagramId, long profileImageId) {
+		if (profileImageId != 0) {
+			this.imageId = profileImageId;
+		}
 
-    if(StringUtils.hasLength(instagramId)) {
-      this.instagramId = instagramId;
-    }
-  }
+		if (StringUtils.hasLength(instagramId)) {
+			this.instagramId = instagramId;
+		}
+	}
 
-  public void modify(String userName, Long crewId, String instagramId) {
-    if(crewId != 0) {
-      this.crewId = crewId;
-    }
+	public void modify(String userName, Long crewId, String instagramId) {
+		if (crewId != 0) {
+			this.crewId = crewId;
+		}
 
-    if(StringUtils.hasLength(instagramId)) {
-      this.instagramId = instagramId;
-    }
+		if (StringUtils.hasLength(instagramId)) {
+			this.instagramId = instagramId;
+		}
 
-    if(StringUtils.hasLength(userName)) {
-      this.name = userName;
-    }
-  }
+		if (StringUtils.hasLength(userName)) {
+			this.name = userName;
+		}
+	}
 }

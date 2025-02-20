@@ -30,21 +30,21 @@ import lombok.ToString;
 @DynamicUpdate
 public class MarathonBookmarkEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long userId;
-  private long marathonId;
-  private LocalDateTime registeredAt;
-  private LocalDateTime updatedAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long userId;
+	private long marathonId;
+	private LocalDateTime registeredAt;
+	private LocalDateTime updatedAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id", insertable = false, updatable = false)
-  private MarathonEntity marathonEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private MarathonEntity marathonEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 }
 
 

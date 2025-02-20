@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum RecommendationType {
 
-  FEED("피드"),
-  COMMENT("댓글");
+	FEED("피드"),
+	COMMENT("댓글");
 
-  private final String description;
+	private final String description;
 }

@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record AuthTokenRequest(@JsonProperty("grant_type") String grantType) {
 
-  public FormInserter<String> getBody() {
-    final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+	public FormInserter<String> getBody() {
+		final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
-    body.add("grant_type", grantType);
+		body.add("grant_type", grantType);
 
-    return BodyInserters.fromFormData(body);
-  }
+		return BodyInserters.fromFormData(body);
+	}
 }

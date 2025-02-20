@@ -16,21 +16,21 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class RecommendationService implements RecommendationPort {
 
-  private final RecommendationConverter recommendationConverter;
+	private final RecommendationConverter recommendationConverter;
 
-  private final RecommendationGateway recommendationGateway;
+	private final RecommendationGateway recommendationGateway;
 
-  @Transactional
-  @Override
-  public void create(final CreateRecommendationCommand command) {
-    CreateRecommendationQuery query = recommendationConverter.toCreateRecommendationQuery(command);
-    recommendationGateway.create(query);
-  }
+	@Transactional
+	@Override
+	public void create(final CreateRecommendationCommand command) {
+		CreateRecommendationQuery query = recommendationConverter.toCreateRecommendationQuery(command);
+		recommendationGateway.create(query);
+	}
 
-  @Transactional
-  @Override
-  public void remove(final RemoveRecommendationCommand command) {
-    RemoveRecommendationQuery query = recommendationConverter.toRemoveRecommendationQuery(command);
-    recommendationGateway.remove(query);
-  }
+	@Transactional
+	@Override
+	public void remove(final RemoveRecommendationCommand command) {
+		RemoveRecommendationQuery query = recommendationConverter.toRemoveRecommendationQuery(command);
+		recommendationGateway.remove(query);
+	}
 }

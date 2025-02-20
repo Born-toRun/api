@@ -1,3 +1,4 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record ParticipateCancelActivityQuery(long participationId) {}
+public record ParticipateCancelActivityQuery(long participationId) {
+}

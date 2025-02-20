@@ -10,17 +10,18 @@ import com.hazelcast.config.properties.ValueValidator;
 
 class SpringCloudDiscoveryProperties {
 
-  public static final PropertyDefinition SERVICE_ID = property("serviceId", STRING);
-  public static final PropertyDefinition PORT = property("port", INTEGER);
+	public static final PropertyDefinition SERVICE_ID = property("serviceId", STRING);
+	public static final PropertyDefinition PORT = property("port", INTEGER);
 
-  private SpringCloudDiscoveryProperties() {
-  }
+	private SpringCloudDiscoveryProperties() {
+	}
 
-  private static PropertyDefinition property(String key, PropertyTypeConverter typeConverter) {
-    return property(key, typeConverter, null);
-  }
+	private static PropertyDefinition property(String key, PropertyTypeConverter typeConverter) {
+		return property(key, typeConverter, null);
+	}
 
-  private static PropertyDefinition property(String key, PropertyTypeConverter typeConverter, ValueValidator valueValidator) {
-    return new SimplePropertyDefinition(key, true, typeConverter, valueValidator);
-  }
+	private static PropertyDefinition property(String key, PropertyTypeConverter typeConverter,
+	  ValueValidator valueValidator) {
+		return new SimplePropertyDefinition(key, true, typeConverter, valueValidator);
+	}
 }

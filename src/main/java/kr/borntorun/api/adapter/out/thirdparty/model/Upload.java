@@ -4,4 +4,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public record Upload(MultipartFile file,
 					 long myUserId,
-                    String bucket) {}
+					 String bucket) {
+}

@@ -15,20 +15,20 @@ import lombok.RequiredArgsConstructor;
 @EnableConfigurationProperties({DiscordProperties.class, BornToRunAuthAdapterProperties.class})
 public class WebClientConfig {
 
-  private final DiscordProperties discordProperties;
-  private final BornToRunAuthAdapterProperties bornToRunAuthAdapterProperties;
-  private final WebClient.Builder webClientBuilder;
+	private final DiscordProperties discordProperties;
+	private final BornToRunAuthAdapterProperties bornToRunAuthAdapterProperties;
+	private final WebClient.Builder webClientBuilder;
 
-  @Bean
-  public WebClient discordConnector() {
-    return webClientBuilder.baseUrl(discordProperties.getHost())
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, discordProperties.getContentType())
-        .build();
-  }
+	@Bean
+	public WebClient discordConnector() {
+		return webClientBuilder.baseUrl(discordProperties.getHost())
+		  .defaultHeader(HttpHeaders.CONTENT_TYPE, discordProperties.getContentType())
+		  .build();
+	}
 
-  @Bean
-  public WebClient bornToRunAuthConnector() {
-    return webClientBuilder.baseUrl(bornToRunAuthAdapterProperties.getHost())
-        .build();
-  }
+	@Bean
+	public WebClient bornToRunAuthConnector() {
+		return webClientBuilder.baseUrl(bornToRunAuthAdapterProperties.getHost())
+		  .build();
+	}
 }

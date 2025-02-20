@@ -12,6 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Schema(description = "마라톤 리스트 조회")
 public class SearchAllMarathonRequest {
-  @Schema(description = "위치") List<String> locations;
-  @Schema(description = "코스") List<String> courses;
+	@Schema(description = "위치")
+	List<String> locations;
+	@Schema(description = "코스")
+	List<String> courses;
 }

@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Builder
 public class BookmarkMarathonQuery {
-  private long marathonId;
-  private long myUserId;
+	private long marathonId;
+	private long myUserId;
 }

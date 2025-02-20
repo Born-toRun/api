@@ -14,38 +14,38 @@ import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import lombok.RequiredArgsConstructor;
 
 @OpenAPIDefinition(
-    info = @Info(title = "born-to-run web app",
-        description = "born-to-run web app api명세",
-        version = "v1"))
+  info = @Info(title = "born-to-run web app",
+	description = "born-to-run web app api명세",
+	version = "v1"))
 @RequiredArgsConstructor
 @Configuration
 public class SwaggerConfig {
 
-  @Bean
-  public GroupedOpenApi chatOpenApi() {
-    String[] paths = {"/api/**"};
+	@Bean
+	public GroupedOpenApi chatOpenApi() {
+		String[] paths = {"/api/**"};
 
-    return GroupedOpenApi.builder()
-        .group("born-to-run WEB API v2")
-        .pathsToMatch(paths)
-        .build();
-  }
+		return GroupedOpenApi.builder()
+		  .group("born-to-run WEB API v2")
+		  .pathsToMatch(paths)
+		  .build();
+	}
 
-  @Bean
-  public OpenAPI customizeOpenAPI() {
-    final String securitySchemeName = "Bearer Authentication";
-    final String cookieSchemeName = "CookieAuth";
+	@Bean
+	public OpenAPI customizeOpenAPI() {
+		final String securitySchemeName = "Bearer Authentication";
+		final String cookieSchemeName = "CookieAuth";
 
-    return new OpenAPI()
-        .addSecurityItem(new SecurityRequirement()
-            .addList(securitySchemeName)
-            .addList(cookieSchemeName))
-        .components(new Components()
-                .addSecuritySchemes(securitySchemeName, new SecurityScheme()
-                    .name(securitySchemeName)
-                    .type(Type.HTTP)
-                    .scheme("bearer")
-                    .bearerFormat("JWT"))
-        );
-  }
+		return new OpenAPI()
+		  .addSecurityItem(new SecurityRequirement()
+			.addList(securitySchemeName)
+			.addList(cookieSchemeName))
+		  .components(new Components()
+			.addSecuritySchemes(securitySchemeName, new SecurityScheme()
+			  .name(securitySchemeName)
+			  .type(Type.HTTP)
+			  .scheme("bearer")
+			  .bearerFormat("JWT"))
+		  );
+	}
 }

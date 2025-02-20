@@ -26,63 +26,64 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService implements UserPort {
 
-  private final UserConverter userConverter;
-  private final BornToRunAuthAdapter borntorunAuthAdapter;
-  private final UserGateway userGateway;
+	private final UserConverter userConverter;
+	private final BornToRunAuthAdapter borntorunAuthAdapter;
+	private final UserGateway userGateway;
 
-  @Override
-  public LoginResult signIn(final SignInCommand command) {
-    final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(userConverter.toAuthSignUpRequest(command));
-    final AuthTokenResponse authTokenResponse = borntorunAuthAdapter.getToken(authSignInResponse.kakaoId());
+	@Override
+	public LoginResult signIn(final SignInCommand command) {
+		final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(
+		  userConverter.toAuthSignUpRequest(command));
+		final AuthTokenResponse authTokenResponse = borntorunAuthAdapter.getToken(authSignInResponse.kakaoId());
 
-    return new LoginResult(authTokenResponse.accessToken(), authSignInResponse.isMember());
-  }
+		return new LoginResult(authTokenResponse.accessToken(), authSignInResponse.isMember());
+	}
 
-  @Transactional
-  @Override
-  public String signUp(final SignUpCommand command) {
-    SignUpUserQuery query = userConverter.toSignUpUserQuery(command);
-    return userGateway.modify(query);
-  }
+	@Transactional
+	@Override
+	public String signUp(final SignUpCommand command) {
+		SignUpUserQuery query = userConverter.toSignUpUserQuery(command);
+		return userGateway.modify(query);
+	}
 
-  @Override
-  public String refreshToken(String accessToken) {
-    RefreshTokenResponse refreshTokenResponse = borntorunAuthAdapter.refreshToken(accessToken);
-    return refreshTokenResponse.accessToken();
-  }
+	@Override
+	public String refreshToken(String accessToken) {
+		RefreshTokenResponse refreshTokenResponse = borntorunAuthAdapter.refreshToken(accessToken);
+		return refreshTokenResponse.accessToken();
+	}
 
-  @Transactional
-  @Override
-  public void remove(final long userId) {
-    userGateway.remove(userId);
-  }
+	@Transactional
+	@Override
+	public void remove(final long userId) {
+		userGateway.remove(userId);
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public BornToRunUser searchById(final long userId) {
-    UserEntity userEntity = userGateway.searchById(userId);
-    return userConverter.toBornToRunUser(userEntity);
-  }
+	@Transactional(readOnly = true)
+	@Override
+	public BornToRunUser searchById(final long userId) {
+		UserEntity userEntity = userGateway.searchById(userId);
+		return userConverter.toBornToRunUser(userEntity);
+	}
 
-  @Override
-  public BornToRunUser searchBySocialId(String socialId) {
-    UserEntity userEntity = userGateway.searchBySocialId(socialId);
-    return userConverter.toBornToRunUser(userEntity);
-  }
+	@Override
+	public BornToRunUser searchBySocialId(String socialId) {
+		UserEntity userEntity = userGateway.searchBySocialId(socialId);
+		return userConverter.toBornToRunUser(userEntity);
+	}
 
-  @Transactional
-  @Override
-  public BornToRunUser modify(final ModifyUserCommand command) {
-    ModifyUserQuery query = userConverter.toModifyUserQuery(command);
+	@Transactional
+	@Override
+	public BornToRunUser modify(final ModifyUserCommand command) {
+		ModifyUserQuery query = userConverter.toModifyUserQuery(command);
 
-    UserEntity modifiedUser = userGateway.modify(query);
-    return userConverter.toBornToRunUser(modifiedUser);
-  }
+		UserEntity modifiedUser = userGateway.modify(query);
+		return userConverter.toBornToRunUser(modifiedUser);
+	}
 
-  @Override
-  public BornToRunUser create(CreateGuestCommand command) {
-    CreateGuestQuery query = userConverter.toCreateGuestQuery(command);
-    UserEntity guest = userGateway.create(query);
-    return userConverter.toBornToRunUser(guest);
-  }
+	@Override
+	public BornToRunUser create(CreateGuestCommand command) {
+		CreateGuestQuery query = userConverter.toCreateGuestQuery(command);
+		UserEntity guest = userGateway.create(query);
+		return userConverter.toBornToRunUser(guest);
+	}
 }

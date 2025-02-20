@@ -24,107 +24,107 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ObjectStorageGateway {
 
-  private final ObjectStorageConverter objectStorageConverter;
-  private final ObjectStorageClient objectStorageClient;
-  private final MinioProperties minioProperties;
-  private final ObjectStorageRepository objectStorageRepository;
+	private final ObjectStorageConverter objectStorageConverter;
+	private final ObjectStorageClient objectStorageClient;
+	private final MinioProperties minioProperties;
+	private final ObjectStorageRepository objectStorageRepository;
 
-  public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
-    final String uploadedFileName = objectStorageClient.upload(
-        objectStorageConverter.toUpload(query));
+	public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
+		final String uploadedFileName = objectStorageClient.upload(
+		  objectStorageConverter.toUpload(query));
 
-    final String cdnUri = minioProperties.getCdnHost()
-        + "/"
-        + query.getBucketName()
-        + "/"
-        + uploadedFileName;
+		final String cdnUri = minioProperties.getCdnHost()
+		  + "/"
+		  + query.getBucketName()
+		  + "/"
+		  + uploadedFileName;
 
-    return objectStorageRepository.save(
-        ObjectStorageEntity.builder()
-            .fileUri(cdnUri)
-            .userId(query.myUserId())
-            .build());
+		return objectStorageRepository.save(
+		  ObjectStorageEntity.builder()
+			.fileUri(cdnUri)
+			.userId(query.myUserId())
+			.build());
 
-  }
+	}
 
-  public List<ObjectStorageEntity> searchAll(final List<Long> fileIds) {
-    return objectStorageRepository.findAllById(fileIds);
-  }
+	public List<ObjectStorageEntity> searchAll(final List<Long> fileIds) {
+		return objectStorageRepository.findAllById(fileIds);
+	}
 
-  public void remove(final RemoveObjectStorageQuery query) {
-    if(0 == query.targetFileId()) {
-      return;
-    }
+	public void remove(final RemoveObjectStorageQuery query) {
+		if (0 == query.targetFileId()) {
+			return;
+		}
 
-    ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.targetFileId())
-        .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
+		ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.targetFileId())
+		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
 
-    if(!query.my().getIsAdmin()) {
-      if(query.my().getId() != objectStorage.getUserId()) {
-        throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
-      }
-    }
+		if (!query.my().getIsAdmin()) {
+			if (query.my().getId() != objectStorage.getUserId()) {
+				throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
+			}
+		}
 
-    objectStorageRepository.deleteById(objectStorage.getId());
+		objectStorageRepository.deleteById(objectStorage.getId());
 
-    objectStorageClient.remove(Remove.builder()
-        .bucket(query.bucket().getBucketName())
-        .objectName(objectStorage.getFileUri().substring(objectStorage.getFileUri().lastIndexOf("/") + 1))
-        .build());
-  }
+		objectStorageClient.remove(Remove.builder()
+		  .bucket(query.bucket().getBucketName())
+		  .objectName(objectStorage.getFileUri().substring(objectStorage.getFileUri().lastIndexOf("/") + 1))
+		  .build());
+	}
 
-  public void removeAll(final RemoveAllObjectStorageQuery query) {
-    if(null == query.targetFileIds() || query.targetFileIds().isEmpty()) {
-      return;
-    }
+	public void removeAll(final RemoveAllObjectStorageQuery query) {
+		if (null == query.targetFileIds() || query.targetFileIds().isEmpty()) {
+			return;
+		}
 
-    List<ObjectStorageEntity> objectStorages = objectStorageRepository.findAllById(query.targetFileIds());
+		List<ObjectStorageEntity> objectStorages = objectStorageRepository.findAllById(query.targetFileIds());
 
-    if(!query.my().getIsAdmin() && objectStorages.stream()
-        .map(ObjectStorageEntity::getUserId)
-        .noneMatch(e -> e == query.my().getId())) {
-      throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
-    }
+		if (!query.my().getIsAdmin() && objectStorages.stream()
+		  .map(ObjectStorageEntity::getUserId)
+		  .noneMatch(e -> e == query.my().getId())) {
+			throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
+		}
 
-    objectStorageRepository.saveAll(objectStorages);
-    objectStorageRepository.deleteAllById(objectStorages.stream()
-      .map(ObjectStorageEntity::getId)
-      .toList());
+		objectStorageRepository.saveAll(objectStorages);
+		objectStorageRepository.deleteAllById(objectStorages.stream()
+		  .map(ObjectStorageEntity::getId)
+		  .toList());
 
-    objectStorageClient.removeAll(RemoveAll.builder()
-        .bucket(query.bucket())
-        .objectNames(objectStorages.stream()
-            .map(e -> e.getFileUri().substring(e.getFileUri().lastIndexOf("/") + 1))
-            .collect(Collectors.toList()))
-        .build());
-  }
+		objectStorageClient.removeAll(RemoveAll.builder()
+		  .bucket(query.bucket())
+		  .objectNames(objectStorages.stream()
+			.map(e -> e.getFileUri().substring(e.getFileUri().lastIndexOf("/") + 1))
+			.collect(Collectors.toList()))
+		  .build());
+	}
 
-  public String modify(final ModifyObjectStorageQuery query) {
-    ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.getTargetFileId())
-        .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
+	public String modify(final ModifyObjectStorageQuery query) {
+		ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.getTargetFileId())
+		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
 
-    if(!query.getMy().getIsAdmin()) {
-      if(query.getMy().getId() != objectStorage.getUserId()) {
-        throw new InvalidException("본인이 올린 파일만 수정할 수 있습니다.");
-      }
-    }
+		if (!query.getMy().getIsAdmin()) {
+			if (query.getMy().getId() != objectStorage.getUserId()) {
+				throw new InvalidException("본인이 올린 파일만 수정할 수 있습니다.");
+			}
+		}
 
-    final String uploadedFileName = objectStorageClient.upload(objectStorageConverter.toUpload(query));
+		final String uploadedFileName = objectStorageClient.upload(objectStorageConverter.toUpload(query));
 
-    final String targetCdnUri = objectStorage.getFileUri();
-    final String cdnUri = minioProperties.getCdnHost()
-        + "/"
-        + query.getBucket()
-        + "/"
-        + uploadedFileName;
+		final String targetCdnUri = objectStorage.getFileUri();
+		final String cdnUri = minioProperties.getCdnHost()
+		  + "/"
+		  + query.getBucket()
+		  + "/"
+		  + uploadedFileName;
 
-    objectStorage.setFileUri(cdnUri);
+		objectStorage.setFileUri(cdnUri);
 
-    final Remove remove = objectStorageConverter.toRemove(query);
-    remove.setObjectName(targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1)));
+		final Remove remove = objectStorageConverter.toRemove(query);
+		remove.setObjectName(targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1)));
 
-    objectStorageClient.remove(remove);
+		objectStorageClient.remove(remove);
 
-    return cdnUri;
-  }
+		return cdnUri;
+	}
 }

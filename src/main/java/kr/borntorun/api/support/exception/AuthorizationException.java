@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 public class AuthorizationException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public AuthorizationException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public AuthorizationException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

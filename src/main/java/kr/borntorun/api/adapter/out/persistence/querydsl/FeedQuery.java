@@ -22,64 +22,64 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedQuery {
 
-  private final JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
-  public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
-    final QFeedEntity feed = QFeedEntity.feedEntity;
+	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
+		final QFeedEntity feed = QFeedEntity.feedEntity;
 
-    BooleanExpression whereClause = Expressions.TRUE; // 기본값 설정
+		BooleanExpression whereClause = Expressions.TRUE; // 기본값 설정
 
-    if (Objects.nonNull(query.category())) {
-      whereClause = whereClause.and(feed.category.eq(query.category()));
-    }
+		if (Objects.nonNull(query.category())) {
+			whereClause = whereClause.and(feed.category.eq(query.category()));
+		}
 
-    if (query.lastFeedId() > 0) {
-      whereClause = whereClause.and(feed.id.lt(query.lastFeedId()));
-    }
+		if (query.lastFeedId() > 0) {
+			whereClause = whereClause.and(feed.id.lt(query.lastFeedId()));
+		}
 
-    // 내 크루만 공개
-    if (query.isMyCrew()) {
-      whereClause = whereClause.and(
-        feed.userEntity.crewId.eq(query.my().getCrewId())
-          .and(feed.accessLevel.eq(FeedAccessLevel.IN_CREW))
-      );
-    } else {
-      whereClause = whereClause.and(feed.accessLevel.eq(FeedAccessLevel.ALL));
-    }
+		// 내 크루만 공개
+		if (query.isMyCrew()) {
+			whereClause = whereClause.and(
+			  feed.userEntity.crewId.eq(query.my().getCrewId())
+				.and(feed.accessLevel.eq(FeedAccessLevel.IN_CREW))
+			);
+		} else {
+			whereClause = whereClause.and(feed.accessLevel.eq(FeedAccessLevel.ALL));
+		}
 
-    // 내용 내 검색어
-    if (query.isUsedIntegratedSearch()) {
-      BooleanExpression searchWhereClause = feed.contents.matches(query.searchKeyword());
+		// 내용 내 검색어
+		if (query.isUsedIntegratedSearch()) {
+			BooleanExpression searchWhereClause = feed.contents.matches(query.searchKeyword());
 
-      if (!query.searchedUserIds().isEmpty()) {
-        searchWhereClause = searchWhereClause.or(feed.userId.in(query.searchedUserIds()));
-      }
+			if (!query.searchedUserIds().isEmpty()) {
+				searchWhereClause = searchWhereClause.or(feed.userId.in(query.searchedUserIds()));
+			}
 
-      whereClause = whereClause.and(searchWhereClause);
-    }
+			whereClause = whereClause.and(searchWhereClause);
+		}
 
-    final int total = queryFactory
-      .selectFrom(feed)
-      .where(whereClause)
-      .fetch().size();
+		final int total = queryFactory
+		  .selectFrom(feed)
+		  .where(whereClause)
+		  .fetch().size();
 
-    final List<FeedEntity> contents = queryFactory
-      .selectFrom(feed)
-      .where(whereClause)
-      .orderBy(feed.id.desc())
-      .offset(pageable.getOffset())
-      .limit(pageable.getPageSize())
-      .fetch();
+		final List<FeedEntity> contents = queryFactory
+		  .selectFrom(feed)
+		  .where(whereClause)
+		  .orderBy(feed.id.desc())
+		  .offset(pageable.getOffset())
+		  .limit(pageable.getPageSize())
+		  .fetch();
 
-    return new PageImpl<>(contents, pageable, total);
-  }
+		return new PageImpl<>(contents, pageable, total);
+	}
 
-  public void increaseViewQty(final long feedId) {
-    final QFeedEntity feed = QFeedEntity.feedEntity;
+	public void increaseViewQty(final long feedId) {
+		final QFeedEntity feed = QFeedEntity.feedEntity;
 
-    queryFactory.update(feed)
-        .set(feed.viewQty, feed.viewQty.add(1))
-        .where(feed.id.eq(feedId))
-        .execute();
-  }
+		queryFactory.update(feed)
+		  .set(feed.viewQty, feed.viewQty.add(1))
+		  .where(feed.id.eq(feedId))
+		  .execute();
+	}
 }

@@ -18,28 +18,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MarathonGateway {
 
-  private final MarathonBookmarkConverter marathonBookmarkConverter;
-  private final MarathonRepository marathonRepository;
-  private final MarathonBookmarkRepository marathonBookmarkRepository;
+	private final MarathonBookmarkConverter marathonBookmarkConverter;
+	private final MarathonRepository marathonRepository;
+	private final MarathonBookmarkRepository marathonBookmarkRepository;
 
-  public List<MarathonEntity> search(SearchMarathonQuery query) {
-    return marathonRepository.findAllByLocationInAndCourseIn(query.locations(), query.courses());
-  }
+	public List<MarathonEntity> search(SearchMarathonQuery query) {
+		return marathonRepository.findAllByLocationInAndCourseIn(query.locations(), query.courses());
+	}
 
-  public MarathonEntity detail(long marathonId) {
-    return marathonRepository.findById(marathonId)
-      .orElseThrow(() -> new NotFoundException("해당 대회를 찾을 수 없습니다."));
-  }
+	public MarathonEntity detail(long marathonId) {
+		return marathonRepository.findById(marathonId)
+		  .orElseThrow(() -> new NotFoundException("해당 대회를 찾을 수 없습니다."));
+	}
 
-  public void bookmark(BookmarkMarathonQuery query) {
-    final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(query.getMyUserId(), query.getMarathonId())
-        .orElse(marathonBookmarkConverter.toMarathonBookmarkEntity(query));
-    marathonBookmarkRepository.save(marathonBookmarkEntity);
-  }
+	public void bookmark(BookmarkMarathonQuery query) {
+		final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
+			query.getMyUserId(), query.getMarathonId())
+		  .orElse(marathonBookmarkConverter.toMarathonBookmarkEntity(query));
+		marathonBookmarkRepository.save(marathonBookmarkEntity);
+	}
 
-  public void cancelBookmark(BookmarkMarathonQuery query) {
-    final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(query.getMyUserId(), query.getMarathonId())
-        .orElseThrow(() -> new NotFoundException("북마크가 되지 않았거나 이미 취소되었습니다."));
-    marathonBookmarkRepository.deleteById(marathonBookmarkEntity.getId());
-  }
+	public void cancelBookmark(BookmarkMarathonQuery query) {
+		final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
+			query.getMyUserId(), query.getMarathonId())
+		  .orElseThrow(() -> new NotFoundException("북마크가 되지 않았거나 이미 취소되었습니다."));
+		marathonBookmarkRepository.deleteById(marathonBookmarkEntity.getId());
+	}
 }

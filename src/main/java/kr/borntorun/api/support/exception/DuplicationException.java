@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class DuplicationException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public DuplicationException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public DuplicationException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

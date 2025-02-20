@@ -15,27 +15,27 @@ import kr.borntorun.api.infrastructure.model.CreateCrewQuery;
 @Mapper(componentModel = "spring")
 public interface CrewConverter {
 
-  @Mapping(target = "imageUri", source = "imageEntity.fileUri")
-  @Mapping(target = "logoUri", source = "logoEntity.fileUri")
-  Crew toCrew(final CrewEntity source);
+	@Mapping(target = "imageUri", source = "imageEntity.fileUri")
+	@Mapping(target = "logoUri", source = "logoEntity.fileUri")
+	Crew toCrew(final CrewEntity source);
 
-  List<Crew> toCrew(final List<CrewEntity> source);
+	List<Crew> toCrew(final List<CrewEntity> source);
 
-  @Mapping(target = "crewName", source = "name")
-  @Mapping(target = "crewSnsUri", source = "sns")
-  SearchCrewResponse.CrewDetail toSearchCrewResponseCrewDetail(final Crew source);
+	@Mapping(target = "crewName", source = "name")
+	@Mapping(target = "crewSnsUri", source = "sns")
+	SearchCrewResponse.CrewDetail toSearchCrewResponseCrewDetail(final Crew source);
 
-  List<SearchCrewResponse.CrewDetail> toSearchCrewResponseCrewDetail(final List<Crew> source);
+	List<SearchCrewResponse.CrewDetail> toSearchCrewResponseCrewDetail(final List<Crew> source);
 
-  CreateCrewCommand toCreateCrewCommand(CreateCrewRequest source);
+	CreateCrewCommand toCreateCrewCommand(CreateCrewRequest source);
 
-  CreateCrewQuery toCreateCrewQuery(CreateCrewCommand source);
+	CreateCrewQuery toCreateCrewQuery(CreateCrewCommand source);
 
-  @Mapping(target ="id", ignore = true)
-  @Mapping(target ="imageId", ignore = true)
-  @Mapping(target ="logoId", ignore = true)
-  @Mapping(target ="userEntities", ignore = true)
-  @Mapping(target ="imageEntity", ignore = true)
-  @Mapping(target ="logoEntity", ignore = true)
-  CrewEntity toCrewEntity(CreateCrewQuery source);
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "imageId", ignore = true)
+	@Mapping(target = "logoId", ignore = true)
+	@Mapping(target = "userEntities", ignore = true)
+	@Mapping(target = "imageEntity", ignore = true)
+	@Mapping(target = "logoEntity", ignore = true)
+	CrewEntity toCrewEntity(CreateCrewQuery source);
 }

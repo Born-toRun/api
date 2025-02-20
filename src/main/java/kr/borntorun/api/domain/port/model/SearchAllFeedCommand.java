@@ -4,9 +4,9 @@ import kr.borntorun.api.domain.constant.FeedCategory;
 import kr.borntorun.api.support.TokenDetail;
 
 public record SearchAllFeedCommand(FeedCategory category,
-                                   String searchKeyword,
-                                   boolean isMyCrew,
-                                   TokenDetail my,
+								   String searchKeyword,
+								   boolean isMyCrew,
+								   TokenDetail my,
 								   long lastFeedId) {
 
 }

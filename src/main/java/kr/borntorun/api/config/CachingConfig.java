@@ -11,9 +11,9 @@ import com.hazelcast.spring.cache.HazelcastCacheManager;
 @Configuration
 public class CachingConfig {
 
-  @Bean
-  public CacheManagerCustomizer<HazelcastCacheManager> cacheManagerCustomizer() {
-    return cacheManagerCustomizer -> {
-    };
-  }
+	@Bean
+	public CacheManagerCustomizer<HazelcastCacheManager> cacheManagerCustomizer() {
+		return cacheManagerCustomizer -> {
+		};
+	}
 }

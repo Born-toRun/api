@@ -8,5 +8,5 @@ import kr.borntorun.api.infrastructure.model.CreateRefreshTokenQuery;
 @Mapper(componentModel = "spring")
 public interface UserRefreshTokenConverter {
 
-  CreateRefreshTokenQuery toCreateRefreshTokenQuery(CreateRefreshTokenCommand source);
+	CreateRefreshTokenQuery toCreateRefreshTokenQuery(CreateRefreshTokenCommand source);
 }

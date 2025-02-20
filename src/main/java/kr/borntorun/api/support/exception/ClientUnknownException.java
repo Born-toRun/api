@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.BAD_GATEWAY)
 public class ClientUnknownException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public ClientUnknownException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public ClientUnknownException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

@@ -31,24 +31,24 @@ import lombok.ToString;
 @DynamicInsert
 public class RecommendationEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long contentId;
-  private long userId;
-  @Enumerated(EnumType.STRING)
-  private RecommendationType recommendationType;
-  private LocalDateTime registeredAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long contentId;
+	private long userId;
+	@Enumerated(EnumType.STRING)
+	private RecommendationType recommendationType;
+	private LocalDateTime registeredAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "content_id", insertable = false, updatable = false)
-  private FeedEntity feedContentsEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "content_id", insertable = false, updatable = false)
+	private FeedEntity feedContentsEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "content_id", insertable = false, updatable = false)
-  private CommentEntity commentContentsEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "content_id", insertable = false, updatable = false)
+	private CommentEntity commentContentsEntity;
 }

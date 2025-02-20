@@ -8,11 +8,11 @@ import kr.borntorun.api.support.oauth.token.AuthTokenProvider;
 
 @Configuration
 public class JwtConfig {
-    @Value("${jwt.secret}")
-    private String secret;
+	@Value("${jwt.secret}")
+	private String secret;
 
-    @Bean
-    public AuthTokenProvider jwtProvider() {
-        return new AuthTokenProvider(secret);
-    }
+	@Bean
+	public AuthTokenProvider jwtProvider() {
+		return new AuthTokenProvider(secret);
+	}
 }

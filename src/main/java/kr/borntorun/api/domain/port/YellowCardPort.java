@@ -4,5 +4,5 @@ import kr.borntorun.api.domain.port.model.CreateYellowCardCommand;
 
 public interface YellowCardPort {
 
-  void create(final CreateYellowCardCommand command);
+	void create(final CreateYellowCardCommand command);
 }

@@ -17,54 +17,54 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentGateway {
 
-  private final CommentConverter commentConverter;
+	private final CommentConverter commentConverter;
 
-  private final CommentRepository commentRepository;
+	private final CommentRepository commentRepository;
 
-  public List<CommentEntity> searchAll(final long feedId) {
-    return commentRepository.findAllByFeedId(feedId);
-  }
+	public List<CommentEntity> searchAll(final long feedId) {
+		return commentRepository.findAllByFeedId(feedId);
+	}
 
-  public List<CommentEntity> searchAll(List<Long> feedIds) {
-    return commentRepository.findAllByFeedIdIn(feedIds);
-  }
+	public List<CommentEntity> searchAll(List<Long> feedIds) {
+		return commentRepository.findAllByFeedIdIn(feedIds);
+	}
 
-  public void create(final CreateCommentQuery query) {
-    CommentEntity commentEntity = commentConverter.toCommentEntity(query);
-    commentRepository.save(commentEntity);
-  }
+	public void create(final CreateCommentQuery query) {
+		CommentEntity commentEntity = commentConverter.toCommentEntity(query);
+		commentRepository.save(commentEntity);
+	}
 
-  public int qty(final long feedId) {
-    return commentRepository.countByFeedId(feedId);
-  }
+	public int qty(final long feedId) {
+		return commentRepository.countByFeedId(feedId);
+	}
 
-  public CommentEntity search(final long commentId) {
-    return commentRepository.findById(commentId)
-        .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
-  }
+	public CommentEntity search(final long commentId) {
+		return commentRepository.findById(commentId)
+		  .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+	}
 
-  public List<CommentEntity> searchReComments(long commentId) {
-    return commentRepository.findAllByParentId(commentId);
-  }
+	public List<CommentEntity> searchReComments(long commentId) {
+		return commentRepository.findAllByParentId(commentId);
+	}
 
-  public void remove(final long commentId) {
-    commentRepository.deleteById(commentId);
-  }
+	public void remove(final long commentId) {
+		commentRepository.deleteById(commentId);
+	}
 
-  public void removeAll(final List<Long> commentIds) {
-    commentRepository.deleteAllById(commentIds);
-  }
+	public void removeAll(final List<Long> commentIds) {
+		commentRepository.deleteAllById(commentIds);
+	}
 
-  public void removeAll(final long userId) {
-    commentRepository.deleteAllById(commentRepository.findAllByUserId(userId).stream()
-        .map(CommentEntity::getId)
-        .collect(Collectors.toList()));
-  }
+	public void removeAll(final long userId) {
+		commentRepository.deleteAllById(commentRepository.findAllByUserId(userId).stream()
+		  .map(CommentEntity::getId)
+		  .collect(Collectors.toList()));
+	}
 
-  public CommentEntity modify(final ModifyCommentQuery query) {
-    final CommentEntity comment = search(query.commentId());
-    comment.setContents(query.contents());
+	public CommentEntity modify(final ModifyCommentQuery query) {
+		final CommentEntity comment = search(query.commentId());
+		comment.setContents(query.contents());
 
-    return commentRepository.save(comment);
-  }
+		return commentRepository.save(comment);
+	}
 }

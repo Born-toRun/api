@@ -12,8 +12,8 @@ import lombok.ToString;
 @ConfigurationProperties("adapter.redis")
 public class RedisProperties {
 
-  private String host;
-  private int port;
-  private String password;
-  private int timeout;
+	private String host;
+	private int port;
+	private String password;
+	private int timeout;
 }

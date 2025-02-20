@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Configuration
@@ -20,18 +19,18 @@ import lombok.Setter;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedissonConfig {
 
-  private final RedisProperties redisProperties;
+	private final RedisProperties redisProperties;
 
-  private static final String SCHEME = "redis://";
+	private static final String SCHEME = "redis://";
 
-  @Bean
-  public RedissonClient redissonClient() {
-    Config config = new Config();
-    config.useSingleServer()
-        .setAddress(SCHEME + redisProperties.getHost() + ":" + redisProperties.getPort())
-        .setPassword(redisProperties.getPassword())
-        .setTimeout(redisProperties.getTimeout());
+	@Bean
+	public RedissonClient redissonClient() {
+		Config config = new Config();
+		config.useSingleServer()
+		  .setAddress(SCHEME + redisProperties.getHost() + ":" + redisProperties.getPort())
+		  .setPassword(redisProperties.getPassword())
+		  .setTimeout(redisProperties.getTimeout());
 
-    return Redisson.create(config);
-  }
+		return Redisson.create(config);
+	}
 }

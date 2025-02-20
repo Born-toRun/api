@@ -17,9 +17,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Schema(description = "행사 상세 조회")
 public class SearchAllActivityRequest {
-  @Schema(description = "코스")
-  private List<String> courses;
+	@Schema(description = "코스")
+	private List<String> courses;
 
-  @Schema(description = "모집 상태")
-  private ActivityRecruitmentType recruitmentType;
+	@Schema(description = "모집 상태")
+	private ActivityRecruitmentType recruitmentType;
 }

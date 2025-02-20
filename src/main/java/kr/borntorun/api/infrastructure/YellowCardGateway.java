@@ -12,16 +12,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class YellowCardGateway {
 
-  private final YellowCardConverter yellowCardConverter;
+	private final YellowCardConverter yellowCardConverter;
 
-  private final YellowCardRepository yellowCardRepository;
+	private final YellowCardRepository yellowCardRepository;
 
-  public boolean exists(final long sourceUserId, final long targetUserId) {
-    return yellowCardRepository.existsBySourceUserIdAndTargetUserId(sourceUserId, targetUserId);
-  }
+	public boolean exists(final long sourceUserId, final long targetUserId) {
+		return yellowCardRepository.existsBySourceUserIdAndTargetUserId(sourceUserId, targetUserId);
+	}
 
-  public void create(CreateYellowCardQuery query) {
-    YellowCardEntity yellowCardEntity = yellowCardConverter.toYellowCardEntity(query);
-    yellowCardRepository.save(yellowCardEntity);
-  }
+	public void create(CreateYellowCardQuery query) {
+		YellowCardEntity yellowCardEntity = yellowCardConverter.toYellowCardEntity(query);
+		yellowCardRepository.save(yellowCardEntity);
+	}
 }

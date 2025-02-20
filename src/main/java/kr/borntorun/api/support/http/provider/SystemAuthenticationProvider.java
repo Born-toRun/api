@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemAuthenticationProvider implements AuthenticationProvider {
 
-  @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-    String jwt = (String) authentication.getPrincipal();
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		String jwt = (String)authentication.getPrincipal();
 
-    if (jwt == null) {
-      return null;
-    }
-    return new PreAuthenticatedAuthenticationToken(jwt, null, Collections.emptyList());
-  }
+		if (jwt == null) {
+			return null;
+		}
+		return new PreAuthenticatedAuthenticationToken(jwt, null, Collections.emptyList());
+	}
 
-  @Override
-  public boolean supports(Class<?> authentication) {
-    return PreAuthenticatedAuthenticationToken.class.isAssignableFrom(authentication);
-  }
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return PreAuthenticatedAuthenticationToken.class.isAssignableFrom(authentication);
+	}
 }

@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public NotFoundException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public NotFoundException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

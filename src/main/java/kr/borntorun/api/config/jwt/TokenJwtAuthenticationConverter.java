@@ -10,8 +10,8 @@ import kr.borntorun.api.support.TokenDetail;
 @Component
 public class TokenJwtAuthenticationConverter implements Converter<JwtAuthenticationToken, TokenDetail> {
 
-  @Override
-  public TokenDetail convert(@NotNull JwtAuthenticationToken jwt) {
-    return new TokenDetail(jwt);
-  }
+	@Override
+	public TokenDetail convert(@NotNull JwtAuthenticationToken jwt) {
+		return new TokenDetail(jwt);
+	}
 }

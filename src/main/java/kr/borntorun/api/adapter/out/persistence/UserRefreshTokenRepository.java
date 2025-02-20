@@ -10,5 +10,5 @@ import kr.borntorun.api.domain.entity.UserRefreshTokenEntity;
 @Repository
 public interface UserRefreshTokenRepository extends JpaRepository<UserRefreshTokenEntity, Long> {
 
-    Optional<UserRefreshTokenEntity> findByUserId(long userId);
+	Optional<UserRefreshTokenEntity> findByUserId(long userId);
 }

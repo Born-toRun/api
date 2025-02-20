@@ -25,74 +25,74 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
-    private final long userId;
-    private final String name;
-    private final String password;
-    private final ProviderType providerType;
-    private final RoleType roleType;
-    private final Collection<GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+	private final long userId;
+	private final String name;
+	private final String password;
+	private final ProviderType providerType;
+	private final RoleType roleType;
+	private final Collection<GrantedAuthority> authorities;
+	private Map<String, Object> attributes;
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
 
-    @Override
-    public String getUsername() {
-        return String.valueOf(userId);
-    }
+	@Override
+	public String getUsername() {
+		return String.valueOf(userId);
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
-    @Override
-    public Map<String, Object> getClaims() {
-        return null;
-    }
+	@Override
+	public Map<String, Object> getClaims() {
+		return null;
+	}
 
-    @Override
-    public OidcUserInfo getUserInfo() {
-        return null;
-    }
+	@Override
+	public OidcUserInfo getUserInfo() {
+		return null;
+	}
 
-    @Override
-    public OidcIdToken getIdToken() {
-        return null;
-    }
+	@Override
+	public OidcIdToken getIdToken() {
+		return null;
+	}
 
-    public static UserPrincipal create(BornToRunUser user) {
-        return new UserPrincipal(
-          user.userId(),
-          user.userName(),
-          user.socialId(),
-          user.providerType(),
-          user.roleType(),
-          Collections.singletonList(new SimpleGrantedAuthority(user.roleType().getCode()))
-        );
-    }
+	public static UserPrincipal create(BornToRunUser user) {
+		return new UserPrincipal(
+		  user.userId(),
+		  user.userName(),
+		  user.socialId(),
+		  user.providerType(),
+		  user.roleType(),
+		  Collections.singletonList(new SimpleGrantedAuthority(user.roleType().getCode()))
+		);
+	}
 
-    public static UserPrincipal create(BornToRunUser user, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = create(user);
-        userPrincipal.setAttributes(attributes);
+	public static UserPrincipal create(BornToRunUser user, Map<String, Object> attributes) {
+		UserPrincipal userPrincipal = create(user);
+		userPrincipal.setAttributes(attributes);
 
-        return userPrincipal;
-    }
+		return userPrincipal;
+	}
 }

@@ -16,15 +16,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BornToRunUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final UserConverter userConverter;
+	private final UserConverter userConverter;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findBySocialId(username)
-          .orElseThrow(() -> new UsernameNotFoundException("Can not find username."));
-        BornToRunUser user = userConverter.toBornToRunUser(userEntity);
-        return UserPrincipal.create(user);
-    }
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		UserEntity userEntity = userRepository.findBySocialId(username)
+		  .orElseThrow(() -> new UsernameNotFoundException("Can not find username."));
+		BornToRunUser user = userConverter.toBornToRunUser(userEntity);
+		return UserPrincipal.create(user);
+	}
 }

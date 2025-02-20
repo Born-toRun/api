@@ -4,4 +4,5 @@ import kr.borntorun.api.domain.constant.RecommendationType;
 
 public record RemoveRecommendationCommand(RecommendationType recommendationType,
 										  long contentId,
-										  long myUserId) {}
+										  long myUserId) {
+}

@@ -7,7 +7,7 @@ import kr.borntorun.api.domain.port.model.Crew;
 
 public interface CrewPort {
 
-  List<Crew> searchAll();
+	List<Crew> searchAll();
 
-  void create(CreateCrewCommand command);
+	void create(CreateCrewCommand command);
 }

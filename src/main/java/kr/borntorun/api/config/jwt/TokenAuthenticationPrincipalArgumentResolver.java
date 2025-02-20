@@ -19,21 +19,23 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class TokenAuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private final Converter<JwtAuthenticationToken, TokenDetail> customJwtAuthenticationConverter;
+	private final Converter<JwtAuthenticationToken, TokenDetail> customJwtAuthenticationConverter;
 
-  @Override
-  public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.hasParameterAnnotation(AuthenticationPrincipal.class) &&
-        parameter.getParameterType().equals(TokenDetail.class);
-  }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		return parameter.hasParameterAnnotation(AuthenticationPrincipal.class) &&
+		  parameter.getParameterType().equals(TokenDetail.class);
+	}
 
-  @Override
-  public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-    try {
-      JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-      return customJwtAuthenticationConverter.convert(authentication);
-    } catch (Exception e) {
-      return null;
-    }
-  }
+	@Override
+	public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer,
+	  @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+		try {
+			JwtAuthenticationToken authentication = (JwtAuthenticationToken)SecurityContextHolder.getContext()
+			  .getAuthentication();
+			return customJwtAuthenticationConverter.convert(authentication);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

@@ -28,62 +28,63 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "activity")
 public class ActivityProxy {
 
-  private final ActivityConverter activityConverter;
+	private final ActivityConverter activityConverter;
 
-  private final ActivityService activityService;
+	private final ActivityService activityService;
 
-  @CacheEvict(allEntries = true)
-  public void create(final TokenDetail my, final CreateActivityRequest request) {
-    CreateActivityCommand command = activityConverter.toCreateActivityCommand(request, my);
-    activityService.create(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void create(final TokenDetail my, final CreateActivityRequest request) {
+		CreateActivityCommand command = activityConverter.toCreateActivityCommand(request, my);
+		activityService.create(command);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void modify(final ModifyActivityRequest request, final long activityId) {
-    ModifyActivityCommand command = activityConverter.toModifyActivityCommand(request, activityId);
-    activityService.modify(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void modify(final ModifyActivityRequest request, final long activityId) {
+		ModifyActivityCommand command = activityConverter.toModifyActivityCommand(request, activityId);
+		activityService.modify(command);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void remove(final long activityId) {
-    activityService.remove(activityId);
-  }
+	@CacheEvict(allEntries = true)
+	public void remove(final long activityId) {
+		activityService.remove(activityId);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void participate(final long activityId, final long myUserId) {
-    ParticipateActivityCommand command = new ParticipateActivityCommand(activityId, myUserId);
-    activityService.participate(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void participate(final long activityId, final long myUserId) {
+		ParticipateActivityCommand command = new ParticipateActivityCommand(activityId, myUserId);
+		activityService.participate(command);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void participateCancel(final long participationId) {
-    activityService.participateCancel(participationId);
-  }
+	@CacheEvict(allEntries = true)
+	public void participateCancel(final long participationId) {
+		activityService.participateCancel(participationId);
+	}
 
-  @Cacheable(key = "'searchAll: ' + #my.id + #request.hashCode()")
-  public List<Activity> searchAll(final SearchAllActivityRequest request, final TokenDetail my) {
-    SearchAllActivityCommand command = activityConverter.toSearchAllActivityCommand(request, my);
-    return activityService.searchAll(command);
-  }
+	@Cacheable(key = "'searchAll: ' + #my.id + #request.hashCode()")
+	public List<Activity> searchAll(final SearchAllActivityRequest request, final TokenDetail my) {
+		SearchAllActivityCommand command = activityConverter.toSearchAllActivityCommand(request, my);
+		return activityService.searchAll(command);
+	}
 
-  @Cacheable(key = "'search: ' + #my.id + #activityId")
-  public Activity search(final long activityId, final TokenDetail my) {
-    return activityService.search(activityId, my.getId());
-  }
+	@Cacheable(key = "'search: ' + #my.id + #activityId")
+	public Activity search(final long activityId, final TokenDetail my) {
+		return activityService.search(activityId, my.getId());
+	}
 
-  @CacheEvict(allEntries = true)
-  public Activity open(final long activityId) {
-    return activityService.open(activityId);
-  }
+	@CacheEvict(allEntries = true)
+	public Activity open(final long activityId) {
+		return activityService.open(activityId);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void attendance(final AttendanceActivityRequest request, final long activityId, final long myUserId) {
-    AttendanceActivityCommand command = activityConverter.toAttendanceActivityCommand(request, activityId, myUserId);
-    activityService.attendance(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void attendance(final AttendanceActivityRequest request, final long activityId, final long myUserId) {
+		AttendanceActivityCommand command = activityConverter.toAttendanceActivityCommand(request, activityId,
+		  myUserId);
+		activityService.attendance(command);
+	}
 
-  @Cacheable(key = "'getAttendance: ' + #activityId")
-  public AttendanceResult getAttendance(final long activityId) {
-    return activityService.getAttendance(activityId);
-  }
+	@Cacheable(key = "'getAttendance: ' + #activityId")
+	public AttendanceResult getAttendance(final long activityId) {
+		return activityService.getAttendance(activityId);
+	}
 }

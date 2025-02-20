@@ -6,13 +6,13 @@ import kr.borntorun.api.domain.constant.FeedCategory;
 import kr.borntorun.api.support.TokenDetail;
 
 public record SearchAllFeedQuery(FeedCategory category,
-                                 String searchKeyword,
-                                 boolean isMyCrew,
-                                 TokenDetail my,
-                                 long lastFeedId,
-                                 List<Long> searchedUserIds) {
+								 String searchKeyword,
+								 boolean isMyCrew,
+								 TokenDetail my,
+								 long lastFeedId,
+								 List<Long> searchedUserIds) {
 
-  public boolean isUsedIntegratedSearch() {
-    return null != searchKeyword && !searchKeyword.isEmpty();
-  }
+	public boolean isUsedIntegratedSearch() {
+		return null != searchKeyword && !searchKeyword.isEmpty();
+	}
 }

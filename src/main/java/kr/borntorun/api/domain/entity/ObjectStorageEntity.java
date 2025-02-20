@@ -34,28 +34,28 @@ import lombok.ToString;
 @DynamicInsert
 public class ObjectStorageEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long userId;
-  private String fileUri;
-  private LocalDateTime uploadAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long userId;
+	private String fileUri;
+	private LocalDateTime uploadAt;
 
-  @OneToMany(mappedBy = "objectStorageEntity", cascade = CascadeType.REMOVE)
-  private Set<FeedImageMappingEntity> feedImageMappingEntities;
+	@OneToMany(mappedBy = "objectStorageEntity", cascade = CascadeType.REMOVE)
+	private Set<FeedImageMappingEntity> feedImageMappingEntities;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  @OneToOne(mappedBy = "imageEntity", cascade = CascadeType.REMOVE)
-  private CrewEntity crewImageEntity;
+	@OneToOne(mappedBy = "imageEntity", cascade = CascadeType.REMOVE)
+	private CrewEntity crewImageEntity;
 
-  @OneToOne(mappedBy = "logoEntity", cascade = CascadeType.REMOVE)
-  private CrewEntity crewLogoEntity;
+	@OneToOne(mappedBy = "logoEntity", cascade = CascadeType.REMOVE)
+	private CrewEntity crewLogoEntity;
 
-  public static ObjectStorageEntity defaultEntity() {
-    return ObjectStorageEntity.builder()
-        .build();
-  }
+	public static ObjectStorageEntity defaultEntity() {
+		return ObjectStorageEntity.builder()
+		  .build();
+	}
 }

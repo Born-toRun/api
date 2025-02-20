@@ -7,5 +7,6 @@ import kr.borntorun.api.domain.constant.RecommendationType;
 public record Recommendation(long id,
 							 long contentId,
 							 long userId,
-                             RecommendationType recommendationType,
-                             LocalDateTime registeredAt) {}
+							 RecommendationType recommendationType,
+							 LocalDateTime registeredAt) {
+}

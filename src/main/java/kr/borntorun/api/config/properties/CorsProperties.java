@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @ConfigurationProperties(prefix = "cors")
 public class CorsProperties {
-    private String allowedOrigins;
-    private String allowedMethods;
-    private String allowedHeaders;
-    private Long maxAge;
+	private String allowedOrigins;
+	private String allowedMethods;
+	private String allowedHeaders;
+	private Long maxAge;
 }

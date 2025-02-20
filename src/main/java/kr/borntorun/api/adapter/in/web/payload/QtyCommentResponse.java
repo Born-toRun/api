@@ -5,4 +5,5 @@ import lombok.Builder;
 
 @Schema(description = "댓글 개수")
 @Builder
-public record QtyCommentResponse(@Schema(description = "댓글 개수") int qty) {}
+public record QtyCommentResponse(@Schema(description = "댓글 개수") int qty) {
+}

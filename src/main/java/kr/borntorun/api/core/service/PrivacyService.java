@@ -16,21 +16,21 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class PrivacyService implements PrivacyPort {
 
-  private final PrivacyConverter privacyConverter;
+	private final PrivacyConverter privacyConverter;
 
-  private final PrivacyGateway privacyGateway;
+	private final PrivacyGateway privacyGateway;
 
-  @Transactional
-  @Override
-  public void modifyUserPrivacy(final ModifyUserPrivacyCommand command) {
-    ModifyUserPrivacyQuery query = privacyConverter.toModifyUserPrivacyQuery(command);
-    privacyGateway.modifyUserPrivacy(query);
-  }
+	@Transactional
+	@Override
+	public void modifyUserPrivacy(final ModifyUserPrivacyCommand command) {
+		ModifyUserPrivacyQuery query = privacyConverter.toModifyUserPrivacyQuery(command);
+		privacyGateway.modifyUserPrivacy(query);
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public UserPrivacy searchUserPrivacy(final long userId) {
-    UserPrivacyEntity userPrivacyEntity = privacyGateway.searchUserPrivacy(userId);
-    return privacyConverter.toUserPrivacy(userPrivacyEntity);
-  }
+	@Transactional(readOnly = true)
+	@Override
+	public UserPrivacy searchUserPrivacy(final long userId) {
+		UserPrivacyEntity userPrivacyEntity = privacyGateway.searchUserPrivacy(userId);
+		return privacyConverter.toUserPrivacy(userPrivacyEntity);
+	}
 }

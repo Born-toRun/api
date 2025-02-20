@@ -14,16 +14,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CrewGateway {
 
-  private final CrewConverter crewConverter;
+	private final CrewConverter crewConverter;
 
-  private final CrewRepository crewRepository;
+	private final CrewRepository crewRepository;
 
-  public List<CrewEntity> searchAll() {
-    return crewRepository.findAll();
-  }
+	public List<CrewEntity> searchAll() {
+		return crewRepository.findAll();
+	}
 
-  public void create(CreateCrewQuery query) {
-    CrewEntity crewEntity = crewConverter.toCrewEntity(query);
-    crewRepository.save(crewEntity);
-  }
+	public void create(CreateCrewQuery query) {
+		CrewEntity crewEntity = crewConverter.toCrewEntity(query);
+		crewRepository.save(crewEntity);
+	}
 }

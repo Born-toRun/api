@@ -15,19 +15,20 @@ import kr.borntorun.api.support.annotation.AuthUser;
 
 public final class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-  @Override
-  public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterAnnotation(AuthUser.class) != null;
-  }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		return parameter.getParameterAnnotation(AuthUser.class) != null;
+	}
 
-  @Override
-  public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	@Override
+	public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer,
+	  @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (!(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken)) {
-      return TokenDetail.defaultUser();
-    }
+		if (!(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken)) {
+			return TokenDetail.defaultUser();
+		}
 
-    return new TokenDetail(jwtAuthenticationToken);
-  }
+		return new TokenDetail(jwtAuthenticationToken);
+	}
 }

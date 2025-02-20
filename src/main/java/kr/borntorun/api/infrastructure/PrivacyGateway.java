@@ -12,22 +12,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PrivacyGateway {
 
-  private final UserPrivacyRepository userPrivacyRepository;
+	private final UserPrivacyRepository userPrivacyRepository;
 
-  public void modifyUserPrivacy(final ModifyUserPrivacyQuery query) {
-    final UserPrivacyEntity userPrivacy = searchUserPrivacy(query.myUserId());
-    userPrivacy.change(query.isInstagramIdPublic());
+	public void modifyUserPrivacy(final ModifyUserPrivacyQuery query) {
+		final UserPrivacyEntity userPrivacy = searchUserPrivacy(query.myUserId());
+		userPrivacy.change(query.isInstagramIdPublic());
 
-    userPrivacyRepository.save(userPrivacy);
-  }
+		userPrivacyRepository.save(userPrivacy);
+	}
 
-  public UserPrivacyEntity searchUserPrivacy(final long userId) {
-    return userPrivacyRepository.findByUserId(userId)
-      .orElseThrow(() -> new NotFoundException("정보 노출 동의 내용을 찾을 수 없습니다."));
-  }
+	public UserPrivacyEntity searchUserPrivacy(final long userId) {
+		return userPrivacyRepository.findByUserId(userId)
+		  .orElseThrow(() -> new NotFoundException("정보 노출 동의 내용을 찾을 수 없습니다."));
+	}
 
-  public void remove(final long userId) {
-    UserPrivacyEntity userPrivacyEntity = searchUserPrivacy(userId);
-    userPrivacyRepository.deleteById(userPrivacyEntity.getId());
-  }
+	public void remove(final long userId) {
+		UserPrivacyEntity userPrivacyEntity = searchUserPrivacy(userId);
+		userPrivacyRepository.deleteById(userPrivacyEntity.getId());
+	}
 }

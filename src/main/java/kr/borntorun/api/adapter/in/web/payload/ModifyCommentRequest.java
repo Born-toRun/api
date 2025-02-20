@@ -4,4 +4,5 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "댓글 수정")
-public record ModifyCommentRequest(@Schema(description = "내용") @NotNull String contents) {}
+public record ModifyCommentRequest(@Schema(description = "내용") @NotNull String contents) {
+}

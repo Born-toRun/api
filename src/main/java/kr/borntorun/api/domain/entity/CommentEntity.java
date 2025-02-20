@@ -34,36 +34,36 @@ import lombok.ToString;
 @DynamicUpdate
 public class CommentEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long parentId;
-  private long userId;
-  private long feedId;
-  private String contents;
-  private LocalDateTime registeredAt;
-  private LocalDateTime updatedAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long parentId;
+	private long userId;
+	private long feedId;
+	private String contents;
+	private LocalDateTime registeredAt;
+	private LocalDateTime updatedAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id", insertable = false, updatable = false)
-  private FeedEntity feedEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private FeedEntity feedEntity;
 
-  @OneToMany(mappedBy = "commentContentsEntity", cascade = CascadeType.REMOVE)
-  private Set<RecommendationEntity> recommendationEntities;
+	@OneToMany(mappedBy = "commentContentsEntity", cascade = CascadeType.REMOVE)
+	private Set<RecommendationEntity> recommendationEntities;
 
-  public long getRecommendationQty() {
-    return recommendationEntities.stream()
-        .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
-        .count();
-  }
+	public long getRecommendationQty() {
+		return recommendationEntities.stream()
+		  .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
+		  .count();
+	}
 
-  public boolean isRootComment() {
-    return parentId == 0;
-  }
+	public boolean isRootComment() {
+		return parentId == 0;
+	}
 }
 
 

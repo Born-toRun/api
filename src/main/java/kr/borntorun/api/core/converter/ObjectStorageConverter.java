@@ -20,26 +20,28 @@ import kr.borntorun.api.support.TokenDetail;
 @Mapper(componentModel = "spring")
 public interface ObjectStorageConverter {
 
-  UploadObjectStorageCommand toUploadObjectStorageCommand(final long myUserId, final MultipartFile file, final Bucket bucket);
+	UploadObjectStorageCommand toUploadObjectStorageCommand(final long myUserId, final MultipartFile file,
+	  final Bucket bucket);
 
-  RemoveObjectStorageCommand toRemoveObjectStorageCommand(final TokenDetail my, final long targetFileId, final Bucket bucket);
+	RemoveObjectStorageCommand toRemoveObjectStorageCommand(final TokenDetail my, final long targetFileId,
+	  final Bucket bucket);
 
-  UploadObjectStorageQuery toUploadObjectStorageQuery(final UploadObjectStorageCommand source);
+	UploadObjectStorageQuery toUploadObjectStorageQuery(final UploadObjectStorageCommand source);
 
-  @Mapping(target = "id", source = "id")
-  ObjectStorage toObjectStorage(final ObjectStorageEntity source);
+	@Mapping(target = "id", source = "id")
+	ObjectStorage toObjectStorage(final ObjectStorageEntity source);
 
-  @Mapping(target = "bucket", source = "bucketName")
-  Upload toUpload(final UploadObjectStorageQuery source);
+	@Mapping(target = "bucket", source = "bucketName")
+	Upload toUpload(final UploadObjectStorageQuery source);
 
-  @Mapping(target = "myUserId", source = "my.id")
-  Upload toUpload(final ModifyObjectStorageQuery source);
+	@Mapping(target = "myUserId", source = "my.id")
+	Upload toUpload(final ModifyObjectStorageQuery source);
 
-  RemoveObjectStorageQuery toRemoveObjectStorageQuery(final RemoveObjectStorageCommand source);
+	RemoveObjectStorageQuery toRemoveObjectStorageQuery(final RemoveObjectStorageCommand source);
 
-  @Mapping(target = "fileId", source = "id")
-  UploadFileResponse toUploadFileResponse(final ObjectStorage source);
+	@Mapping(target = "fileId", source = "id")
+	UploadFileResponse toUploadFileResponse(final ObjectStorage source);
 
-  @Mapping(target = "objectName", ignore = true)
-  Remove toRemove(final ModifyObjectStorageQuery source);
+	@Mapping(target = "objectName", ignore = true)
+	Remove toRemove(final ModifyObjectStorageQuery source);
 }

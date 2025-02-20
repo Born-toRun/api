@@ -24,39 +24,39 @@ access token 수신
 @RequiredArgsConstructor
 public class BornToRunOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserPort userPort;
+	private final UserPort userPort;
 
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User user = super.loadUser(userRequest);
+	@Override
+	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+		OAuth2User user = super.loadUser(userRequest);
 
-        try {
-            return this.process(userRequest, user);
-        } catch (AuthenticationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
-        }
-    }
+		try {
+			return this.process(userRequest, user);
+		} catch (AuthenticationException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+		}
+	}
 
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration()
-          .getRegistrationId()
-          .toUpperCase());
+	private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
+		ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration()
+		  .getRegistrationId()
+		  .toUpperCase());
 
-        OAuth2UserInfo socialUser = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        BornToRunUser bornToRunUser = userPort.searchBySocialId(socialUser.getId());
+		OAuth2UserInfo socialUser = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
+		BornToRunUser bornToRunUser = userPort.searchBySocialId(socialUser.getId());
 
-        if (bornToRunUser == null) {
-            bornToRunUser = createUser(socialUser, providerType);
-        }
+		if (bornToRunUser == null) {
+			bornToRunUser = createUser(socialUser, providerType);
+		}
 
-        return UserPrincipal.create(bornToRunUser, user.getAttributes());
-    }
+		return UserPrincipal.create(bornToRunUser, user.getAttributes());
+	}
 
-    private BornToRunUser createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        CreateGuestCommand command = new CreateGuestCommand(userInfo.getId(), providerType);
-        return userPort.create(command);
-    }
+	private BornToRunUser createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+		CreateGuestCommand command = new CreateGuestCommand(userInfo.getId(), providerType);
+		return userPort.create(command);
+	}
 }

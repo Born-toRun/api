@@ -37,47 +37,48 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/feeds")
 public class FeedController {
 
-  private final FeedConverter feedConverter;
+	private final FeedConverter feedConverter;
 
-  private final FeedProxy feedProxy;
+	private final FeedProxy feedProxy;
 
-  @Operation(summary = "피드 상세 보기", description = "특정 피드를 조회합니다.")
-  @GetMapping(value = "{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DetailFeedResponse> detail(@AuthUser TokenDetail my, @PathVariable final long feedId) {
-    final Feed feed = feedProxy.searchDetail(my, feedId);
-    feedProxy.increaseViewQty(feedId);
+	@Operation(summary = "피드 상세 보기", description = "특정 피드를 조회합니다.")
+	@GetMapping(value = "{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DetailFeedResponse> detail(@AuthUser TokenDetail my, @PathVariable final long feedId) {
+		final Feed feed = feedProxy.searchDetail(my, feedId);
+		feedProxy.increaseViewQty(feedId);
 
-    return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feed));
-  }
+		return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feed));
+	}
 
-  @Operation(summary = "피드 작성", description = "피드를 작성합니다.")
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public void create(@AuthUser TokenDetail my, @RequestBody @Valid final CreateFeedRequest request) {
-    feedProxy.create(request, my);
-  }
+	@Operation(summary = "피드 작성", description = "피드를 작성합니다.")
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public void create(@AuthUser TokenDetail my, @RequestBody @Valid final CreateFeedRequest request) {
+		feedProxy.create(request, my);
+	}
 
-  @Operation(summary = "피드 삭제", description = "피드를 삭제합니다.")
-  @DeleteMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void remove(@AuthUser TokenDetail my, @PathVariable final long feedId) {
-    feedProxy.remove(feedId, my);
-  }
+	@Operation(summary = "피드 삭제", description = "피드를 삭제합니다.")
+	@DeleteMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public void remove(@AuthUser TokenDetail my, @PathVariable final long feedId) {
+		feedProxy.remove(feedId, my);
+	}
 
-  @Operation(summary = "피드 수정", description = "피드를 수정합니다.")
-  @PutMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void modify(@AuthUser TokenDetail my, @PathVariable final long feedId, @RequestBody @Valid final ModifyFeedRequest request) {
-    feedProxy.modify(request, feedId);
-  }
+	@Operation(summary = "피드 수정", description = "피드를 수정합니다.")
+	@PutMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public void modify(@AuthUser TokenDetail my, @PathVariable final long feedId,
+	  @RequestBody @Valid final ModifyFeedRequest request) {
+		feedProxy.modify(request, feedId);
+	}
 
-  @Operation(summary = "피드 목록 조회", description = "피드 목록을 조회합니다.")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Page<SearchFeedResponse>> searchAll(@AuthUser TokenDetail my,
-      @Valid @ModelAttribute SearchFeedRequest request,
-      @RequestParam(defaultValue = "0") long lastFeedId,
-      @RequestParam(defaultValue = "10") int size) {
-    final Page<FeedCard> feedPage = feedProxy.searchAll(request, my, lastFeedId, PageRequest.of(0, size));
+	@Operation(summary = "피드 목록 조회", description = "피드 목록을 조회합니다.")
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<SearchFeedResponse>> searchAll(@AuthUser TokenDetail my,
+	  @Valid @ModelAttribute SearchFeedRequest request,
+	  @RequestParam(defaultValue = "0") long lastFeedId,
+	  @RequestParam(defaultValue = "10") int size) {
+		final Page<FeedCard> feedPage = feedProxy.searchAll(request, my, lastFeedId, PageRequest.of(0, size));
 
-    return ResponseEntity.ok(feedPage.map(feedConverter::toSearchFeedResponse));
-  }
+		return ResponseEntity.ok(feedPage.map(feedConverter::toSearchFeedResponse));
+	}
 }
 
 

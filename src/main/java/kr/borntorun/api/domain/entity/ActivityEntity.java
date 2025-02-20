@@ -33,67 +33,67 @@ import lombok.ToString;
 @DynamicInsert
 public class ActivityEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private String title;
-  private String contents;
-  private LocalDateTime startDate;
-  private String venue;
-  private String venueUrl;
-  private int participantsLimit;
-  private int participationFee;
-  private String course;
-  private String courseDetail;
-  private String path;
-  private long userId;
-  private Boolean isOpen;
-  private LocalDateTime updatedAt;
-  private LocalDateTime registeredAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String title;
+	private String contents;
+	private LocalDateTime startDate;
+	private String venue;
+	private String venueUrl;
+	private int participantsLimit;
+	private int participationFee;
+	private String course;
+	private String courseDetail;
+	private String path;
+	private long userId;
+	private Boolean isOpen;
+	private LocalDateTime updatedAt;
+	private LocalDateTime registeredAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.REMOVE)
-  private Set<ActivityParticipationEntity> activityParticipationEntities;
+	@OneToMany(mappedBy = "activityEntity", cascade = CascadeType.REMOVE)
+	private Set<ActivityParticipationEntity> activityParticipationEntities;
 
-  public void open() {
-    this.isOpen = true;
-  }
+	public void open() {
+		this.isOpen = true;
+	}
 
-  public void modify(final ModifyActivityQuery query) {
-    if(!ObjectUtils.isEmpty(query.title())) {
-      this.title = query.title();
-    }
-    if(!ObjectUtils.isEmpty(query.contents())) {
-      this.contents = query.contents();
-    }
-    if(!ObjectUtils.isEmpty(query.startDate())) {
-      this.startDate = query.startDate();
-    }
-    if(!ObjectUtils.isEmpty(query.venue())) {
-      this.venue = query.venue();
-    }
-    if(!ObjectUtils.isEmpty(query.venueUrl())) {
-      this.venueUrl = query.venueUrl();
-    }
-    if(!ObjectUtils.isEmpty(query.participantsLimit())) {
-      this.participantsLimit = query.participantsLimit();
-    }
-    if(!ObjectUtils.isEmpty(query.participationFee())) {
-      this.participationFee = query.participationFee();
-    }
-    if(!ObjectUtils.isEmpty(query.course())) {
-      this.course = query.course();
-    }
-    if(!ObjectUtils.isEmpty(query.courseDetail())) {
-      this.courseDetail = query.courseDetail();
-    }
-    if(!ObjectUtils.isEmpty(query.path())) {
-      this.path = query.path();
-    }
-  }
+	public void modify(final ModifyActivityQuery query) {
+		if (!ObjectUtils.isEmpty(query.title())) {
+			this.title = query.title();
+		}
+		if (!ObjectUtils.isEmpty(query.contents())) {
+			this.contents = query.contents();
+		}
+		if (!ObjectUtils.isEmpty(query.startDate())) {
+			this.startDate = query.startDate();
+		}
+		if (!ObjectUtils.isEmpty(query.venue())) {
+			this.venue = query.venue();
+		}
+		if (!ObjectUtils.isEmpty(query.venueUrl())) {
+			this.venueUrl = query.venueUrl();
+		}
+		if (!ObjectUtils.isEmpty(query.participantsLimit())) {
+			this.participantsLimit = query.participantsLimit();
+		}
+		if (!ObjectUtils.isEmpty(query.participationFee())) {
+			this.participationFee = query.participationFee();
+		}
+		if (!ObjectUtils.isEmpty(query.course())) {
+			this.course = query.course();
+		}
+		if (!ObjectUtils.isEmpty(query.courseDetail())) {
+			this.courseDetail = query.courseDetail();
+		}
+		if (!ObjectUtils.isEmpty(query.path())) {
+			this.path = query.path();
+		}
+	}
 }
 
 

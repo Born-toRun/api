@@ -12,7 +12,7 @@ import lombok.ToString;
 @ConfigurationProperties("adapter.discord")
 public class DiscordProperties {
 
-  private final String host;
-  private final String webhookPath;
-  private final String contentType;
+	private final String host;
+	private final String webhookPath;
+	private final String contentType;
 }

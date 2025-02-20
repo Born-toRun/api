@@ -24,17 +24,17 @@ import lombok.Setter;
 @Table(name = "user_refresh_token")
 public class UserRefreshTokenEntity {
 
-    @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@JsonIgnore
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private long userId;
+	private long userId;
 
-    @Setter
-    private String refreshToken;
+	@Setter
+	private String refreshToken;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private UserEntity userEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 }

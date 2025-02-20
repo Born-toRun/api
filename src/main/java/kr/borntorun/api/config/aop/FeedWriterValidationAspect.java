@@ -17,33 +17,36 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedWriterValidationAspect {
 
-  private final FeedRepository feedRepository;
+	private final FeedRepository feedRepository;
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.FeedController.modify(..))")
-  public void onModifyUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.FeedController.modify(..))")
+	public void onModifyUser() {
+	}
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.FeedController.remove(..))")
-  public void onDeleteUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.FeedController.remove(..))")
+	public void onDeleteUser() {
+	}
 
-  @Before("onModifyUser() && args(my, feedId, request, ..)")
-  public void validateModify(final TokenDetail my, final long feedId, final ModifyFeedRequest request) throws IllegalArgumentException {
-    validate(my.getId(), feedId);
-  }
+	@Before("onModifyUser() && args(my, feedId, request, ..)")
+	public void validateModify(final TokenDetail my, final long feedId, final ModifyFeedRequest request) throws
+	  IllegalArgumentException {
+		validate(my.getId(), feedId);
+	}
 
-  @Before("onDeleteUser() && args(my, feedId, ..)")
-  public void validateDelete(final TokenDetail my, final long feedId) throws IllegalArgumentException {
-    validate(my.getId(), feedId);
-  }
+	@Before("onDeleteUser() && args(my, feedId, ..)")
+	public void validateDelete(final TokenDetail my, final long feedId) throws IllegalArgumentException {
+		validate(my.getId(), feedId);
+	}
 
-  private void validate(final long userId, final long feedId) {
-    if (!isValid(userId, feedId)) {
-      throw new ForBiddenException("잘못된 접근입니다.");
-    }
-  }
+	private void validate(final long userId, final long feedId) {
+		if (!isValid(userId, feedId)) {
+			throw new ForBiddenException("잘못된 접근입니다.");
+		}
+	}
 
-  private boolean isValid(final long userId, final long feedId) {
-    return feedRepository.findById(feedId)
-        .orElseThrow(() -> new NotFoundException("피드를 찾을 수 없습니다."))
-        .getUserId() == userId;
-  }
+	private boolean isValid(final long userId, final long feedId) {
+		return feedRepository.findById(feedId)
+		  .orElseThrow(() -> new NotFoundException("피드를 찾을 수 없습니다."))
+		  .getUserId() == userId;
+	}
 }

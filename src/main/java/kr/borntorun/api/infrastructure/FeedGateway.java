@@ -22,62 +22,62 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedGateway {
 
-  private final FeedConverter feedConverter;
-  private final FeedRepository feedRepository;
-  private final FeedQuery feedQuery;
+	private final FeedConverter feedConverter;
+	private final FeedRepository feedRepository;
+	private final FeedQuery feedQuery;
 
-  public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
-    return feedQuery.searchAllByFilter(query, pageable);
-  }
+	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
+		return feedQuery.searchAllByFilter(query, pageable);
+	}
 
-  public void increaseViewQty(final long feedId) {
-    feedQuery.increaseViewQty(feedId);
-  }
+	public void increaseViewQty(final long feedId) {
+		feedQuery.increaseViewQty(feedId);
+	}
 
-  public FeedEntity create(final CreateFeedQuery query) {
-    final FeedEntity feedEntity = feedConverter.toFeedEntity(query);
+	public FeedEntity create(final CreateFeedQuery query) {
+		final FeedEntity feedEntity = feedConverter.toFeedEntity(query);
 
-    List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
-      .map(imageId -> FeedImageMappingEntity.builder()
-        .imageId(imageId)
-        .build())
-      .toList();
+		List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
+		  .map(imageId -> FeedImageMappingEntity.builder()
+			.imageId(imageId)
+			.build())
+		  .toList();
 
-    feedEntity.add(feedImageMappingEntities);
+		feedEntity.add(feedImageMappingEntities);
 
-    return feedRepository.save(feedEntity);
-  }
+		return feedRepository.save(feedEntity);
+	}
 
-  public List<Long> removeAll(final long userId) {
-    final List<FeedEntity> feeds = feedRepository.findAllByUserId(userId);
-    final List<Long> feedIds = feeds.stream()
-        .map(FeedEntity::getId)
-        .collect(Collectors.toList());
+	public List<Long> removeAll(final long userId) {
+		final List<FeedEntity> feeds = feedRepository.findAllByUserId(userId);
+		final List<Long> feedIds = feeds.stream()
+		  .map(FeedEntity::getId)
+		  .collect(Collectors.toList());
 
-    feedRepository.deleteAllById(feedIds);
+		feedRepository.deleteAllById(feedIds);
 
-    return feedIds;
-  }
+		return feedIds;
+	}
 
-  public void remove(final long feedId) {
-    feedRepository.deleteById(feedId);
-  }
+	public void remove(final long feedId) {
+		feedRepository.deleteById(feedId);
+	}
 
-  public FeedEntity modify(final ModifyFeedQuery query) {
-    final FeedEntity feedEntity = search(query.feedId());
-    feedEntity.modify(query);
+	public FeedEntity modify(final ModifyFeedQuery query) {
+		final FeedEntity feedEntity = search(query.feedId());
+		feedEntity.modify(query);
 
-    feedEntity.add(query.imageIds().stream()
-        .map(imageId -> FeedImageMappingEntity.builder()
-            .imageId(imageId)
-            .build())
-        .collect(Collectors.toList()));
+		feedEntity.add(query.imageIds().stream()
+		  .map(imageId -> FeedImageMappingEntity.builder()
+			.imageId(imageId)
+			.build())
+		  .collect(Collectors.toList()));
 
-    return feedRepository.save(feedEntity);
-  }
+		return feedRepository.save(feedEntity);
+	}
 
-  public FeedEntity search(final long feedId) {
-    return feedRepository.findById(feedId)
-        .orElseThrow(() -> new NotFoundException("해당 피드를 찾을 수 없습니다."));
-  }
+	public FeedEntity search(final long feedId) {
+		return feedRepository.findById(feedId)
+		  .orElseThrow(() -> new NotFoundException("해당 피드를 찾을 수 없습니다."));
+	}
 }

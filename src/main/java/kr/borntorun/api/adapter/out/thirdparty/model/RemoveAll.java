@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 @Getter
 public class RemoveAll {
-  private Bucket bucket;
-  @Setter
-  private List<String> objectNames;
+	private Bucket bucket;
+	@Setter
+	private List<String> objectNames;
 }

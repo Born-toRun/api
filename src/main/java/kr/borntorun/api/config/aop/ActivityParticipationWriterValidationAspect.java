@@ -16,25 +16,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ActivityParticipationWriterValidationAspect {
 
-  private final ActivityParticipationRepository activityParticipationRepository;
+	private final ActivityParticipationRepository activityParticipationRepository;
 
-  @Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.participateCancel(..))")
-  public void onCancelUser() {}
+	@Pointcut("execution(* kr.borntorun.api.adapter.in.web.ActivityController.participateCancel(..))")
+	public void onCancelUser() {
+	}
 
-  @Before("onCancelUser() && args(my, participationId, ..)")
-  public void validateCancel(final TokenDetail my, final long participationId) throws IllegalArgumentException {
-    validate(my.getId(), participationId);
-  }
+	@Before("onCancelUser() && args(my, participationId, ..)")
+	public void validateCancel(final TokenDetail my, final long participationId) throws IllegalArgumentException {
+		validate(my.getId(), participationId);
+	}
 
-  private void validate(final long userId, final long participationId) {
-    if (!isValid(userId, participationId)) {
-      throw new ForBiddenException("잘못된 접근입니다.");
-    }
-  }
+	private void validate(final long userId, final long participationId) {
+		if (!isValid(userId, participationId)) {
+			throw new ForBiddenException("잘못된 접근입니다.");
+		}
+	}
 
-  private boolean isValid(final long userId, final long participationId) {
-    return activityParticipationRepository.findById(participationId)
-        .orElseThrow(() -> new NotFoundException("참여를 하지 않은 상태입니다."))
-        .getUserId() == userId;
-  }
+	private boolean isValid(final long userId, final long participationId) {
+		return activityParticipationRepository.findById(participationId)
+		  .orElseThrow(() -> new NotFoundException("참여를 하지 않은 상태입니다."))
+		  .getUserId() == userId;
+	}
 }

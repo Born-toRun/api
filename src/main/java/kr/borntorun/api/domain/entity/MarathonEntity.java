@@ -25,26 +25,26 @@ import lombok.ToString;
 @Setter
 public class MarathonEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private String title;
-  private String owner;
-  private String email;
-  private String schedule;
-  private String contact;
-  private String course;
-  private String location;
-  private String venue;
-  private String host;
-  private String duration;
-  private String homepage;
-  private String venueDetail;
-  private String remark;
-  private LocalDateTime registeredAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String title;
+	private String owner;
+	private String email;
+	private String schedule;
+	private String contact;
+	private String course;
+	private String location;
+	private String venue;
+	private String host;
+	private String duration;
+	private String homepage;
+	private String venueDetail;
+	private String remark;
+	private LocalDateTime registeredAt;
 
-  @OneToMany(mappedBy = "marathonEntity", cascade = CascadeType.REMOVE)
-  private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
+	@OneToMany(mappedBy = "marathonEntity", cascade = CascadeType.REMOVE)
+	private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
 }
 
 

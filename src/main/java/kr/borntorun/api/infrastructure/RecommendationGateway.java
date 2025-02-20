@@ -16,30 +16,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RecommendationGateway {
 
-  private final RecommendationRepository recommendationRepository;
+	private final RecommendationRepository recommendationRepository;
 
-  public List<RecommendationEntity> searchAll(SearchAllRecommendationQuery query) {
-    return recommendationRepository.findAllByRecommendationTypeAndContentIdIn(query.recommendationType(), query.contentIds());
-  }
+	public List<RecommendationEntity> searchAll(SearchAllRecommendationQuery query) {
+		return recommendationRepository.findAllByRecommendationTypeAndContentIdIn(query.recommendationType(),
+		  query.contentIds());
+	}
 
-  public void create(final CreateRecommendationQuery query) {
-    RecommendationEntity recommendationEntity = RecommendationEntity.builder()
-      .userId(query.myUserId())
-      .contentId(query.contentId())
-      .recommendationType(query.recommendationType())
-      .build();
+	public void create(final CreateRecommendationQuery query) {
+		RecommendationEntity recommendationEntity = RecommendationEntity.builder()
+		  .userId(query.myUserId())
+		  .contentId(query.contentId())
+		  .recommendationType(query.recommendationType())
+		  .build();
 
-    recommendationRepository.save(recommendationEntity);
-  }
+		recommendationRepository.save(recommendationEntity);
+	}
 
-  public void remove(final RemoveRecommendationQuery query) {
-    final RecommendationEntity recommendationEntity = recommendationRepository.findByUserIdAndRecommendationTypeAndContentId(query.myUserId(), query.recommendationType(), query.contentId());
-    recommendationRepository.deleteById(recommendationEntity.getId());
-  }
+	public void remove(final RemoveRecommendationQuery query) {
+		final RecommendationEntity recommendationEntity = recommendationRepository.findByUserIdAndRecommendationTypeAndContentId(
+		  query.myUserId(), query.recommendationType(), query.contentId());
+		recommendationRepository.deleteById(recommendationEntity.getId());
+	}
 
-  public void removeAll(final long userId) {
-    recommendationRepository.deleteAllById(recommendationRepository.findAllByUserId(userId).stream()
-        .map(RecommendationEntity::getId)
-        .collect(Collectors.toList()));
-  }
+	public void removeAll(final long userId) {
+		recommendationRepository.deleteAllById(recommendationRepository.findAllByUserId(userId).stream()
+		  .map(RecommendationEntity::getId)
+		  .collect(Collectors.toList()));
+	}
 }

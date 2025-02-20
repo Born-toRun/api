@@ -27,26 +27,26 @@ import lombok.ToString;
 @Getter
 public class CrewEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private String name;
-  private String contents;
-  private String sns;
-  private String region;
-  @Setter
-  private long imageId;
-  @Setter
-  private long logoId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String name;
+	private String contents;
+	private String sns;
+	private String region;
+	@Setter
+	private long imageId;
+	@Setter
+	private long logoId;
 
-  @OneToMany(mappedBy = "crewEntity")
-  private Set<UserEntity> userEntities;
+	@OneToMany(mappedBy = "crewEntity")
+	private Set<UserEntity> userEntities;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id", insertable = false, updatable = false)
-  private ObjectStorageEntity imageEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private ObjectStorageEntity imageEntity;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "logo_id", insertable = false, updatable = false)
-  private ObjectStorageEntity logoEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "logo_id", insertable = false, updatable = false)
+	private ObjectStorageEntity logoEntity;
 }

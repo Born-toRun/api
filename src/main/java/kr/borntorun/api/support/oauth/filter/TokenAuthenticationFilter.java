@@ -20,25 +20,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthTokenProvider tokenProvider;
+	private final AuthTokenProvider tokenProvider;
 
-    @Override
-    protected void doFilterInternal(
-            @NotNull HttpServletRequest request,
-            @NotNull HttpServletResponse response,
-            @NotNull FilterChain filterChain)  throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(
+	  @NotNull HttpServletRequest request,
+	  @NotNull HttpServletResponse response,
+	  @NotNull FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenStr = HeaderSupport.getAccessToken(request);
-        AuthToken token = tokenProvider.convertAuthToken(tokenStr);
+		String tokenStr = HeaderSupport.getAccessToken(request);
+		AuthToken token = tokenProvider.convertAuthToken(tokenStr);
 
-        try {
-            token.validate();
+		try {
+			token.validate();
 
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } finally {
-            filterChain.doFilter(request, response);
-        }
-    }
+			Authentication authentication = tokenProvider.getAuthentication(token);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} finally {
+			filterChain.doFilter(request, response);
+		}
+	}
 
 }

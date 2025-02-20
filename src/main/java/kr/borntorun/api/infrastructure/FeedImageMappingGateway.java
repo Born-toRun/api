@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedImageMappingGateway {
 
-  private final FeedImageMappingRepository feedImageMappingRepository;
+	private final FeedImageMappingRepository feedImageMappingRepository;
 
-  public void removeAllByFileId(List<Long> imageIds) {
-    feedImageMappingRepository.deleteAllByImageIdIn(imageIds);
-  }
+	public void removeAllByFileId(List<Long> imageIds) {
+		feedImageMappingRepository.deleteAllByImageIdIn(imageIds);
+	}
 }

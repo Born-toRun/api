@@ -7,13 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import kr.borntorun.api.domain.entity.UserPrivacyEntity;
 
-
 public interface UserPrivacyRepository extends JpaRepository<UserPrivacyEntity, Long> {
 
-  @Query(
-      "SELECT u FROM UserPrivacyEntity u " +
-          "JOIN FETCH u.userEntity " +
-          "WHERE u.userId =:userId"
-  )
-  Optional<UserPrivacyEntity> findByUserId(final long userId);
+	@Query(
+	  "SELECT u FROM UserPrivacyEntity u " +
+		"JOIN FETCH u.userEntity " +
+		"WHERE u.userId =:userId"
+	)
+	Optional<UserPrivacyEntity> findByUserId(final long userId);
 }

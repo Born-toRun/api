@@ -18,87 +18,87 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthToken {
 
-    @Getter
-    private final String token;
-    private final SecretKey key;
+	@Getter
+	private final String token;
+	private final SecretKey key;
 
-    public static final String AUTHORITIES_KEY = "role";
+	public static final String AUTHORITIES_KEY = "role";
 
-    AuthToken(long id, Date expiry, SecretKey key) {
-        this.key = key;
-        this.token = createAuthToken(id, expiry);
-    }
+	AuthToken(long id, Date expiry, SecretKey key) {
+		this.key = key;
+		this.token = createAuthToken(id, expiry);
+	}
 
-    AuthToken(long id, String role, Date expiry, SecretKey key) {
-        this.key = key;
-        this.token = createAuthToken(id, role, expiry);
-    }
+	AuthToken(long id, String role, Date expiry, SecretKey key) {
+		this.key = key;
+		this.token = createAuthToken(id, role, expiry);
+	}
 
-    private String createAuthToken(long id, Date expiry) {
-        return Jwts.builder()
-          .subject(String.valueOf(id))
-                .signWith(key, Jwts.SIG.HS512)
-                .expiration(expiry)
-                .compact();
-    }
+	private String createAuthToken(long id, Date expiry) {
+		return Jwts.builder()
+		  .subject(String.valueOf(id))
+		  .signWith(key, Jwts.SIG.HS512)
+		  .expiration(expiry)
+		  .compact();
+	}
 
-    private String createAuthToken(long id, String role, Date expiry) {
-        return Jwts.builder()
-                .subject(String.valueOf(id))
-                .claim(AUTHORITIES_KEY, role)
-                .signWith(key, Jwts.SIG.HS512)
-                .expiration(expiry)
-                .compact();
-    }
+	private String createAuthToken(long id, String role, Date expiry) {
+		return Jwts.builder()
+		  .subject(String.valueOf(id))
+		  .claim(AUTHORITIES_KEY, role)
+		  .signWith(key, Jwts.SIG.HS512)
+		  .expiration(expiry)
+		  .compact();
+	}
 
-    public boolean isValidate() {
-        try {
-            validate();
-        } catch (InvalidTokenException e) {
-            return false;
-        }
+	public boolean isValidate() {
+		try {
+			validate();
+		} catch (InvalidTokenException e) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public void validate() {
-        try {
-            Jwts.parser()
-              .verifyWith(key)
-              .build()
-              .parseSignedClaims(token)
-              .getPayload();
-        } catch (SecurityException e) {
-            throw new InvalidTokenException("Invalid JWT signature.");
-        } catch (MalformedJwtException e) {
-            throw new InvalidTokenException("Invalid JWT token.");
-        } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT token.");
-        } catch (UnsupportedJwtException e) {
-            throw new InvalidTokenException("Unsupported JWT token.");
-        } catch (IllegalArgumentException e) {
-            throw new InvalidTokenException("JWT token compact of handler are invalid.");
-        }
-    }
+	public void validate() {
+		try {
+			Jwts.parser()
+			  .verifyWith(key)
+			  .build()
+			  .parseSignedClaims(token)
+			  .getPayload();
+		} catch (SecurityException e) {
+			throw new InvalidTokenException("Invalid JWT signature.");
+		} catch (MalformedJwtException e) {
+			throw new InvalidTokenException("Invalid JWT token.");
+		} catch (ExpiredJwtException e) {
+			log.warn("Expired JWT token.");
+		} catch (UnsupportedJwtException e) {
+			throw new InvalidTokenException("Unsupported JWT token.");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidTokenException("JWT token compact of handler are invalid.");
+		}
+	}
 
-    public Claims getTokenClaims() {
-        try {
-            return Jwts.parser()
-              .verifyWith(key)
-              .build()
-              .parseSignedClaims(token)
-              .getPayload();
-        } catch (SecurityException e) {
-            log.warn("Invalid JWT signature.");
-        } catch (MalformedJwtException e) {
-            log.warn("Invalid JWT token.");
-        } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT token.");
-        } catch (UnsupportedJwtException e) {
-            log.warn("Unsupported JWT token.");
-        } catch (IllegalArgumentException e) {
-            log.warn("JWT token compact of handler are invalid.");
-        }
-        return null;
-    }
+	public Claims getTokenClaims() {
+		try {
+			return Jwts.parser()
+			  .verifyWith(key)
+			  .build()
+			  .parseSignedClaims(token)
+			  .getPayload();
+		} catch (SecurityException e) {
+			log.warn("Invalid JWT signature.");
+		} catch (MalformedJwtException e) {
+			log.warn("Invalid JWT token.");
+		} catch (ExpiredJwtException e) {
+			log.warn("Expired JWT token.");
+		} catch (UnsupportedJwtException e) {
+			log.warn("Unsupported JWT token.");
+		} catch (IllegalArgumentException e) {
+			log.warn("JWT token compact of handler are invalid.");
+		}
+		return null;
+	}
 }

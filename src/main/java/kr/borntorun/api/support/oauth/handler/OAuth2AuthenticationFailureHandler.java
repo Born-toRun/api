@@ -16,27 +16,27 @@ import kr.borntorun.api.support.CookieSupport;
 import kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import lombok.RequiredArgsConstructor;
 
-
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
+	private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        String targetUrl = CookieSupport.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse(("/"));
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+	  AuthenticationException exception) throws IOException {
+		String targetUrl = CookieSupport.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+		  .map(Cookie::getValue)
+		  .orElse(("/"));
 
-        exception.printStackTrace();
+		exception.printStackTrace();
 
-        targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("error", exception.getLocalizedMessage())
-                .build().toUriString();
+		targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
+		  .queryParam("error", exception.getLocalizedMessage())
+		  .build().toUriString();
 
-        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+		authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-    }
+		getRedirectStrategy().sendRedirect(request, response, targetUrl);
+	}
 }

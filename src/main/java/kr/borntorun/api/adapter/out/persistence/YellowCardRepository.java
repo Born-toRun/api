@@ -7,5 +7,5 @@ import kr.borntorun.api.domain.entity.YellowCardMultiKey;
 
 public interface YellowCardRepository extends JpaRepository<YellowCardEntity, YellowCardMultiKey> {
 
-  boolean existsBySourceUserIdAndTargetUserId(final long sourceUserId, final long targetUserId);
+	boolean existsBySourceUserIdAndTargetUserId(final long sourceUserId, final long targetUserId);
 }

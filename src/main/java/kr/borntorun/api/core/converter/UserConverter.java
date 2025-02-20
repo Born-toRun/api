@@ -22,29 +22,29 @@ import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 @Mapper(componentModel = "spring")
 public interface UserConverter {
 
-  SignInCommand toSignInCommand(final SignInRequest source);
+	SignInCommand toSignInCommand(final SignInRequest source);
 
-  @Mapping(target = "code", source = "kakaoAuthCode")
-  AuthSignInRequest toAuthSignUpRequest(final SignInCommand source);
+	@Mapping(target = "code", source = "kakaoAuthCode")
+	AuthSignInRequest toAuthSignUpRequest(final SignInCommand source);
 
-  SignUpCommand toSignUpCommand(final SignUpRequest source, final long userId);
+	SignUpCommand toSignUpCommand(final SignUpRequest source, final long userId);
 
-  @Mapping(target = "userId", source = "id")
-  @Mapping(target = "userName", source = "name")
-  @Mapping(target = "crewName", source = "crewEntity.name")
-  @Mapping(target = "isInstagramIdPublic", source = "userPrivacyEntity.isInstagramIdPublic")
-  @Mapping(target = "refreshToken", source = "userRefreshTokenEntity.refreshToken")
-  BornToRunUser toBornToRunUser(final UserEntity source);
+	@Mapping(target = "userId", source = "id")
+	@Mapping(target = "userName", source = "name")
+	@Mapping(target = "crewName", source = "crewEntity.name")
+	@Mapping(target = "isInstagramIdPublic", source = "userPrivacyEntity.isInstagramIdPublic")
+	@Mapping(target = "refreshToken", source = "userRefreshTokenEntity.refreshToken")
+	BornToRunUser toBornToRunUser(final UserEntity source);
 
-  UserDetailResponse toUserDetailResponse(final BornToRunUser source);
+	UserDetailResponse toUserDetailResponse(final BornToRunUser source);
 
-  ModifyUserCommand toModifyUserCommand(final ModifyUserRequest source, final long userId);
+	ModifyUserCommand toModifyUserCommand(final ModifyUserRequest source, final long userId);
 
-  ModifyUserQuery toModifyUserQuery(final ModifyUserCommand source);
+	ModifyUserQuery toModifyUserQuery(final ModifyUserCommand source);
 
-  SignUpUserQuery toSignUpUserQuery(final SignUpCommand source);
+	SignUpUserQuery toSignUpUserQuery(final SignUpCommand source);
 
-  ModifyUserResponse toModifyUserResponse(final BornToRunUser source);
+	ModifyUserResponse toModifyUserResponse(final BornToRunUser source);
 
-  CreateGuestQuery toCreateGuestQuery(final CreateGuestCommand source);
+	CreateGuestQuery toCreateGuestQuery(final CreateGuestCommand source);
 }

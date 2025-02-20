@@ -11,23 +11,23 @@ import kr.borntorun.api.domain.constant.ProviderType;
 import kr.borntorun.api.domain.constant.RoleType;
 
 public record BornToRunUser(
-    long userId,
-    String socialId,
-    ProviderType providerType,
-    String refreshToken,
-    RoleType roleType,
-    String userName,
-    Long crewId,
-    String crewName,
-    String instagramId,
-    Long imageId,
-    String profileImageUri,
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    LocalDateTime lastLoginAt,
-    Boolean isAdmin,
-    Boolean isManager,
-    int yellowCardQty,
-    Boolean isInstagramIdPublic
+  long userId,
+  String socialId,
+  ProviderType providerType,
+  String refreshToken,
+  RoleType roleType,
+  String userName,
+  Long crewId,
+  String crewName,
+  String instagramId,
+  Long imageId,
+  String profileImageUri,
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  LocalDateTime lastLoginAt,
+  Boolean isAdmin,
+  Boolean isManager,
+  int yellowCardQty,
+  Boolean isInstagramIdPublic
 ) {
 }

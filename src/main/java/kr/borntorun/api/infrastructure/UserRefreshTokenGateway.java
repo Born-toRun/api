@@ -12,18 +12,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserRefreshTokenGateway {
 
-  private final UserRefreshTokenRepository userRefreshTokenRepository;
+	private final UserRefreshTokenRepository userRefreshTokenRepository;
 
-  public UserRefreshTokenEntity searchByUserId(long userId) {
-    return userRefreshTokenRepository.findByUserId(userId)
-      .orElseThrow(() -> new NotFoundException("토큰을 찾을 수 없습니다."));
-  }
+	public UserRefreshTokenEntity searchByUserId(long userId) {
+		return userRefreshTokenRepository.findByUserId(userId)
+		  .orElseThrow(() -> new NotFoundException("토큰을 찾을 수 없습니다."));
+	}
 
-  public UserRefreshTokenEntity saveAndFlush(CreateRefreshTokenQuery query) {
-    UserRefreshTokenEntity userRefreshTokenEntity = UserRefreshTokenEntity.builder()
-      .userId(query.userId())
-      .refreshToken(query.refreshToken())
-      .build();
-    return userRefreshTokenRepository.saveAndFlush(userRefreshTokenEntity);
-  }
+	public UserRefreshTokenEntity saveAndFlush(CreateRefreshTokenQuery query) {
+		UserRefreshTokenEntity userRefreshTokenEntity = UserRefreshTokenEntity.builder()
+		  .userId(query.userId())
+		  .refreshToken(query.refreshToken())
+		  .build();
+		return userRefreshTokenRepository.saveAndFlush(userRefreshTokenEntity);
+	}
 }

@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BornToRunApiApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(BornToRunApiApplication.class, args);
-  }
+	public static void main(String[] args) {
+		SpringApplication.run(BornToRunApiApplication.class, args);
+	}
 
 }

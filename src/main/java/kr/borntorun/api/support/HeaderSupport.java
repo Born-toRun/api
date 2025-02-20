@@ -6,19 +6,19 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class HeaderSupport {
 
-    private final static String TOKEN_PREFIX = "Bearer ";
+	private final static String TOKEN_PREFIX = "Bearer ";
 
-    public static String getAccessToken(HttpServletRequest request) {
-        String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
+	public static String getAccessToken(HttpServletRequest request) {
+		String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (headerValue == null) {
-            return null;
-        }
+		if (headerValue == null) {
+			return null;
+		}
 
-        if (headerValue.startsWith(TOKEN_PREFIX)) {
-            return headerValue.substring(TOKEN_PREFIX.length());
-        }
+		if (headerValue.startsWith(TOKEN_PREFIX)) {
+			return headerValue.substring(TOKEN_PREFIX.length());
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

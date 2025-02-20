@@ -30,69 +30,68 @@ import kr.borntorun.api.infrastructure.model.ModifyFeedQuery;
 import kr.borntorun.api.infrastructure.model.SearchAllFeedQuery;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @Service
 public class FeedService implements FeedPort {
 
-  private final FeedConverter feedConverter;
-  private final FeedGateway feedGateway;
-  private final FeedImageMappingGateway feedImageMappingGateway;
-  private final UserGateway userGateway;
+	private final FeedConverter feedConverter;
+	private final FeedGateway feedGateway;
+	private final FeedImageMappingGateway feedImageMappingGateway;
+	private final UserGateway userGateway;
 
-  @Transactional(readOnly = true)
-  @Override
-  public Feed searchDetail(final SearchFeedDetailCommand command) {
-    final FeedEntity feedEntity = feedGateway.search(command.feedId());
-    return feedConverter.toFeed(feedEntity, command.my());
-  }
+	@Transactional(readOnly = true)
+	@Override
+	public Feed searchDetail(final SearchFeedDetailCommand command) {
+		final FeedEntity feedEntity = feedGateway.search(command.feedId());
+		return feedConverter.toFeed(feedEntity, command.my());
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
-    List<Long> searchedUserIds = Optional.ofNullable(command.searchKeyword())
-      .map(userGateway::searchByUserName)
-      .map(users -> users.stream().map(UserEntity::getId).toList())
-      .orElseGet(Collections::emptyList);
+	@Transactional(readOnly = true)
+	@Override
+	public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
+		List<Long> searchedUserIds = Optional.ofNullable(command.searchKeyword())
+		  .map(userGateway::searchByUserName)
+		  .map(users -> users.stream().map(UserEntity::getId).toList())
+		  .orElseGet(Collections::emptyList);
 
-    SearchAllFeedQuery query = feedConverter.toSearchAllFeedQuery(command, searchedUserIds);
-    Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
+		SearchAllFeedQuery query = feedConverter.toSearchAllFeedQuery(command, searchedUserIds);
+		Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
 
-    return feedPage.map(entity -> feedConverter.toFeedCard(entity,
-        entity.hasComment(command.my().getId()),
-        entity.hasRecommendation(command.my().getId())));
-  }
+		return feedPage.map(entity -> feedConverter.toFeedCard(entity,
+		  entity.hasComment(command.my().getId()),
+		  entity.hasRecommendation(command.my().getId())));
+	}
 
-  @Async
-  @Override
-  public void increaseViewQty(final long feedId) {
-    feedGateway.increaseViewQty(feedId);
-  }
+	@Async
+	@Override
+	public void increaseViewQty(final long feedId) {
+		feedGateway.increaseViewQty(feedId);
+	}
 
-  @Transactional
-  @Override
-  public void create(final CreateFeedCommand command) {
-    CreateFeedQuery query = feedConverter.toCreateFeedQuery(command);
-    feedGateway.create(query);
-  }
+	@Transactional
+	@Override
+	public void create(final CreateFeedCommand command) {
+		CreateFeedQuery query = feedConverter.toCreateFeedQuery(command);
+		feedGateway.create(query);
+	}
 
-  @Transactional
-  @Override
-  public void remove(final RemoveFeedCommand command) {
-    feedGateway.remove(command.feedId());
-  }
+	@Transactional
+	@Override
+	public void remove(final RemoveFeedCommand command) {
+		feedGateway.remove(command.feedId());
+	}
 
-  @Transactional
-  @Override
-  public void modify(final ModifyFeedCommand command) {
-    ModifyFeedQuery query = feedConverter.toModifyFeedQuery(command);
-    final FeedEntity modified = feedGateway.modify(query);
+	@Transactional
+	@Override
+	public void modify(final ModifyFeedCommand command) {
+		ModifyFeedQuery query = feedConverter.toModifyFeedQuery(command);
+		final FeedEntity modified = feedGateway.modify(query);
 
-    final List<Long> removedImageIds = modified.getFeedImageMappingEntities().stream()
-        .map(FeedImageMappingEntity::getImageId)
-        .filter(imageId -> !command.imageIds().contains(imageId))
-        .toList();
+		final List<Long> removedImageIds = modified.getFeedImageMappingEntities().stream()
+		  .map(FeedImageMappingEntity::getImageId)
+		  .filter(imageId -> !command.imageIds().contains(imageId))
+		  .toList();
 
-    feedImageMappingGateway.removeAllByFileId(removedImageIds);
-  }
+		feedImageMappingGateway.removeAllByFileId(removedImageIds);
+	}
 }

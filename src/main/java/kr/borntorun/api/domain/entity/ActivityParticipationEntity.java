@@ -28,26 +28,26 @@ import lombok.ToString;
 @DynamicInsert
 public class ActivityParticipationEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long activityId;
-  private long userId;
-  private LocalDateTime updatedAt;
-  private LocalDateTime registeredAt;
-  private Boolean isAttendance;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long activityId;
+	private long userId;
+	private LocalDateTime updatedAt;
+	private LocalDateTime registeredAt;
+	private Boolean isAttendance;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id", insertable = false, updatable = false)
-  private ActivityEntity activityEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private ActivityEntity activityEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  public void attendance() {
-    this.isAttendance = true;
-  }
+	public void attendance() {
+		this.isAttendance = true;
+	}
 }
 
 

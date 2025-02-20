@@ -8,5 +8,5 @@ import kr.borntorun.api.domain.entity.FeedEntity;
 
 public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
 
-  List<FeedEntity> findAllByUserId(final long userId);
+	List<FeedEntity> findAllByUserId(final long userId);
 }

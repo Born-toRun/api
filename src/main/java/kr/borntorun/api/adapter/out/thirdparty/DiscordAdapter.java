@@ -23,58 +23,58 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties(DiscordProperties.class)
 public class DiscordAdapter {
 
-  private static final int MESSAGE_MAX_SIZE = 2000;
-  private static final String MESSAGE = "content";
-  private final DiscordProperties discordProperties;
-  private final WebClient discordConnector;
+	private static final int MESSAGE_MAX_SIZE = 2000;
+	private static final String MESSAGE = "content";
+	private final DiscordProperties discordProperties;
+	private final WebClient discordConnector;
 
-  @Async
-  public void send(String message) {
-    if(Objects.isNull(message) || message.isEmpty()) {
-      return;
-    }
-
-    log.info("discord error messange: {}", message);
-    List<String> slicedMessage = new ArrayList<>();
-
-    int index = 0;
-
-	  while (index < message.length()) {
-		int length = Math.min(MESSAGE_MAX_SIZE, message.length() - index);
-
-		int nextIndex = message.indexOf("\n", index);
-
-		if (nextIndex != -1 && nextIndex == index + 1 && length > 10) {
-		  length = MESSAGE_MAX_SIZE-1;
+	@Async
+	public void send(String message) {
+		if (Objects.isNull(message) || message.isEmpty()) {
+			return;
 		}
 
-		slicedMessage.add(message.substring(index, index + length));
+		log.info("discord error messange: {}", message);
+		List<String> slicedMessage = new ArrayList<>();
 
-		index += length;
-	  }
+		int index = 0;
 
-	  try {
-		for (String m : slicedMessage) {
-		  m = m.trim();
-		  if(m.isEmpty()) {
-			continue;
-		  }
+		while (index < message.length()) {
+			int length = Math.min(MESSAGE_MAX_SIZE, message.length() - index);
 
-		  final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		  body.add(MESSAGE, m);
+			int nextIndex = message.indexOf("\n", index);
 
-		  discordConnector.post()
-			  .uri(uriBuilder -> uriBuilder
-				  .path(discordProperties.getWebhookPath())
-				  .build())
-			  .body(BodyInserters.fromFormData(body))
-			  .retrieve()
-			  .toEntity(Void.class)
-			  .delayElement(Duration.ofSeconds(1))
-			  .block();
+			if (nextIndex != -1 && nextIndex == index + 1 && length > 10) {
+				length = MESSAGE_MAX_SIZE - 1;
+			}
+
+			slicedMessage.add(message.substring(index, index + length));
+
+			index += length;
 		}
-	  } catch (Exception e) {
-		log.error ("Discord notify failed", e);
-	  }
-  }
+
+		try {
+			for (String m : slicedMessage) {
+				m = m.trim();
+				if (m.isEmpty()) {
+					continue;
+				}
+
+				final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+				body.add(MESSAGE, m);
+
+				discordConnector.post()
+				  .uri(uriBuilder -> uriBuilder
+					.path(discordProperties.getWebhookPath())
+					.build())
+				  .body(BodyInserters.fromFormData(body))
+				  .retrieve()
+				  .toEntity(Void.class)
+				  .delayElement(Duration.ofSeconds(1))
+				  .block();
+			}
+		} catch (Exception e) {
+			log.error("Discord notify failed", e);
+		}
+	}
 }

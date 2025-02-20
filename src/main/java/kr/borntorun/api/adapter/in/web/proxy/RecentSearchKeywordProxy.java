@@ -15,26 +15,25 @@ import lombok.RequiredArgsConstructor;
 @CacheConfig(cacheNames = "recentSearchKeyword")
 public class RecentSearchKeywordProxy {
 
-  private final RecentSearchKeywordService recentSearchKeywordService;
+	private final RecentSearchKeywordService recentSearchKeywordService;
 
+	@CacheEvict(allEntries = true)
+	public void removeAll(final long userId) {
+		recentSearchKeywordService.removeAll(userId);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void removeAll(final long userId) {
-    recentSearchKeywordService.removeAll(userId);
-  }
+	@CacheEvict(allEntries = true)
+	public void removeKeyword(final long userId, final String searchKeyword) {
+		recentSearchKeywordService.removeKeyword(userId, searchKeyword);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void removeKeyword(final long userId, final String searchKeyword) {
-    recentSearchKeywordService.removeKeyword(userId, searchKeyword);
-  }
+	@CacheEvict(allEntries = true)
+	public void add(final long userId, final String searchKeyword) {
+		recentSearchKeywordService.add(userId, searchKeyword);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void add(final long userId, final String searchKeyword) {
-    recentSearchKeywordService.add(userId, searchKeyword);
-  }
-
-  @Cacheable(key = "'search: ' + #userId")
-  public List<Object> search(final long userId) {
-    return recentSearchKeywordService.search(userId);
-  }
+	@Cacheable(key = "'search: ' + #userId")
+	public List<Object> search(final long userId) {
+		return recentSearchKeywordService.search(userId);
+	}
 }

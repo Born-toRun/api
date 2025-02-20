@@ -13,12 +13,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SearchFeedRequest {
 
-  @Schema(description = "피드 종류")
-  private FeedCategory category;
+	@Schema(description = "피드 종류")
+	private FeedCategory category;
 
-  @Schema(description = "통합 검색어")
-  private String searchKeyword;
+	@Schema(description = "통합 검색어")
+	private String searchKeyword;
 
-  @Schema(description = "내 크루만 보기")
-  private boolean isMyCrew;
+	@Schema(description = "내 크루만 보기")
+	private boolean isMyCrew;
 }

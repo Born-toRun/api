@@ -5,10 +5,10 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.borntorun.api.domain.constant.Bucket;
 
 public record UploadObjectStorageQuery(long myUserId,
-                                       MultipartFile file,
-                                       Bucket bucket) {
+									   MultipartFile file,
+									   Bucket bucket) {
 
-  public String getBucketName() {
-    return bucket.getBucketName();
-  }
+	public String getBucketName() {
+		return bucket.getBucketName();
+	}
 }

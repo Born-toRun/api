@@ -38,78 +38,78 @@ import lombok.ToString;
 @DynamicInsert
 public class FeedEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long userId;
-  private String contents;
-  @Enumerated(EnumType.STRING)
-  private FeedCategory category;
-  @Enumerated(EnumType.STRING)
-  private FeedAccessLevel accessLevel;
-  private int viewQty;
-  private LocalDateTime registeredAt;
-  private LocalDateTime updatedAt;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long userId;
+	private String contents;
+	@Enumerated(EnumType.STRING)
+	private FeedCategory category;
+	@Enumerated(EnumType.STRING)
+	private FeedAccessLevel accessLevel;
+	private int viewQty;
+	private LocalDateTime registeredAt;
+	private LocalDateTime updatedAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
-  private Set<CommentEntity> commentEntities;
+	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
+	private Set<CommentEntity> commentEntities;
 
-  @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
-  private Set<FeedImageMappingEntity> feedImageMappingEntities;
+	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
+	private Set<FeedImageMappingEntity> feedImageMappingEntities;
 
-  @OneToMany(mappedBy = "feedContentsEntity", cascade = CascadeType.REMOVE)
-  private Set<RecommendationEntity> recommendationEntities;
+	@OneToMany(mappedBy = "feedContentsEntity", cascade = CascadeType.REMOVE)
+	private Set<RecommendationEntity> recommendationEntities;
 
-  public void add(final List<FeedImageMappingEntity> feedImageMappingEntities) {
-    for(final FeedImageMappingEntity entity: feedImageMappingEntities) {
-      entity.setFeedEntity(this);
-    }
+	public void add(final List<FeedImageMappingEntity> feedImageMappingEntities) {
+		for (final FeedImageMappingEntity entity : feedImageMappingEntities) {
+			entity.setFeedEntity(this);
+		}
 
-    this.feedImageMappingEntities.addAll(feedImageMappingEntities);
-  }
+		this.feedImageMappingEntities.addAll(feedImageMappingEntities);
+	}
 
-  public void modify(final ModifyFeedQuery query) {
-    this.accessLevel = query.accessLevel();
-    this.contents = query.contents();
-    this.category = query.category();
-  }
+	public void modify(final ModifyFeedQuery query) {
+		this.accessLevel = query.accessLevel();
+		this.contents = query.contents();
+		this.category = query.category();
+	}
 
-  public long getRecommendationQty() {
-    return recommendationEntities.stream()
-        .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
-        .count();
-  }
+	public long getRecommendationQty() {
+		return recommendationEntities.stream()
+		  .filter(e -> e.getRecommendationType().equals(RecommendationType.FEED))
+		  .count();
+	}
 
-  public long getCommentQty() {
-    return commentEntities.size();
-  }
+	public long getCommentQty() {
+		return commentEntities.size();
+	}
 
-  public List<String> getImageUris() {
-    return feedImageMappingEntities.stream()
-        .map(FeedImageMappingEntity::getObjectStorageEntity)
-        .map(ObjectStorageEntity::getFileUri)
-        .toList();
-  }
+	public List<String> getImageUris() {
+		return feedImageMappingEntities.stream()
+		  .map(FeedImageMappingEntity::getObjectStorageEntity)
+		  .map(ObjectStorageEntity::getFileUri)
+		  .toList();
+	}
 
-  public boolean hasComment(final long myUserId) {
-    if(myUserId == -1) {
-      return false;
-    }
+	public boolean hasComment(final long myUserId) {
+		if (myUserId == -1) {
+			return false;
+		}
 
-    return commentEntities.stream()
-        .anyMatch(e -> e.getUserId() == myUserId);
-  }
+		return commentEntities.stream()
+		  .anyMatch(e -> e.getUserId() == myUserId);
+	}
 
-  public boolean hasRecommendation(final long myUserId) {
-    if(myUserId == -1) {
-      return false;
-    }
+	public boolean hasRecommendation(final long myUserId) {
+		if (myUserId == -1) {
+			return false;
+		}
 
-    return recommendationEntities.stream()
-        .anyMatch(e -> e.getUserId() == myUserId);
-  }
+		return recommendationEntities.stream()
+		  .anyMatch(e -> e.getUserId() == myUserId);
+	}
 }

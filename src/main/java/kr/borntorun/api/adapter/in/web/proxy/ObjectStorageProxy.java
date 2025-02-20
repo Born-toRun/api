@@ -16,17 +16,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ObjectStorageProxy {
 
-  private final ObjectStorageConverter objectStorageConverter;
+	private final ObjectStorageConverter objectStorageConverter;
 
-  private final ObjectStorageService objectStorageService;
+	private final ObjectStorageService objectStorageService;
 
-  public ObjectStorage upload(final TokenDetail my, final Bucket bucket, final MultipartFile file) {
-    UploadObjectStorageCommand command = objectStorageConverter.toUploadObjectStorageCommand(my.getId(), file, bucket);
-    return objectStorageService.upload(command);
-  }
+	public ObjectStorage upload(final TokenDetail my, final Bucket bucket, final MultipartFile file) {
+		UploadObjectStorageCommand command = objectStorageConverter.toUploadObjectStorageCommand(my.getId(), file,
+		  bucket);
+		return objectStorageService.upload(command);
+	}
 
-  public void remove(final TokenDetail my, final Bucket bucket, final long fileId) {
-    RemoveObjectStorageCommand command = objectStorageConverter.toRemoveObjectStorageCommand(my, fileId, bucket);
-    objectStorageService.remove(command);
-  }
+	public void remove(final TokenDetail my, final Bucket bucket, final long fileId) {
+		RemoveObjectStorageCommand command = objectStorageConverter.toRemoveObjectStorageCommand(my, fileId, bucket);
+		objectStorageService.remove(command);
+	}
 }

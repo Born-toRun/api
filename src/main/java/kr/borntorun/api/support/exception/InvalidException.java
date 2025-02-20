@@ -9,10 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class InvalidException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-  public InvalidException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public InvalidException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

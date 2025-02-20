@@ -20,71 +20,71 @@ import com.hazelcast.nio.serialization.StreamSerializer;
 
 public class Kryo5Serializer implements StreamSerializer<Object> {
 
-  private static final Pool<Kryo> pool = new KryoPool();
+	private static final Pool<Kryo> pool = new KryoPool();
 
-  @Override
-  public void write(@NotNull final ObjectDataOutput out, @NotNull final Object object) {
-    final Kryo kryo = pool.obtain();
-    final OutputChunked output = new OutputChunked((OutputStream) out);
-    kryo.writeClassAndObject(output, object);
-    output.endChunk();
-    output.flush();
-    pool.free(kryo);
-  }
+	@Override
+	public void write(@NotNull final ObjectDataOutput out, @NotNull final Object object) {
+		final Kryo kryo = pool.obtain();
+		final OutputChunked output = new OutputChunked((OutputStream)out);
+		kryo.writeClassAndObject(output, object);
+		output.endChunk();
+		output.flush();
+		pool.free(kryo);
+	}
 
-  @NotNull
-  @Override
-  public Object read(@NotNull final ObjectDataInput in) {
-    final Kryo kryo = pool.obtain();
-    final Object object = kryo.readClassAndObject(new InputChunked((InputStream) in));
-    pool.free(kryo);
-    return object;
-  }
+	@NotNull
+	@Override
+	public Object read(@NotNull final ObjectDataInput in) {
+		final Kryo kryo = pool.obtain();
+		final Object object = kryo.readClassAndObject(new InputChunked((InputStream)in));
+		pool.free(kryo);
+		return object;
+	}
 
-  @Override
-  public int getTypeId() {
-    return 1;
-  }
+	@Override
+	public int getTypeId() {
+		return 1;
+	}
 
-  @Override
-  public void destroy() {
-    pool.clean();
-  }
+	@Override
+	public void destroy() {
+		pool.clean();
+	}
 
-  static class KryoPool extends Pool<Kryo> {
+	static class KryoPool extends Pool<Kryo> {
 
-    private final ClassResolver classResolver = new ClassResolver();
+		private final ClassResolver classResolver = new ClassResolver();
 
-    public KryoPool() {
-      super(true, true);
-    }
+		public KryoPool() {
+			super(true, true);
+		}
 
-    @Override
-    protected Kryo create() {
-      final Kryo kryo = new Kryo(classResolver, null);
-//      final Kryo kryo = new Kryo();
-      kryo.setReferences(true);
-      kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-      kryo.addDefaultSerializer(Enum.class, EnumNameSerializer.class);
-      kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-      kryo.setRegistrationRequired(false);
-      return kryo;
-    }
-  }
+		@Override
+		protected Kryo create() {
+			final Kryo kryo = new Kryo(classResolver, null);
+			//      final Kryo kryo = new Kryo();
+			kryo.setReferences(true);
+			kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+			kryo.addDefaultSerializer(Enum.class, EnumNameSerializer.class);
+			kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+			kryo.setRegistrationRequired(false);
+			return kryo;
+		}
+	}
 
-  static class ClassResolver extends DefaultClassResolver {
+	static class ClassResolver extends DefaultClassResolver {
 
-    @Override
-    protected Class<?> getTypeByName(final String className) {
-      final Class<?> type = super.getTypeByName(className);
-      if (type != null) {
-        return type;
-      }
-      try {
-        return Class.forName(className, false, Thread.currentThread().getContextClassLoader());
-      } catch (ClassNotFoundException ex) {
-        return null;
-      }
-    }
-  }
+		@Override
+		protected Class<?> getTypeByName(final String className) {
+			final Class<?> type = super.getTypeByName(className);
+			if (type != null) {
+				return type;
+			}
+			try {
+				return Class.forName(className, false, Thread.currentThread().getContextClassLoader());
+			} catch (ClassNotFoundException ex) {
+				return null;
+			}
+		}
+	}
 }

@@ -21,14 +21,14 @@ import lombok.ToString;
 @IdClass(YellowCardMultiKey.class)
 public class YellowCardEntity {
 
-  @Id
-  private long targetUserId;
-  @Id
-  private long sourceUserId;
-  private String reason;
-  private String basis;
+	@Id
+	private long targetUserId;
+	@Id
+	private long sourceUserId;
+	private String reason;
+	private String basis;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "target_user_id")
-  private UserEntity userEntity;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "target_user_id")
+	private UserEntity userEntity;
 }

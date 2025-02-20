@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Remove {
-  private String bucket;
-  private String objectName;
+	private String bucket;
+	private String objectName;
 }

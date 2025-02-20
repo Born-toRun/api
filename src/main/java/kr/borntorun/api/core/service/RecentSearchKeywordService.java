@@ -14,41 +14,41 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class RecentSearchKeywordService implements RecentSearchKeywordPort {
 
-  private final String RECENT_SEARCH_KEYWORD_KEY_PREFIX = "recentSearch:";
-  private final RedisClient redisClient;
+	private final String RECENT_SEARCH_KEYWORD_KEY_PREFIX = "recentSearch:";
+	private final RedisClient redisClient;
 
-  @Async
-  @Transactional
-  @Override
-  public void removeAll(final long userId) {
-    redisClient.removeAll(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
-  }
+	@Async
+	@Transactional
+	@Override
+	public void removeAll(final long userId) {
+		redisClient.removeAll(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
+	}
 
-  @Async
-  @Transactional
-  @Override
-  public void removeKeyword(final long userId, final String searchKeyword) {
-    redisClient.removeValue(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId, searchKeyword);
-  }
+	@Async
+	@Transactional
+	@Override
+	public void removeKeyword(final long userId, final String searchKeyword) {
+		redisClient.removeValue(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId, searchKeyword);
+	}
 
-  @Async
-  @Transactional
-  @Override
-  public void add(final long userId, final String searchKeyword) {
-    final String key = RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId;
-    redisClient.add(key, searchKeyword);
+	@Async
+	@Transactional
+	@Override
+	public void add(final long userId, final String searchKeyword) {
+		final String key = RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId;
+		redisClient.add(key, searchKeyword);
 
-    final List<Object> recentSearchKeywords = redisClient.getList(key);
+		final List<Object> recentSearchKeywords = redisClient.getList(key);
 
-    final int recentSearchKeywordMaxSize = 10;
-    if(recentSearchKeywords.size() > recentSearchKeywordMaxSize) {
-      recentSearchKeywords.remove(0);
-    }
-  }
+		final int recentSearchKeywordMaxSize = 10;
+		if (recentSearchKeywords.size() > recentSearchKeywordMaxSize) {
+			recentSearchKeywords.remove(0);
+		}
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public List<Object> search(final long userId) {
-    return redisClient.getList(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
-  }
+	@Transactional(readOnly = true)
+	@Override
+	public List<Object> search(final long userId) {
+		return redisClient.getList(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
+	}
 }

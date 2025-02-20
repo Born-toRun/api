@@ -26,17 +26,17 @@ import lombok.ToString;
 @DynamicInsert
 public class UserPrivacyEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-  private long userId;
-  private Boolean isInstagramIdPublic;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private long userId;
+	private Boolean isInstagramIdPublic;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private UserEntity userEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private UserEntity userEntity;
 
-  public void change(boolean isInstagramIdPublic) {
-    this.isInstagramIdPublic = isInstagramIdPublic;
-  }
+	public void change(boolean isInstagramIdPublic) {
+		this.isInstagramIdPublic = isInstagramIdPublic;
+	}
 }

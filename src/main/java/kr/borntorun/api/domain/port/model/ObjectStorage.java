@@ -4,5 +4,6 @@ import java.time.LocalDateTime;
 
 public record ObjectStorage(long id,
 							long userId,
-                            String fileUri,
-                            LocalDateTime uploadAt) {}
+							String fileUri,
+							LocalDateTime uploadAt) {
+}

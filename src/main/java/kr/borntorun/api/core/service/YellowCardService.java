@@ -15,19 +15,20 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class YellowCardService implements YellowCardPort {
 
-  private final YellowCardConverter yellowCardConverter;
+	private final YellowCardConverter yellowCardConverter;
 
-  private final YellowCardGateway yellowCardGateway;
+	private final YellowCardGateway yellowCardGateway;
 
-  @Transactional
-  @Override
-  public void create(final CreateYellowCardCommand command) {
-    final boolean isExists = yellowCardGateway.exists(command.sourceUserId(), command.targetUserId());
-    if(isExists) {
-      throw new DuplicationException("이미 신고한 사용자입니다. [{" + command.sourceUserId() + " to " + command.targetUserId() + "}]");
-    }
+	@Transactional
+	@Override
+	public void create(final CreateYellowCardCommand command) {
+		final boolean isExists = yellowCardGateway.exists(command.sourceUserId(), command.targetUserId());
+		if (isExists) {
+			throw new DuplicationException(
+			  "이미 신고한 사용자입니다. [{" + command.sourceUserId() + " to " + command.targetUserId() + "}]");
+		}
 
-    CreateYellowCardQuery query = yellowCardConverter.toCreateYellowCardQuery(command);
-    yellowCardGateway.create(query);
-  }
+		CreateYellowCardQuery query = yellowCardConverter.toCreateYellowCardQuery(command);
+		yellowCardGateway.create(query);
+	}
 }

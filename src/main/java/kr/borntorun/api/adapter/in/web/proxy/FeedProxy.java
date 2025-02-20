@@ -29,42 +29,43 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FeedProxy {
 
-  private final FeedConverter feedConverter;
+	private final FeedConverter feedConverter;
 
-  private final FeedService feedService;
+	private final FeedService feedService;
 
-  @Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
-  public Feed searchDetail(final TokenDetail my, final long feedId) {
-    SearchFeedDetailCommand command = feedConverter.toSearchFeedDetailCommand(feedId, my);
-    return feedService.searchDetail(command);
-  }
+	@Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
+	public Feed searchDetail(final TokenDetail my, final long feedId) {
+		SearchFeedDetailCommand command = feedConverter.toSearchFeedDetailCommand(feedId, my);
+		return feedService.searchDetail(command);
+	}
 
-  @Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.pageSize : 'searchAll: ' + #my.id + #request.hashCode() + #pageable.pageSize")
-  public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final long lastFeedId, final Pageable pageable) {
-    SearchAllFeedCommand command = feedConverter.toSearchAllFeedCommand(request, my, lastFeedId);
-    return feedService.searchAll(command, pageable);
-  }
+	@Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.pageSize : 'searchAll: ' + #my.id + #request.hashCode() + #pageable.pageSize")
+	public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final long lastFeedId,
+	  final Pageable pageable) {
+		SearchAllFeedCommand command = feedConverter.toSearchAllFeedCommand(request, my, lastFeedId);
+		return feedService.searchAll(command, pageable);
+	}
 
-  //  @DistributedLock(key = "'FeedView-'.concat(#id)", waitTime = 10L)
-  public void increaseViewQty(final long feedId) {
-    feedService.increaseViewQty(feedId);
-  }
+	//  @DistributedLock(key = "'FeedView-'.concat(#id)", waitTime = 10L)
+	public void increaseViewQty(final long feedId) {
+		feedService.increaseViewQty(feedId);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void create(final CreateFeedRequest request, final TokenDetail my) {
-    CreateFeedCommand command = feedConverter.toCreateFeedCommand(request, my);
-    feedService.create(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void create(final CreateFeedRequest request, final TokenDetail my) {
+		CreateFeedCommand command = feedConverter.toCreateFeedCommand(request, my);
+		feedService.create(command);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void remove(final long feedId, final TokenDetail my) {
-    RemoveFeedCommand command = feedConverter.toRemoveFeedCommand(feedId, my);
-    feedService.remove(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void remove(final long feedId, final TokenDetail my) {
+		RemoveFeedCommand command = feedConverter.toRemoveFeedCommand(feedId, my);
+		feedService.remove(command);
+	}
 
-  @CacheEvict(allEntries = true)
-  public void modify(final ModifyFeedRequest request, final long feedId) {
-    ModifyFeedCommand command = feedConverter.toModifyFeedCommand(request, feedId);
-    feedService.modify(command);
-  }
+	@CacheEvict(allEntries = true)
+	public void modify(final ModifyFeedRequest request, final long feedId) {
+		ModifyFeedCommand command = feedConverter.toModifyFeedCommand(request, feedId);
+		feedService.modify(command);
+	}
 }

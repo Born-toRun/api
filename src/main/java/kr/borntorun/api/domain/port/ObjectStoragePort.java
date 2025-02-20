@@ -6,6 +6,7 @@ import kr.borntorun.api.domain.port.model.UploadObjectStorageCommand;
 
 public interface ObjectStoragePort {
 
-  ObjectStorage upload(final UploadObjectStorageCommand command);
-  void remove(final RemoveObjectStorageCommand command);
+	ObjectStorage upload(final UploadObjectStorageCommand command);
+
+	void remove(final RemoveObjectStorageCommand command);
 }

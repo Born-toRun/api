@@ -18,20 +18,20 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CrewService implements CrewPort {
 
-  private final CrewConverter crewConverter;
+	private final CrewConverter crewConverter;
 
-  private final CrewGateway crewGateway;
+	private final CrewGateway crewGateway;
 
-  @Transactional(readOnly = true)
-  @Override
-  public List<Crew> searchAll() {
-    List<CrewEntity> crewEntities = crewGateway.searchAll();
-    return crewConverter.toCrew(crewEntities);
-  }
+	@Transactional(readOnly = true)
+	@Override
+	public List<Crew> searchAll() {
+		List<CrewEntity> crewEntities = crewGateway.searchAll();
+		return crewConverter.toCrew(crewEntities);
+	}
 
-  @Override
-  public void create(CreateCrewCommand command) {
-    CreateCrewQuery query = crewConverter.toCreateCrewQuery(command);
-    crewGateway.create(query);
-  }
+	@Override
+	public void create(CreateCrewCommand command) {
+		CreateCrewQuery query = crewConverter.toCreateCrewQuery(command);
+		crewGateway.create(query);
+	}
 }

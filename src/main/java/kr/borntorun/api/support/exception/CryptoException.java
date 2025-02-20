@@ -9,11 +9,10 @@ import lombok.Getter;
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 public class CryptoException extends RuntimeException {
 
-  private final String message;
+	private final String message;
 
-
-  public CryptoException(final String message) {
-    super(message);
-    this.message = message;
-  }
+	public CryptoException(final String message) {
+		super(message);
+		this.message = message;
+	}
 }

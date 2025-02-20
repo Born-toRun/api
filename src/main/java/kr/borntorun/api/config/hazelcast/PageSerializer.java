@@ -16,26 +16,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PageSerializer extends Serializer<PageImpl> {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @Override
-  public void write(Kryo kryo, Output output, PageImpl object) {
-    try {
-      String json = objectMapper.writeValueAsString(object);
-      output.writeString(json);
-    } catch (JsonProcessingException e) {
-      throw new KryoException("cannot serialize PageImpl!");
-    }
+	@Override
+	public void write(Kryo kryo, Output output, PageImpl object) {
+		try {
+			String json = objectMapper.writeValueAsString(object);
+			output.writeString(json);
+		} catch (JsonProcessingException e) {
+			throw new KryoException("cannot serialize PageImpl!");
+		}
 
-  }
+	}
 
-  @Override
-  public PageImpl read(Kryo kryo, Input input, Class<? extends PageImpl> type) {
-    String page = input.readString();
-    try {
-      return objectMapper.readValue(page, new TypeReference<>() {});
-    } catch (JsonProcessingException ex) {
-      throw new KryoException("cannot deserialize PageImpl!");
-    }
-  }
+	@Override
+	public PageImpl read(Kryo kryo, Input input, Class<? extends PageImpl> type) {
+		String page = input.readString();
+		try {
+			return objectMapper.readValue(page, new TypeReference<>() {
+			});
+		} catch (JsonProcessingException ex) {
+			throw new KryoException("cannot deserialize PageImpl!");
+		}
+	}
 }

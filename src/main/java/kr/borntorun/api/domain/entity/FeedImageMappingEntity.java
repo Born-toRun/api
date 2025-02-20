@@ -29,9 +29,9 @@ public class FeedImageMappingEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int feedId;
-  private int imageId;
+  private long id;
+  private long feedId;
+  private long imageId;
 
   @Setter
   @ManyToOne(fetch = FetchType.LAZY)

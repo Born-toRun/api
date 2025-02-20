@@ -7,15 +7,20 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import kr.borntorun.api.domain.constant.ProviderType;
+import kr.borntorun.api.domain.constant.RoleType;
 
 public record BornToRunUser(
-    int userId,
+    long userId,
     String socialId,
+    ProviderType providerType,
+    String refreshToken,
+    RoleType roleType,
     String userName,
-    int crewId,
+    Long crewId,
     String crewName,
     String instagramId,
-    int imageId,
+    Long imageId,
     String profileImageUri,
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

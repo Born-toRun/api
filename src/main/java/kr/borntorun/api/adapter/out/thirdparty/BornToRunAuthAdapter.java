@@ -9,6 +9,7 @@ import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInRequest;
 import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInResponse;
 import kr.borntorun.api.adapter.out.thirdparty.model.AuthTokenRequest;
 import kr.borntorun.api.adapter.out.thirdparty.model.AuthTokenResponse;
+import kr.borntorun.api.adapter.out.thirdparty.model.RefreshTokenResponse;
 import kr.borntorun.api.config.properties.BornToRunAuthAdapterProperties;
 import kr.borntorun.api.support.exception.ClientUnknownException;
 import lombok.RequiredArgsConstructor;
@@ -61,4 +62,21 @@ public class BornToRunAuthAdapter {
         .bodyToMono(AuthSignInResponse.class)
         .block();
   }
+
+    public RefreshTokenResponse refreshToken(final String accessToken) {
+        return bornToRunAuthConnector.post()
+          .uri(uriBuilder -> uriBuilder
+            .path(bornToRunAuthAdapterProperties.getRefreshTokenPath())
+            .build())
+          .headers(headers -> headers.setBearerAuth(accessToken))
+          .retrieve()
+          .onStatus(status -> !status.is2xxSuccessful(), response -> response.bodyToMono(String.class).flatMap(body ->
+            Mono.error(new ClientUnknownException(
+              String.format("우리 토큰 요청 오류. statusCode: %d, response: %s",
+                response.statusCode().value(), body)
+            )))
+          )
+          .bodyToMono(RefreshTokenResponse.class)
+          .block();
+    }
 }

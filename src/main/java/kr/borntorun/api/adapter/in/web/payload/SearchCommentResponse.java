@@ -13,8 +13,8 @@ import lombok.Builder;
 public record SearchCommentResponse(@Schema(description = "댓글") List<Comment> comments) {
 
   @Schema(description = "댓글")
-  public record Comment(@Schema(description = "댓글 번호") int id,
-                        @Schema(description = "부모 댓글 번호") int parentId,
+  public record Comment(@Schema(description = "댓글 번호") long id,
+                        @Schema(description = "부모 댓글 번호") long parentId,
                         @Schema(description = "대댓글 개수") int reCommentQty,
                         @Schema(description = "작성자") Writer writer,
                         @Schema(description = "내용") String contents,
@@ -28,7 +28,7 @@ public record SearchCommentResponse(@Schema(description = "댓글") List<Comment
   }
 
   @Schema(description = "작성자")
-  public record Writer(@Schema(description = "작성자 식별자") int userId,
+  public record Writer(@Schema(description = "작성자 식별자") long userId,
                        @Schema(description = "성명") String userName,
                        @Schema(description = "프로필 이미지") String profileImageUri,
                        @Schema(description = "크루명") String crewName,

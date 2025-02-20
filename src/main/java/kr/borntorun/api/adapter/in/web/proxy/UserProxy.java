@@ -9,10 +9,11 @@ import kr.borntorun.api.adapter.in.web.payload.ModifyUserRequest;
 import kr.borntorun.api.adapter.in.web.payload.SignInRequest;
 import kr.borntorun.api.adapter.in.web.payload.SignUpRequest;
 import kr.borntorun.api.core.converter.UserConverter;
-import kr.borntorun.api.core.service.UserService;
+import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.LoginResult;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
+import kr.borntorun.api.domain.port.model.RefreshTokenResult;
 import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.support.TokenDetail;
@@ -25,42 +26,42 @@ public class UserProxy {
 
   private final UserConverter userConverter;
 
-  private final UserService userService;
-
-  @Cacheable(key = "'kakaoAuthCode'")
-  public String getKakaoAuthCodeUri() {
-    return userService.getKakaoAuthCodeUri();
-  }
+  private final UserPort userPort;
 
   public LoginResult signIn(final SignInRequest request) {
     SignInCommand command = userConverter.toSignInCommand(request);
-    return userService.signIn(command);
+    return userPort.signIn(command);
   }
 
   @CacheEvict(allEntries = true)
   public String signUp(final TokenDetail my, final SignUpRequest request) {
     SignUpCommand command = userConverter.toSignUpCommand(request, my.getId());
-    return userService.signUp(command);
+    return userPort.signUp(command);
+  }
+
+  public RefreshTokenResult refreshToken(final String accessToken) {
+    String refreshedToken = userPort.refreshToken(accessToken);
+    return new RefreshTokenResult(refreshedToken);
   }
 
   @CacheEvict(allEntries = true)
-  public void remove(final int myUserId) {
-    userService.remove(myUserId);
+  public void remove(final long myUserId) {
+    userPort.remove(myUserId);
   }
 
   @Cacheable(key = "'search: ' + #my.hashCode()")
   public BornToRunUser search(final TokenDetail my) {
-    return userService.search(my.getId());
+    return userPort.searchById(my.getId());
   }
 
   @Cacheable(key = "'search: ' + #userId")
-  public BornToRunUser search(final int userId) {
-    return userService.search(userId);
+  public BornToRunUser search(final long userId) {
+    return userPort.searchById(userId);
   }
 
   @CacheEvict(allEntries = true)
   public BornToRunUser modify(final TokenDetail my, final ModifyUserRequest request) {
     ModifyUserCommand command = userConverter.toModifyUserCommand(request, my.getId());
-    return userService.modify(command);
+    return userPort.modify(command);
   }
 }

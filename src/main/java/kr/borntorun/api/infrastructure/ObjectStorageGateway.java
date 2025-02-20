@@ -47,7 +47,7 @@ public class ObjectStorageGateway {
 
   }
 
-  public List<ObjectStorageEntity> searchAll(final List<Integer> fileIds) {
+  public List<ObjectStorageEntity> searchAll(final List<Long> fileIds) {
     return objectStorageRepository.findAllById(fileIds);
   }
 

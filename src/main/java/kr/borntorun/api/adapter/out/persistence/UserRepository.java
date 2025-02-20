@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import kr.borntorun.api.domain.entity.UserEntity;
 
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   @Query(
       "SELECT u FROM UserEntity u " +
@@ -44,4 +44,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
           "WHERE u.name =:userName"
   )
   List<UserEntity> findAllByNameContaining(String userName);
+
+  Optional<UserEntity> findBySocialId(String socialId);
 }

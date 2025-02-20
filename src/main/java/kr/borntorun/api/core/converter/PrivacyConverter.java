@@ -13,7 +13,7 @@ import kr.borntorun.api.infrastructure.model.ModifyUserPrivacyQuery;
 @Mapper(componentModel = "spring")
 public interface PrivacyConverter {
 
-  ModifyUserPrivacyCommand toModifyUserPrivacyCommand(final SettingUserPrivacyRequest source, final int myUserId);
+  ModifyUserPrivacyCommand toModifyUserPrivacyCommand(final SettingUserPrivacyRequest source, final long myUserId);
 
   SearchUserPrivacyResponse toSearchUserPrivacyResponse(final UserPrivacy source);
 

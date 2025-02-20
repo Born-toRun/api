@@ -52,13 +52,13 @@ public class ActivityService implements ActivityPort {
 
   @Transactional
   @Override
-  public void removeAll(final int userId) {
+  public void removeAll(final long userId) {
     activityGateway.removeAll(userId);
   }
 
   @Transactional
   @Override
-  public void remove(final int activityId) {
+  public void remove(final long activityId) {
     activityGateway.remove(activityId);
   }
 
@@ -71,7 +71,7 @@ public class ActivityService implements ActivityPort {
 
   @Transactional
   @Override
-  public void participateCancel(final int participationId) {
+  public void participateCancel(final long participationId) {
     activityGateway.participateCancel(participationId);
   }
 
@@ -86,14 +86,14 @@ public class ActivityService implements ActivityPort {
 
   @Transactional(readOnly = true)
   @Override
-  public Activity search(final int activityId, final int myUserId) {
+  public Activity search(final long activityId, final long myUserId) {
     ActivityEntity activityEntity = activityGateway.search(activityId);
     return activityConverter.toActivityByUserId(activityEntity, myUserId);
   }
 
   @Transactional
   @Override
-  public Activity open(final int activityId) {
+  public Activity open(final long activityId) {
     final ActivityEntity opened = activityGateway.open(activityId);
     int accessCode = activityGateway.initAccessCode(activityId);
     return activityConverter.toActivity(opened, accessCode);
@@ -108,7 +108,7 @@ public class ActivityService implements ActivityPort {
 
   @Transactional(readOnly = true)
   @Override
-  public AttendanceResult getAttendance(final int activityId) {
+  public AttendanceResult getAttendance(final long activityId) {
     final List<ActivityParticipationEntity> activityParticipationEntities = activityGateway.searchParticipation(activityId);
     final List<UserEntity> participants = activityParticipationEntities.stream()
       .map(ActivityParticipationEntity::getUserEntity)

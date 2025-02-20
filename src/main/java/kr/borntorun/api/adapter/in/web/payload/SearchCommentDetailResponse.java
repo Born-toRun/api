@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "댓글 상세 조회")
 public record SearchCommentDetailResponse(
-    @Schema(description = "댓글 번호") int id,
+    @Schema(description = "댓글 번호") long id,
     @Schema(description = "작성자") Writer writer,
     @Schema(description = "내용") String contents,
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -20,7 +20,7 @@ public record SearchCommentDetailResponse(
 ) {
   @Schema(description = "작성자")
   public record Writer(
-      @Schema(description = "식별자") int userId,
+      @Schema(description = "식별자") long userId,
       @Schema(description = "성명") String userName,
       @Schema(description = "프로필 이미지") String profileImageUri,
       @Schema(description = "크루명") String crewName,
@@ -30,7 +30,7 @@ public record SearchCommentDetailResponse(
 
   @Schema(description = "대댓글")
   public record ReComment(
-      @Schema(description = "댓글 번호") int id,
+      @Schema(description = "댓글 번호") long id,
       @Schema(description = "내용") String contents,
       @Schema(description = "작성일자") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime registeredAt,
       @Schema(description = "작성자") Writer writer,
@@ -38,7 +38,7 @@ public record SearchCommentDetailResponse(
   ) {
     @Schema(description = "작성자")
     public record Writer(
-        @Schema(description = "작성자") int userId,
+        @Schema(description = "작성자") long userId,
         @Schema(description = "성명") String userName,
         @Schema(description = "프로필 이미지") String profileImageUri,
         @Schema(description = "크루명") String crewName,

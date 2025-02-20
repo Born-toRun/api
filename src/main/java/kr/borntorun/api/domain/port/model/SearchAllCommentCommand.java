@@ -1,3 +1,3 @@
 package kr.borntorun.api.domain.port.model;
 
-public record SearchAllCommentCommand(int feedId, int myUserId) {}
+public record SearchAllCommentCommand(long feedId, long myUserId) {}

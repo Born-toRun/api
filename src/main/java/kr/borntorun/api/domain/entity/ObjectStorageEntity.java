@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,8 +36,8 @@ public class ObjectStorageEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int userId;
+  private long id;
+  private long userId;
   private String fileUri;
   private LocalDateTime uploadAt;
 
@@ -49,22 +48,11 @@ public class ObjectStorageEntity {
   @JoinColumn(name = "userId", insertable = false, updatable = false)
   private UserEntity userEntity;
 
-  @OneToOne(mappedBy = "imageEntity")
+  @OneToOne(mappedBy = "imageEntity", cascade = CascadeType.REMOVE)
   private CrewEntity crewImageEntity;
 
-  @OneToOne(mappedBy = "logoEntity")
+  @OneToOne(mappedBy = "logoEntity", cascade = CascadeType.REMOVE)
   private CrewEntity crewLogoEntity;
-
-  @PreRemove
-  private void preRemove() {
-    if (crewImageEntity != null) {
-      crewImageEntity.setImageId(null);
-    }
-
-    if (crewLogoEntity != null) {
-      crewLogoEntity.setLogoId(null);
-    }
-  }
 
   public static ObjectStorageEntity defaultEntity() {
     return ObjectStorageEntity.builder()

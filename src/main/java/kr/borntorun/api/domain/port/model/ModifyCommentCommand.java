@@ -1,3 +1,3 @@
 package kr.borntorun.api.domain.port.model;
 
-public record ModifyCommentCommand(int commentId, String contents) {}
+public record ModifyCommentCommand(long commentId, String contents) {}

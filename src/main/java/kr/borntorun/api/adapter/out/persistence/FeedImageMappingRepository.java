@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.borntorun.api.domain.entity.FeedImageMappingEntity;
 
-public interface FeedImageMappingRepository extends JpaRepository<FeedImageMappingEntity, Integer> {
+public interface FeedImageMappingRepository extends JpaRepository<FeedImageMappingEntity, Long> {
 
-  List<FeedImageMappingEntity> findAllByFeedIdIn(final List<Integer> feedIds);
-  List<FeedImageMappingEntity> findAllByImageIdIn(final List<Integer> imageIds);
-  void deleteAllByImageIdIn(final List<Integer> imageIds);
+  List<FeedImageMappingEntity> findAllByFeedIdIn(final List<Long> feedIds);
+  List<FeedImageMappingEntity> findAllByImageIdIn(final List<Long> imageIds);
+  void deleteAllByImageIdIn(final List<Long> imageIds);
 }

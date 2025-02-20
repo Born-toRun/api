@@ -12,7 +12,7 @@ public record SignUpRequest(
 
     @NotNull
     @Schema(description = "크루(소속 팀) 식별자")
-    int crewId,
+    Long crewId,
 
     @Schema(description = "인스타그램 아이디")
     String instagramId

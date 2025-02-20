@@ -22,9 +22,9 @@ import lombok.ToString;
 public class YellowCardEntity {
 
   @Id
-  private int targetUserId;
+  private long targetUserId;
   @Id
-  private int sourceUserId;
+  private long sourceUserId;
   private String reason;
   private String basis;
 

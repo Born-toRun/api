@@ -1,6 +1,6 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record SignUpUserQuery(int userId,
+public record SignUpUserQuery(long userId,
                               String userName,
-                              int crewId,
+                              Long crewId,
                               String instagramId) {}

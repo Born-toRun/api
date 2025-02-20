@@ -2,9 +2,7 @@ package kr.borntorun.api.core.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +50,7 @@ public class FeedService implements FeedPort {
   @Transactional(readOnly = true)
   @Override
   public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
-    List<Integer> searchedUserIds = Optional.ofNullable(command.searchKeyword())
+    List<Long> searchedUserIds = Optional.ofNullable(command.searchKeyword())
       .map(userGateway::searchByUserName)
       .map(users -> users.stream().map(UserEntity::getId).toList())
       .orElseGet(Collections::emptyList);
@@ -67,7 +65,7 @@ public class FeedService implements FeedPort {
 
   @Async
   @Override
-  public void increaseViewQty(final int feedId) {
+  public void increaseViewQty(final long feedId) {
     feedGateway.increaseViewQty(feedId);
   }
 
@@ -90,7 +88,7 @@ public class FeedService implements FeedPort {
     ModifyFeedQuery query = feedConverter.toModifyFeedQuery(command);
     final FeedEntity modified = feedGateway.modify(query);
 
-    final List<Integer> removedImageIds = modified.getFeedImageMappingEntities().stream()
+    final List<Long> removedImageIds = modified.getFeedImageMappingEntities().stream()
         .map(FeedImageMappingEntity::getImageId)
         .filter(imageId -> !command.imageIds().contains(imageId))
         .toList();

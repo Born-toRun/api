@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import kr.borntorun.api.domain.constant.RecommendationType;
 
-public record Recommendation(int id,
-                             int contentId,
-                             int userId,
+public record Recommendation(long id,
+							 long contentId,
+							 long userId,
                              RecommendationType recommendationType,
                              LocalDateTime registeredAt) {}

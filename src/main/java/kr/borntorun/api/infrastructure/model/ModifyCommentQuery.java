@@ -1,5 +1,5 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record ModifyCommentQuery(int commentId, String contents) {
+public record ModifyCommentQuery(long commentId, String contents) {
 
 }

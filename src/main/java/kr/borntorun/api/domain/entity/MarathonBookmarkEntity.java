@@ -32,8 +32,8 @@ public class MarathonBookmarkEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int userId;
+  private long id;
+  private long userId;
   private long marathonId;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;

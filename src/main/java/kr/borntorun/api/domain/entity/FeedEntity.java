@@ -40,8 +40,8 @@ public class FeedEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int userId;
+  private long id;
+  private long userId;
   private String contents;
   @Enumerated(EnumType.STRING)
   private FeedCategory category;
@@ -95,7 +95,7 @@ public class FeedEntity {
         .toList();
   }
 
-  public boolean hasComment(final int myUserId) {
+  public boolean hasComment(final long myUserId) {
     if(myUserId == -1) {
       return false;
     }
@@ -104,7 +104,7 @@ public class FeedEntity {
         .anyMatch(e -> e.getUserId() == myUserId);
   }
 
-  public boolean hasRecommendation(final int myUserId) {
+  public boolean hasRecommendation(final long myUserId) {
     if(myUserId == -1) {
       return false;
     }

@@ -25,7 +25,7 @@ public class ObjectStorageProxy {
     return objectStorageService.upload(command);
   }
 
-  public void remove(final TokenDetail my, final Bucket bucket, final int fileId) {
+  public void remove(final TokenDetail my, final Bucket bucket, final long fileId) {
     RemoveObjectStorageCommand command = objectStorageConverter.toRemoveObjectStorageCommand(my, fileId, bucket);
     objectStorageService.remove(command);
   }

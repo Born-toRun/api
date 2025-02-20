@@ -49,7 +49,7 @@ public class ActivityGateway {
     activityRepository.save(activityEntity);
   }
 
-  public void removeAll(final int userId) {
+  public void removeAll(final long userId) {
     activityParticipationRepository.deleteAllById(activityParticipationRepository.findAllByUserId(userId).stream()
         .map(ActivityParticipationEntity::getId)
         .collect(Collectors.toList()));
@@ -59,7 +59,7 @@ public class ActivityGateway {
         .collect(Collectors.toList()));
   }
 
-  public void remove(final int activityId) {
+  public void remove(final long activityId) {
     activityRepository.deleteById(activityId);
   }
 
@@ -68,7 +68,7 @@ public class ActivityGateway {
     activityParticipationRepository.save(activityParticipationEntity);
   }
 
-  public void participateCancel(final int participationId) {
+  public void participateCancel(final long participationId) {
     activityParticipationRepository.deleteById(participationId);
   }
 
@@ -104,12 +104,12 @@ public class ActivityGateway {
     return activityEntities;
   }
 
-  public ActivityEntity search(int activityId) {
+  public ActivityEntity search(long activityId) {
     return activityRepository.findById(activityId)
         .orElseThrow(() -> new NotFoundException("모임을 찾지 못했습니다."));
   }
 
-  public ActivityEntity open(final int activityId) {
+  public ActivityEntity open(final long activityId) {
     final ActivityEntity activity = search(activityId);
 
     final LocalDateTime now = LocalDateTime.now();
@@ -137,14 +137,14 @@ public class ActivityGateway {
     }
   }
 
-  public int initAccessCode(final int activityId) {
+  public int initAccessCode(final long activityId) {
     final int accessCode = new Random().nextInt(100) + 1;
     redisClient.save(ACCESS_CODE_KEY_PREFIX + activityId, accessCode, Duration.ofMinutes(5));
 
     return accessCode;
   }
 
-  public List<ActivityParticipationEntity> searchParticipation(final int activityId) {
+  public List<ActivityParticipationEntity> searchParticipation(final long activityId) {
     return activityParticipationRepository.findAllByActivityId(activityId);
   }
 }

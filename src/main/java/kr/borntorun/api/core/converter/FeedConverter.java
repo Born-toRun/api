@@ -32,7 +32,7 @@ import kr.borntorun.api.support.exception.InvalidException;
 @Mapper(componentModel = "spring")
 public interface FeedConverter {
 
-  SearchFeedDetailCommand toSearchFeedDetailCommand(final Integer feedId, final TokenDetail my);
+  SearchFeedDetailCommand toSearchFeedDetailCommand(final long feedId, final TokenDetail my);
 
   @Mapping(target = "id", source = "source.id")
   @Mapping(target = "hasMyRecommendation", source = ".", qualifiedByName = "convertHasMyRecommendation")
@@ -49,11 +49,11 @@ public interface FeedConverter {
   @Mapping(target = "viewer.hasMyComment", source = "hasMyComment")
   DetailFeedResponse toDetailFeedResponse(final Feed source);
 
-  ModifyFeedCommand toModifyFeedCommand(final ModifyFeedRequest source, final int feedId);
+  ModifyFeedCommand toModifyFeedCommand(final ModifyFeedRequest source, final long feedId);
 
   ModifyFeedQuery toModifyFeedQuery(final ModifyFeedCommand source);
 
-  RemoveFeedCommand toRemoveFeedCommand(final Integer feedId, final TokenDetail my);
+  RemoveFeedCommand toRemoveFeedCommand(final long feedId, final TokenDetail my);
 
   @Mapping(target = "myUserId", source = "my.id")
   CreateFeedCommand toCreateFeedCommand(final CreateFeedRequest source, final TokenDetail my);
@@ -73,9 +73,9 @@ public interface FeedConverter {
   FeedEntity toFeedEntity(final CreateFeedQuery source);
 
   @Mapping(target = "isMyCrew", source = "request.myCrew")
-  SearchAllFeedCommand toSearchAllFeedCommand(final SearchFeedRequest request, final TokenDetail my, final int lastFeedId);
+  SearchAllFeedCommand toSearchAllFeedCommand(final SearchFeedRequest request, final TokenDetail my, final long lastFeedId);
 
-  SearchAllFeedQuery toSearchAllFeedQuery(final SearchAllFeedCommand source, final List<Integer> searchedUserIds);
+  SearchAllFeedQuery toSearchAllFeedQuery(final SearchAllFeedCommand source, final List<Long> searchedUserIds);
 
   @Mapping(target = "writer.userName", source = "writer.userName")
   @Mapping(target = "writer.crewName", source = "writer.crewName")

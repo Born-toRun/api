@@ -29,7 +29,7 @@ public class PrivacyService implements PrivacyPort {
 
   @Transactional(readOnly = true)
   @Override
-  public UserPrivacy searchUserPrivacy(final int userId) {
+  public UserPrivacy searchUserPrivacy(final long userId) {
     UserPrivacyEntity userPrivacyEntity = privacyGateway.searchUserPrivacy(userId);
     return privacyConverter.toUserPrivacy(userPrivacyEntity);
   }

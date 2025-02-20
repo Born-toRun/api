@@ -1,6 +1,6 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record CreateCommentQuery(int myUserId,
-                                 int feedId,
-                                 Integer parentCommentId,
+public record CreateCommentQuery(long myUserId,
+								 long feedId,
+								 long parentCommentId,
                                  String contents) {}

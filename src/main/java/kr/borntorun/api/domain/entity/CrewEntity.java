@@ -29,15 +29,15 @@ public class CrewEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private long id;
   private String name;
   private String contents;
   private String sns;
   private String region;
   @Setter
-  private Integer imageId;
+  private long imageId;
   @Setter
-  private Integer logoId;
+  private long logoId;
 
   @OneToMany(mappedBy = "crewEntity")
   private Set<UserEntity> userEntities;

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ModifyObjectStorageQuery {
-  private int targetFileId;
+  private long targetFileId;
   private String cdnUri;
   private TokenDetail my;
   private MultipartFile file;

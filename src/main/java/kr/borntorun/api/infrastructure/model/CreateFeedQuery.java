@@ -6,7 +6,7 @@ import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.constant.FeedCategory;
 
 public record CreateFeedQuery(String contents,
-                             List<Integer> imageIds,
+                             List<Long> imageIds,
                              FeedCategory category,
                              FeedAccessLevel accessLevel,
-                             int userId) {}
+							  long userId) {}

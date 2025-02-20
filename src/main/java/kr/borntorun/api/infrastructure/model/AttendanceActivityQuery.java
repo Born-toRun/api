@@ -1,5 +1,5 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record AttendanceActivityQuery(int activityId,
+public record AttendanceActivityQuery(long activityId,
                                       int accessCode,
-                                      int myUserId) {}
+									  long myUserId) {}

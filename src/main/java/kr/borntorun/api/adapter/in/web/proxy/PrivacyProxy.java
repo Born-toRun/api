@@ -22,13 +22,13 @@ public class PrivacyProxy {
   private final PrivacyService privacyService;
 
   @CacheEvict(allEntries = true)
-  public void modifyUserPrivacy(final SettingUserPrivacyRequest request, final int myUserId) {
+  public void modifyUserPrivacy(final SettingUserPrivacyRequest request, final long myUserId) {
     ModifyUserPrivacyCommand command = privacyConverter.toModifyUserPrivacyCommand(request, myUserId);
     privacyService.modifyUserPrivacy(command);
   }
 
   @Cacheable(key = "'searchUserPrivacy: ' + #userId")
-  public UserPrivacy searchUserPrivacy(final int userId) {
+  public UserPrivacy searchUserPrivacy(final long userId) {
     return privacyService.searchUserPrivacy(userId);
   }
 }

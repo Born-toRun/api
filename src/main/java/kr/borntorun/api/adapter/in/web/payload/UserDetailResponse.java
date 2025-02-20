@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "유저 정보 조회")
 public record UserDetailResponse(
     @Schema(description = "회원 식별자")
-    int userId,
+    long userId,
 
     @Schema(description = "유저명")
     String userName,

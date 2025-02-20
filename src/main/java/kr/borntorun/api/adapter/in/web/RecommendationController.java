@@ -25,13 +25,13 @@ public class RecommendationController {
 
   @Operation(summary = "좋아요 추가", description = "컨텐츠를 '좋아요'합니다.")
   @PostMapping(value = "/{recommendationType}/{contentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void recommend(@AuthUser TokenDetail my, @PathVariable final RecommendationType recommendationType, @PathVariable final int contentId) {
+  public void recommend(@AuthUser TokenDetail my, @PathVariable final RecommendationType recommendationType, @PathVariable final long contentId) {
     recommendationProxy.create(my, recommendationType, contentId);
   }
 
   @Operation(summary = "좋아요 취소", description = "컨텐츠의 '좋아요'를 취소 합니다.")
   @DeleteMapping(value = "/{recommendationType}/{contentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void remove(@AuthUser TokenDetail my, @PathVariable final RecommendationType recommendationType, @PathVariable final int contentId) {
+  public void remove(@AuthUser TokenDetail my, @PathVariable final RecommendationType recommendationType, @PathVariable final long contentId) {
     recommendationProxy.remove(my, recommendationType, contentId);
   }
 }

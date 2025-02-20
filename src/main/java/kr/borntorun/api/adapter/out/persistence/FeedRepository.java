@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.borntorun.api.domain.entity.FeedEntity;
 
-public interface FeedRepository extends JpaRepository<FeedEntity, Integer> {
+public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
 
-  List<FeedEntity> findAllByUserId(final int userId);
+  List<FeedEntity> findAllByUserId(final long userId);
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AttendanceActivityCommand {
-  private int activityId;
+  private long activityId;
   private int accessCode;
-  private int myUserId;
+  private long myUserId;
 }

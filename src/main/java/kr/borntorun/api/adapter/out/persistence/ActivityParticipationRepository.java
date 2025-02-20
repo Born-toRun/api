@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.borntorun.api.domain.entity.ActivityParticipationEntity;
 
-public interface ActivityParticipationRepository extends JpaRepository<ActivityParticipationEntity, Integer> {
+public interface ActivityParticipationRepository extends JpaRepository<ActivityParticipationEntity, Long> {
 
-  List<ActivityParticipationEntity> findAllByUserId(final int userId);
-  List<ActivityParticipationEntity> findAllByActivityId(final int activityId);
-  Optional<ActivityParticipationEntity> findByActivityIdAndUserId(final int activityId, final int userId);
+  List<ActivityParticipationEntity> findAllByUserId(final long userId);
+  List<ActivityParticipationEntity> findAllByActivityId(final long activityId);
+  Optional<ActivityParticipationEntity> findByActivityIdAndUserId(final long activityId, final long userId);
 }

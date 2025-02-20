@@ -10,7 +10,7 @@ import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.constant.FeedCategory;
 
 @Schema(description = "피드 상세 조회")
-public record DetailFeedResponse(@Schema(description = "글 번호") int id,
+public record DetailFeedResponse(@Schema(description = "글 번호") long id,
                                  @Schema(description = "내용") String contents,
                                  @Schema(description = "이미지") List<Image> images,
                                  @Schema(description = "카테고리") FeedCategory category,
@@ -23,12 +23,12 @@ public record DetailFeedResponse(@Schema(description = "글 번호") int id,
                                  @Schema(description = "조회자") Viewer viewer) {
 
   @Schema(description = "이미지")
-  public record Image(@Schema(description = "이미지 식별자") int imageId,
+  public record Image(@Schema(description = "이미지 식별자") long imageId,
                       @Schema(description = "이미지 uri") String imageUri) {}
 
 
   @Schema(description = "작성자")
-  public record Writer(@Schema(description = "유저 식별자") int userId,
+  public record Writer(@Schema(description = "유저 식별자") long userId,
                        @Schema(description = "작성자 명") String userName,
                        @Schema(description = "작성자의 크루 명") String crewName,
                        @Schema(description = "작성자 프로필 사진") String profileImageUri,

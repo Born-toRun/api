@@ -30,9 +30,9 @@ public class ActivityParticipationEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int activityId;
-  private int userId;
+  private long id;
+  private long activityId;
+  private long userId;
   private LocalDateTime updatedAt;
   private LocalDateTime registeredAt;
   private Boolean isAttendance;

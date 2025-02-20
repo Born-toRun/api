@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.borntorun.api.domain.entity.ActivityEntity;
 
-public interface ActivityRepository extends JpaRepository<ActivityEntity, Integer> {
+public interface ActivityRepository extends JpaRepository<ActivityEntity, Long> {
 
-  List<ActivityEntity> findAllByUserId(final int userId);
+  List<ActivityEntity> findAllByUserId(final long userId);
 }

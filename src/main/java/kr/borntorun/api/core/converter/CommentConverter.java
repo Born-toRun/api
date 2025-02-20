@@ -18,16 +18,14 @@ import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.Comment;
 import kr.borntorun.api.domain.port.model.CommentDetail;
 import kr.borntorun.api.domain.port.model.CreateCommentCommand;
-import kr.borntorun.api.domain.port.model.DetailCommentCommand;
 import kr.borntorun.api.domain.port.model.ModifyCommentCommand;
-import kr.borntorun.api.domain.port.model.SearchAllCommentCommand;
 import kr.borntorun.api.infrastructure.model.CreateCommentQuery;
 import kr.borntorun.api.infrastructure.model.ModifyCommentQuery;
 
 @Mapper(componentModel = "spring")
 public interface CommentConverter {
 
-  CreateCommentCommand toCreateCommentCommand(final int myUserId, final int feedId, final CreateCommentRequest source);
+  CreateCommentCommand toCreateCommentCommand(final long myUserId, final long feedId, final CreateCommentRequest source);
 
   CreateCommentQuery toCreateCommentQuery(final CreateCommentCommand source);
 
@@ -49,7 +47,7 @@ public interface CommentConverter {
 
   @Mapping(target = "writer", source = "userId", qualifiedByName = "convertCommentWriter")
   @Mapping(target = "isMyComment", source = "source.userId", qualifiedByName = "convertIsMyComment")
-  List<Comment> toComments(final List<CommentEntity> source, @Context final Map<Integer, BornToRunUser> writersByUserIdMapping, @Context final int myUserId);
+  List<Comment> toComments(final List<CommentEntity> source, @Context final Map<Long, BornToRunUser> writersByUserIdMapping, @Context final long myUserId);
 
   List<SearchCommentResponse.Comment> toSearchCommentResponseComment(final List<Comment> source);
 
@@ -59,13 +57,13 @@ public interface CommentConverter {
 
   @Mapping(target = "writer", expression = "java(new SearchCommentDetailResponse.Writer(source.writer().userId(), source.writer().userName(), source.writer().profileImageUri(), source.writer().crewName(), source.writer().isAdmin(), source.writer().isManager()))")
   @Mapping(target = "reComments", source = "reComments", qualifiedByName = "convertReComments")
-  SearchCommentDetailResponse toSearchCommentDetailResponse(final CommentDetail source, @Context final Integer myUserId);
+  SearchCommentDetailResponse toSearchCommentDetailResponse(final CommentDetail source, @Context final long myUserId);
 
-  List<SearchCommentDetailResponse.ReComment> toSearchCommentDetailResponseReComment(final List<Comment> source, @Context Integer myUserId);
+  List<SearchCommentDetailResponse.ReComment> toSearchCommentDetailResponseReComment(final List<Comment> source, @Context long myUserId);
 
-  SearchCommentDetailResponse.ReComment toSearchCommentDetailResponseReComment(final Comment source, @Context Integer myUserId);
+  SearchCommentDetailResponse.ReComment toSearchCommentDetailResponseReComment(final Comment source, @Context long myUserId);
 
-  ModifyCommentCommand toModifyCommentCommand(final ModifyCommentRequest source, final Integer commentId);
+  ModifyCommentCommand toModifyCommentCommand(final ModifyCommentRequest source, final long commentId);
 
   ModifyCommentQuery toModifyCommentQuery(final ModifyCommentCommand source);
 
@@ -77,17 +75,13 @@ public interface CommentConverter {
 
   ModifyCommentResponse toModifyCommentResponse(final Comment source);
 
-  SearchAllCommentCommand toSearchAllCommentCommand(final Integer feedId, Integer myUserId);
-
-  DetailCommentCommand toDetailCommentCommand(final Integer commentId, final Integer myUserId);
-
   @Named("convertIsMyCommentByBornToRunUser")
-  default boolean convertIsMyCommentByBornToRunUser(final int userId, @Context final BornToRunUser user) {
+  default boolean convertIsMyCommentByBornToRunUser(final long userId, @Context final BornToRunUser user) {
     return userId == user.userId();
   }
 
   @Named("convertReComments")
-  default List<SearchCommentDetailResponse.ReComment> convertReComments(final List<Comment> reComments, @Context final Integer myUserId) {
+  default List<SearchCommentDetailResponse.ReComment> convertReComments(final List<Comment> reComments, @Context final long myUserId) {
     return toSearchCommentDetailResponseReComment(reComments, myUserId);
   }
 }

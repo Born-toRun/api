@@ -1,29 +1,12 @@
 package kr.borntorun.api.config;
 
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyFactory;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.openssl.jcajce.JceOpenSSLPKCS8DecryptorProviderBuilder;
-import org.bouncycastle.operator.InputDecryptorProvider;
-import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,63 +15,53 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.XXssConfig;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
-
 import kr.borntorun.api.config.jwt.AuthenticationPrincipalArgumentResolver;
 import kr.borntorun.api.config.jwt.JwtAccessDeniedHandler;
 import kr.borntorun.api.config.jwt.JwtAuthenticationEntryPoint;
 import kr.borntorun.api.config.jwt.TokenAuthenticationPrincipalArgumentResolver;
+import kr.borntorun.api.config.properties.AppProperties;
+import kr.borntorun.api.config.properties.CorsProperties;
+import kr.borntorun.api.domain.constant.RoleType;
+import kr.borntorun.api.domain.port.UserPort;
+import kr.borntorun.api.domain.port.UserRefreshTokenPort;
 import kr.borntorun.api.support.TokenDetail;
 import kr.borntorun.api.support.http.filter.AuthorizationFilter;
+import kr.borntorun.api.support.oauth.filter.TokenAuthenticationFilter;
+import kr.borntorun.api.support.oauth.handler.OAuth2AuthenticationFailureHandler;
+import kr.borntorun.api.support.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import kr.borntorun.api.support.oauth.handler.TokenAccessDeniedHandler;
+import kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import kr.borntorun.api.support.oauth.service.BornToRunOAuth2UserService;
+import kr.borntorun.api.support.oauth.service.BornToRunUserDetailsService;
+import kr.borntorun.api.support.oauth.token.AuthTokenProvider;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableConfigurationProperties(value = {CorsProperties.class, AppProperties.class})
 public class SecurityConfig  implements WebMvcConfigurer {
 
-  @Value("${jwt.private-key-path}")
-  private String privateKeyPath;
-
-  @Value("${jwt.public-key-path}")
-  private String publicKeyPath;
-
-  @Value("${jwt.private-key-pwd}")
-  private String privateKeyPassword;
-
-  @Value("${cors.origin}")
-  private String origin;
+  private final CorsProperties corsProperties;
+  private final AppProperties appProperties;
+  private final AuthTokenProvider tokenProvider;
+  private final BornToRunUserDetailsService userDetailsService;
+  private final BornToRunOAuth2UserService oAuth2UserService;
+  private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
+  private final UserRefreshTokenPort userRefreshTokenPort;
+  private final UserPort userPort;
 
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
   private final Converter<JwtAuthenticationToken, TokenDetail> jwtToTokenConverter;
-
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**")
-        .allowedOrigins(origin)
-//        .allowCredentials(credentials)
-        .allowedMethods(
-            HttpMethod.GET.name(),
-            HttpMethod.POST.name(),
-            HttpMethod.PUT.name(),
-            HttpMethod.DELETE.name());
-  }
 
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -116,18 +89,16 @@ public class SecurityConfig  implements WebMvcConfigurer {
         .csrf(CsrfConfigurer::disable)
         .cors(Customizer.withDefaults())
         .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(oauth2ResourceServer ->
-            oauth2ResourceServer
-                .jwt(jwt -> jwt
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-        )
         .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(authenticationManager -> authenticationManager
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .accessDeniedHandler(jwtAccessDeniedHandler))
         .authorizeHttpRequests(
-            auth -> auth.requestMatchers(HttpMethod.POST, "/api/v1/auth/sign-out", "/api/v1/auth/refresh").authenticated()  // 로그아웃/토큰갱신
+            auth -> auth.requestMatchers("/api/**").hasAnyAuthority(RoleType.GUEST.getCode())
+              .requestMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+              .anyRequest().authenticated()
+
+              .requestMatchers(HttpMethod.POST, "/api/v1/auth/sign-out", "/api/v1/auth/refresh").authenticated()  // 로그아웃/토큰갱신
                 .requestMatchers(HttpMethod.GET,
 //                    activityBased + "/**", // 모임
                     privacyBased + "/user",
@@ -167,80 +138,82 @@ public class SecurityConfig  implements WebMvcConfigurer {
                 )
                 .authenticated()
                 .anyRequest().permitAll())
+      .oauth2Login(oauth2 -> oauth2
+        .authorizationEndpoint(endpoint -> endpoint
+          .baseUri("/oauth2/authorization")
+          .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
+        .redirectionEndpoint(endpoint -> endpoint
+          .baseUri("/*/oauth2/code/*"))
+        .userInfoEndpoint(endpoint -> endpoint
+          .userService(oAuth2UserService))
+        .successHandler(oAuth2AuthenticationSuccessHandler())
+        .failureHandler(oAuth2AuthenticationFailureHandler()))
         .build();
   }
 
+
+
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService)
+      .passwordEncoder(passwordEncoder());
+  }
+
+  /*
+   * security 설정 시, 사용할 인코더 설정
+   * */
   @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class)
-        .build();
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 
+  /*
+   * 토큰 필터 설정
+   * */
   @Bean
-  public JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-
-    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-    return jwtAuthenticationConverter;
+  public TokenAuthenticationFilter tokenAuthenticationFilter() {
+    return new TokenAuthenticationFilter(tokenProvider);
   }
 
+  /*
+   * 쿠키 기반 인가 Repository
+   * 인가 응답을 연계 하고 검증할 때 사용.
+   * */
   @Bean
-  public RSAKey rsaKey() throws Exception {
-    RSAPrivateKey privateKey = loadPrivateKey(privateKeyPath, privateKeyPassword);
-    RSAPublicKey publicKey = loadPublicKey(publicKeyPath);
-
-    return new RSAKey.Builder(publicKey)
-      .privateKey(privateKey)
-      .keyID(UUID.randomUUID().toString())
-      .build();
+  public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+    return new OAuth2AuthorizationRequestBasedOnCookieRepository();
   }
 
-  private RSAPrivateKey loadPrivateKey(String filePath, String password) throws Exception {
-    try (PEMParser pemParser = new PEMParser(new FileReader(filePath))) {
-      Object object = pemParser.readObject();
-
-      JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-
-      if (object instanceof PKCS8EncryptedPrivateKeyInfo encryptedPrivateKeyInfo) {
-        // 🔹 암호화된 PKCS#8 개인 키를 복호화
-        InputDecryptorProvider decryptorProvider = new JceOpenSSLPKCS8DecryptorProviderBuilder()
-          .setProvider(new BouncyCastleProvider())
-          .build(password.toCharArray());
-
-        PrivateKeyInfo privateKeyInfo = encryptedPrivateKeyInfo.decryptPrivateKeyInfo(decryptorProvider);
-        return (RSAPrivateKey) converter.getPrivateKey(privateKeyInfo);
-      } else if (object instanceof PrivateKeyInfo) {
-        return (RSAPrivateKey) converter.getPrivateKey((PrivateKeyInfo) object);
-      } else {
-        throw new IllegalArgumentException("Invalid private key format");
-      }
-    }
-  }
-
-  private RSAPublicKey loadPublicKey(String filePath) throws Exception {
-    String keyContent = Files.readString(Paths.get(filePath))
-      .replaceAll("-----BEGIN PUBLIC KEY-----", "")
-      .replaceAll("-----END PUBLIC KEY-----", "")
-      .replaceAll("\\s", "");
-
-    byte[] decodedKey = Base64.getDecoder().decode(keyContent);
-    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    return (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(decodedKey));
-  }
-
+  /*
+   * Oauth 인증 성공 핸들러
+   * */
   @Bean
-  public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
-    JWKSet jwkSet = new JWKSet(rsaKey);
-    return (jwkSelector, context) -> jwkSelector.select(jwkSet);
+  public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
+    return new OAuth2AuthenticationSuccessHandler(
+      tokenProvider,
+      appProperties,
+      userPort,
+      userRefreshTokenPort,
+      oAuth2AuthorizationRequestBasedOnCookieRepository()
+    );
   }
 
+  /*
+   * Oauth 인증 실패 핸들러
+   * */
   @Bean
-  public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
-    return NimbusJwtDecoder
-        .withPublicKey(rsaKey.toRSAPublicKey())
-        .build();
+  public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+    return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
+  }
+
+  /*
+   * Cors 설정
+   * */
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**")
+      .allowedOrigins(corsProperties.getAllowedOrigins().split(","))
+      .allowedHeaders(corsProperties.getAllowedHeaders().split(","))
+      .allowedMethods(corsProperties.getAllowedHeaders().split(","))
+      .allowCredentials(true);
   }
 }

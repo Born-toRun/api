@@ -15,8 +15,8 @@ public interface CommentPort {
   List<Comment> searchAll(final SearchAllCommentCommand command);
   CommentDetail detail(final DetailCommentCommand command);
   void create(final CreateCommentCommand command);
-  int qty(final int feedId);
-  void remove(final int commentId);
+  int qty(final long feedId);
+  void remove(final long commentId);
   Comment modify(final ModifyCommentCommand command);
-  CommentEntity search(final int commentId);
+  CommentEntity search(final long commentId);
 }

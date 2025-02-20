@@ -4,7 +4,7 @@ import java.util.List;
 
 public record AttendanceResult(Participant host,
                                List<Participant> participants) {
-  public record Participant(int userId,
+  public record Participant(long userId,
                             String userName,
                             String crewName,
                             String userProfileUri) {}

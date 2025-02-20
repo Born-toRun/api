@@ -36,10 +36,10 @@ public class CommentEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  private int parentId;
-  private int userId;
-  private int feedId;
+  private long id;
+  private long parentId;
+  private long userId;
+  private long feedId;
   private String contents;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;

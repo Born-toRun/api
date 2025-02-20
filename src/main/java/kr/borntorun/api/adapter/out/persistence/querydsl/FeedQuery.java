@@ -74,7 +74,7 @@ public class FeedQuery {
     return new PageImpl<>(contents, pageable, total);
   }
 
-  public void increaseViewQty(final int feedId) {
+  public void increaseViewQty(final long feedId) {
     final QFeedEntity feed = QFeedEntity.feedEntity;
 
     queryFactory.update(feed)

@@ -41,7 +41,7 @@ public class ObjectStorageController {
 
   @Operation(summary = "파일 삭제", description = "파일을 삭제합니다.")
   @DeleteMapping(value = "/{bucket}/{fileId}", produces=MediaType.APPLICATION_JSON_VALUE)
-  public void removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @PathVariable int fileId) {
+  public void removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket, @PathVariable long fileId) {
     objectStorageProxy.remove(my, bucket, fileId);
   }
 }

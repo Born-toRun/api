@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import kr.borntorun.api.domain.constant.ActivityRecruitmentType;
 
-public record Activity(int id,
+public record Activity(long id,
                        String title,
                        String contents,
                        LocalDateTime startDate,
@@ -23,8 +23,8 @@ public record Activity(int id,
                        ActivityRecruitmentType recruitmentType,
                        Host host) {
 
-  public record Host(int userId,
-                     int crewId,
+  public record Host(long userId,
+                     Long crewId,
                      String userProfileUri,
                      String userName,
                      String crewName,

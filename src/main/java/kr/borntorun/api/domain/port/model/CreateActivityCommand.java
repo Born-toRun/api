@@ -12,4 +12,4 @@ public record CreateActivityCommand(String title,
                               String course,
                               String courseDetail,
                               String path,
-                              int myUserId) {}
+									long myUserId) {}

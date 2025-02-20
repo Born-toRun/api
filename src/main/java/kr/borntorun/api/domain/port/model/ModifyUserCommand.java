@@ -1,7 +1,7 @@
 package kr.borntorun.api.domain.port.model;
 
-public record ModifyUserCommand(int userId,
-    int profileImageId,
+public record ModifyUserCommand(long userId,
+								long profileImageId,
     String instagramId
 ) {
 }

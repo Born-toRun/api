@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.borntorun.api.domain.constant.Bucket;
 
-public record UploadObjectStorageQuery(int myUserId,
+public record UploadObjectStorageQuery(long myUserId,
                                        MultipartFile file,
                                        Bucket bucket) {
 

@@ -2,7 +2,7 @@ package kr.borntorun.api.infrastructure.model;
 
 import java.time.LocalDateTime;
 
-public record ModifyActivityQuery(int activityId,
+public record ModifyActivityQuery(long activityId,
                                   String title,
                                   String contents,
                                   LocalDateTime startDate,

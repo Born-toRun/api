@@ -12,4 +12,4 @@ public record CreateActivityQuery(String title,
                                   String course,
                                   String courseDetail,
                                   String path,
-                                  int myUserId) {}
+								  long myUserId) {}

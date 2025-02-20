@@ -1,6 +1,6 @@
 package kr.borntorun.api.domain.port.model;
 
-public record Crew(int id,
+public record Crew(long id,
                    String name,
                    String contents,
                    String region,

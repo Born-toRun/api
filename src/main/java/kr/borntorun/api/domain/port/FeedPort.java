@@ -15,7 +15,7 @@ public interface FeedPort {
 
   Feed searchDetail(final SearchFeedDetailCommand command);
   Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable);
-  void increaseViewQty(final int feedId);
+  void increaseViewQty(final long feedId);
   void create(final CreateFeedCommand command);
   void remove(final RemoveFeedCommand command);
   void modify(final ModifyFeedCommand command);

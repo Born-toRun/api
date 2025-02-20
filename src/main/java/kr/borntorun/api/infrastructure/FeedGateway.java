@@ -30,7 +30,7 @@ public class FeedGateway {
     return feedQuery.searchAllByFilter(query, pageable);
   }
 
-  public void increaseViewQty(final int feedId) {
+  public void increaseViewQty(final long feedId) {
     feedQuery.increaseViewQty(feedId);
   }
 
@@ -48,9 +48,9 @@ public class FeedGateway {
     return feedRepository.save(feedEntity);
   }
 
-  public List<Integer> removeAll(final int userId) {
+  public List<Long> removeAll(final long userId) {
     final List<FeedEntity> feeds = feedRepository.findAllByUserId(userId);
-    final List<Integer> feedIds = feeds.stream()
+    final List<Long> feedIds = feeds.stream()
         .map(FeedEntity::getId)
         .collect(Collectors.toList());
 
@@ -59,7 +59,7 @@ public class FeedGateway {
     return feedIds;
   }
 
-  public void remove(final int feedId) {
+  public void remove(final long feedId) {
     feedRepository.deleteById(feedId);
   }
 
@@ -76,7 +76,7 @@ public class FeedGateway {
     return feedRepository.save(feedEntity);
   }
 
-  public FeedEntity search(final int feedId) {
+  public FeedEntity search(final long feedId) {
     return feedRepository.findById(feedId)
         .orElseThrow(() -> new NotFoundException("해당 피드를 찾을 수 없습니다."));
   }

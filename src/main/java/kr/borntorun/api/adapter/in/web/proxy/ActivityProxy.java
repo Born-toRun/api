@@ -39,24 +39,24 @@ public class ActivityProxy {
   }
 
   @CacheEvict(allEntries = true)
-  public void modify(final ModifyActivityRequest request, final int activityId) {
+  public void modify(final ModifyActivityRequest request, final long activityId) {
     ModifyActivityCommand command = activityConverter.toModifyActivityCommand(request, activityId);
     activityService.modify(command);
   }
 
   @CacheEvict(allEntries = true)
-  public void remove(final int activityId) {
+  public void remove(final long activityId) {
     activityService.remove(activityId);
   }
 
   @CacheEvict(allEntries = true)
-  public void participate(final int activityId, final int myUserId) {
+  public void participate(final long activityId, final long myUserId) {
     ParticipateActivityCommand command = new ParticipateActivityCommand(activityId, myUserId);
     activityService.participate(command);
   }
 
   @CacheEvict(allEntries = true)
-  public void participateCancel(final int participationId) {
+  public void participateCancel(final long participationId) {
     activityService.participateCancel(participationId);
   }
 
@@ -67,23 +67,23 @@ public class ActivityProxy {
   }
 
   @Cacheable(key = "'search: ' + #my.id + #activityId")
-  public Activity search(final int activityId, final TokenDetail my) {
+  public Activity search(final long activityId, final TokenDetail my) {
     return activityService.search(activityId, my.getId());
   }
 
   @CacheEvict(allEntries = true)
-  public Activity open(final int activityId) {
+  public Activity open(final long activityId) {
     return activityService.open(activityId);
   }
 
   @CacheEvict(allEntries = true)
-  public void attendance(final AttendanceActivityRequest request, final int activityId, final int myUserId) {
+  public void attendance(final AttendanceActivityRequest request, final long activityId, final long myUserId) {
     AttendanceActivityCommand command = activityConverter.toAttendanceActivityCommand(request, activityId, myUserId);
     activityService.attendance(command);
   }
 
   @Cacheable(key = "'getAttendance: ' + #activityId")
-  public AttendanceResult getAttendance(final int activityId) {
+  public AttendanceResult getAttendance(final long activityId) {
     return activityService.getAttendance(activityId);
   }
 }

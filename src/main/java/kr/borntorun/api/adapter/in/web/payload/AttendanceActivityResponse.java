@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record AttendanceActivityResponse(@Schema(description = "호스트") Person host,
                                          @Schema(description = "참여 예정자") List<Person> participants) {
 
-  public record Person(@Schema(description = "참여 예정자 식별자") int userId,
+  public record Person(@Schema(description = "참여 예정자 식별자") long userId,
                        @Schema(description = "참여 예정자 성명") String userName,
                        @Schema(description = "참여 예정자 크루명") String crewName,
                        @Schema(description = "참여 예정자 프로필 사진 url") String userProfileUri) {}

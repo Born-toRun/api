@@ -1,9 +1,9 @@
 package kr.borntorun.api.domain.port.model;
 
 public record SignUpCommand(
-    int userId,
+  long userId,
     String userName,
-    int crewId,
+    Long crewId,
     String instagramId
 ) {
 }

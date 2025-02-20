@@ -13,19 +13,19 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import kr.borntorun.api.config.properties.DiscordAdapterProperties;
+import kr.borntorun.api.config.properties.DiscordProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@EnableConfigurationProperties(DiscordAdapterProperties.class)
+@EnableConfigurationProperties(DiscordProperties.class)
 public class DiscordAdapter {
 
   private static final int MESSAGE_MAX_SIZE = 2000;
   private static final String MESSAGE = "content";
-  private final DiscordAdapterProperties discordAdapterProperties;
+  private final DiscordProperties discordProperties;
   private final WebClient discordConnector;
 
   @Async
@@ -66,7 +66,7 @@ public class DiscordAdapter {
 
           discordConnector.post()
               .uri(uriBuilder -> uriBuilder
-                  .path(discordAdapterProperties.getWebhookPath())
+                  .path(discordProperties.getWebhookPath())
                   .build())
               .body(BodyInserters.fromFormData(body))
               .retrieve()

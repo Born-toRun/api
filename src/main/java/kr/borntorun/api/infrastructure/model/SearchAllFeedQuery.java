@@ -9,8 +9,8 @@ public record SearchAllFeedQuery(FeedCategory category,
                                  String searchKeyword,
                                  boolean isMyCrew,
                                  TokenDetail my,
-                                 int lastFeedId,
-                                 List<Integer> searchedUserIds) {
+                                 long lastFeedId,
+                                 List<Long> searchedUserIds) {
 
   public boolean isUsedIntegratedSearch() {
     return null != searchKeyword && !searchKeyword.isEmpty();

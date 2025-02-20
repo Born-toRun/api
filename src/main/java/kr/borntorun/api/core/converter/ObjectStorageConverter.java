@@ -20,9 +20,9 @@ import kr.borntorun.api.support.TokenDetail;
 @Mapper(componentModel = "spring")
 public interface ObjectStorageConverter {
 
-  UploadObjectStorageCommand toUploadObjectStorageCommand(final Integer myUserId, final MultipartFile file, final Bucket bucket);
+  UploadObjectStorageCommand toUploadObjectStorageCommand(final long myUserId, final MultipartFile file, final Bucket bucket);
 
-  RemoveObjectStorageCommand toRemoveObjectStorageCommand(final TokenDetail my, final Integer targetFileId, final Bucket bucket);
+  RemoveObjectStorageCommand toRemoveObjectStorageCommand(final TokenDetail my, final long targetFileId, final Bucket bucket);
 
   UploadObjectStorageQuery toUploadObjectStorageQuery(final UploadObjectStorageCommand source);
 

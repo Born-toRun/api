@@ -21,12 +21,12 @@ public class PrivacyGateway {
     userPrivacyRepository.save(userPrivacy);
   }
 
-  public UserPrivacyEntity searchUserPrivacy(final int userId) {
+  public UserPrivacyEntity searchUserPrivacy(final long userId) {
     return userPrivacyRepository.findByUserId(userId)
       .orElseThrow(() -> new NotFoundException("정보 노출 동의 내용을 찾을 수 없습니다."));
   }
 
-  public void remove(final int userId) {
+  public void remove(final long userId) {
     UserPrivacyEntity userPrivacyEntity = searchUserPrivacy(userId);
     userPrivacyRepository.deleteById(userPrivacyEntity.getId());
   }

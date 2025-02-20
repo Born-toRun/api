@@ -51,25 +51,25 @@ public class ActivityController {
 
   @Operation(summary = "모임 수정", description = "모임를 수정합니다.")
   @PutMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void modify(@AuthUser TokenDetail my, @PathVariable int activityId, @RequestBody @Valid ModifyActivityRequest request) {
+  public void modify(@AuthUser TokenDetail my, @PathVariable long activityId, @RequestBody @Valid ModifyActivityRequest request) {
     activityProxy.modify(request, activityId);
   }
 
   @Operation(summary = "모임 삭제", description = "모임를 삭제합니다.")
   @DeleteMapping(value = "/{activityId}")
-  public void remove(@AuthUser TokenDetail my, @PathVariable int activityId) {
+  public void remove(@AuthUser TokenDetail my, @PathVariable long activityId) {
     activityProxy.remove(activityId);
   }
 
   @Operation(summary = "모임 참여", description = "모임에 참여할 예정입니다.")
   @PostMapping(value = "/participation/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void participate(@AuthUser TokenDetail my, @PathVariable int activityId) {
+  public void participate(@AuthUser TokenDetail my, @PathVariable long activityId) {
     activityProxy.participate(activityId, my.getId());
   }
 
   @Operation(summary = "모임 불참", description = "모임에 불참할 예정입니다.")
   @PostMapping(value = "/participation-cancel/{participationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void participateCancel(@AuthUser TokenDetail my, @PathVariable int participationId) {
+  public void participateCancel(@AuthUser TokenDetail my, @PathVariable long participationId) {
     activityProxy.participateCancel(participationId);
   }
 
@@ -84,7 +84,7 @@ public class ActivityController {
 
   @Operation(summary = "모임 상세 조회", description = "모임 상세를 조회합니다.")
   @GetMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SearchActivityDetailResponse> search(@AuthUser TokenDetail my, @PathVariable int activityId) {
+  public ResponseEntity<SearchActivityDetailResponse> search(@AuthUser TokenDetail my, @PathVariable long activityId) {
     final Activity activity = activityProxy.search(activityId, my);
     SearchActivityDetailResponse response = activityConverter.toSearchActivityDetailResponse(activity);
     return ResponseEntity.ok(response);
@@ -92,7 +92,7 @@ public class ActivityController {
 
   @Operation(summary = "모임 오픈", description = "모임를 오픈합니다.")
   @PutMapping(value = "/open/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<OpenActivityResponse> open(@AuthUser TokenDetail my, @PathVariable int activityId) {
+  public ResponseEntity<OpenActivityResponse> open(@AuthUser TokenDetail my, @PathVariable long activityId) {
     final Activity activity = activityProxy.open(activityId);
     OpenActivityResponse response = activityConverter.toOpenActivityResponse(activity);
     return ResponseEntity.ok(response);
@@ -100,7 +100,7 @@ public class ActivityController {
 
   @Operation(summary = "출석 현황", description = "모임의 출석 현황을 조회합니다.")
   @GetMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AttendanceActivityResponse> searchAttendance(@AuthUser TokenDetail my, @PathVariable int activityId) {
+  public ResponseEntity<AttendanceActivityResponse> searchAttendance(@AuthUser TokenDetail my, @PathVariable long activityId) {
     final AttendanceResult attendanceResult = activityProxy.getAttendance(activityId);
     AttendanceActivityResponse response = activityConverter.toAttendanceActivityResponse(attendanceResult);
     return ResponseEntity.ok(response);
@@ -108,7 +108,7 @@ public class ActivityController {
 
   @Operation(summary = "모임 출석", description = "모임에 출석합니다.")
   @PostMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void attendance(@AuthUser TokenDetail my, @PathVariable int activityId, @RequestBody @Valid AttendanceActivityRequest request) {
+  public void attendance(@AuthUser TokenDetail my, @PathVariable long activityId, @RequestBody @Valid AttendanceActivityRequest request) {
     activityProxy.attendance(request, activityId, my.getId());
   }
 }

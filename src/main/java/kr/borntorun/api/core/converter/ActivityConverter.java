@@ -48,7 +48,7 @@ public interface ActivityConverter {
   @Mapping(target = "userId", source = "myUserId")
   ActivityEntity toActivityEntity(final CreateActivityQuery source);
 
-  ModifyActivityCommand toModifyActivityCommand(final ModifyActivityRequest source, final Integer activityId);
+  ModifyActivityCommand toModifyActivityCommand(final ModifyActivityRequest source, final long activityId);
 
   ModifyActivityQuery toModifyActivityQuery(final ModifyActivityCommand source);
 
@@ -58,14 +58,14 @@ public interface ActivityConverter {
   @Mapping(target = "recruitmentType", ignore = true)
   Activity toActivity(final ActivityEntity source, final int attendanceCode);
 
-  List<Activity> toActivityByUserId(final List<ActivityEntity> source, @Context final int myUserId);
+  List<Activity> toActivityByUserId(final List<ActivityEntity> source, @Context final long myUserId);
 
   @Mapping(target = "recruitmentType", source = ".", qualifiedByName = "convertRecruitmentType")
   @Mapping(target = "attendanceCode", ignore = true)
   @Mapping(target = "id", source = "id")
   @Mapping(target = "participantsQty", expression = "java(source.getActivityParticipationEntities().size())")
   @Mapping(target = "host", expression = "java(new Activity.Host(source.getUserId(), source.getUserEntity().getCrewEntity().getId(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getName(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsManager(), source.getUserEntity().getIsAdmin()))")
-  Activity toActivityByUserId(final ActivityEntity source, @Context final int myUserId);
+  Activity toActivityByUserId(final ActivityEntity source, @Context final long myUserId);
 
   List<SearchActivityResponse.Activity> toSearchActivityResponseActivity(final List<Activity> source);
 
@@ -86,7 +86,7 @@ public interface ActivityConverter {
   @Mapping(target = "host", expression = "java(new SearchActivityDetailResponse.Host(source.host().userId(), source.host().crewId(), source.host().userProfileUri(), source.host().userName(), source.host().crewName(), source.host().isManager(), source.host().isAdmin()))")
   SearchActivityDetailResponse toSearchActivityDetailResponse(final Activity source);
 
-  AttendanceActivityCommand toAttendanceActivityCommand(final AttendanceActivityRequest source, final Integer activityId, final Integer myUserId);
+  AttendanceActivityCommand toAttendanceActivityCommand(final AttendanceActivityRequest source, final long activityId, final long myUserId);
 
   AttendanceActivityQuery toAttendanceActivityQuery(final AttendanceActivityCommand source);
 
@@ -105,7 +105,7 @@ public interface ActivityConverter {
   }
 
   @Named("convertRecruitmentType")
-  default ActivityRecruitmentType convertRecruitmentType(final ActivityEntity source, @Context final int myUserId) {
+  default ActivityRecruitmentType convertRecruitmentType(final ActivityEntity source, @Context final long myUserId) {
     if(source.getActivityParticipationEntities().stream()
         .anyMatch(e -> e.getUserEntity().getId() == myUserId)) {
       return ActivityRecruitmentType.ALREADY_PARTICIPATING;

@@ -9,5 +9,5 @@ import lombok.Setter;
 @Builder
 public class BookmarkMarathonQuery {
   private long marathonId;
-  private int myUserId;
+  private long myUserId;
 }

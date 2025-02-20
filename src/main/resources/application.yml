@@ -27,7 +27,8 @@ adapter:
     client-id: ${authentication.client-id}
     client-secret: ${authentication.client-secret}
     grant-type: client_credentials
-    sign-in-path: /oauth2/kakao/sign-in
+    # TODO: 네이버/구글/메타 추가
+    sign-in-path: /oauth2/authorization/kakao
     auth-token-path: /oauth2/token
 
 spring:

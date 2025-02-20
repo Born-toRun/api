@@ -29,27 +29,27 @@ public class ActivityWriterValidationAspect {
   public void onDeleteUser() {}
 
   @Before("onOpenUser() && args(my, activityId, ..)")
-  public void validateOpen(final TokenDetail my, final int activityId) throws IllegalArgumentException {
+  public void validateOpen(final TokenDetail my, final long activityId) throws IllegalArgumentException {
     validate(my.getId(), activityId);
   }
 
   @Before("onModifyUser() && args(my, activityId, request, ..)")
-  public void validateModify(final TokenDetail my, final int activityId, final ModifyActivityRequest request) throws IllegalArgumentException {
+  public void validateModify(final TokenDetail my, final long activityId, final ModifyActivityRequest request) throws IllegalArgumentException {
     validate(my.getId(), activityId);
   }
 
   @Before("onDeleteUser() && args(my, activityId, ..)")
-  public void validateDelete(final TokenDetail my, final int activityId) throws IllegalArgumentException {
+  public void validateDelete(final TokenDetail my, final long activityId) throws IllegalArgumentException {
     validate(my.getId(), activityId);
   }
 
-  private void validate(final int userId, final int activityId) {
+  private void validate(final long userId, final long activityId) {
     if (!isValid(userId, activityId)) {
       throw new ForBiddenException("잘못된 접근입니다.");
     }
   }
 
-  private boolean isValid(final int userId, final int activityId) {
+  private boolean isValid(final long userId, final long activityId) {
     return activityRepository.findById(activityId)
         .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."))
         .getUserId() == userId;

@@ -35,7 +35,7 @@ public class ActivityEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private long id;
   private String title;
   private String contents;
   private LocalDateTime startDate;
@@ -46,7 +46,7 @@ public class ActivityEntity {
   private String course;
   private String courseDetail;
   private String path;
-  private int userId;
+  private long userId;
   private Boolean isOpen;
   private LocalDateTime updatedAt;
   private LocalDateTime registeredAt;

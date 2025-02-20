@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface RecentSearchKeywordPort {
 
-  void removeAll(final int userId);
-  void removeKeyword(final int userId, final String searchKeyword);
-  void add(final int userId, final String searchKeyword);
-  List<Object> search(final int userId);
+  void removeAll(final long userId);
+  void removeKeyword(final long userId, final String searchKeyword);
+  void add(final long userId, final String searchKeyword);
+  List<Object> search(final long userId);
 }

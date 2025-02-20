@@ -7,6 +7,6 @@ public record SearchAllFeedCommand(FeedCategory category,
                                    String searchKeyword,
                                    boolean isMyCrew,
                                    TokenDetail my,
-                                   int lastFeedId) {
+								   long lastFeedId) {
 
 }

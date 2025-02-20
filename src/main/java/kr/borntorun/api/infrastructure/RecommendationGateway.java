@@ -37,7 +37,7 @@ public class RecommendationGateway {
     recommendationRepository.deleteById(recommendationEntity.getId());
   }
 
-  public void removeAll(final int userId) {
+  public void removeAll(final long userId) {
     recommendationRepository.deleteAllById(recommendationRepository.findAllByUserId(userId).stream()
         .map(RecommendationEntity::getId)
         .collect(Collectors.toList()));

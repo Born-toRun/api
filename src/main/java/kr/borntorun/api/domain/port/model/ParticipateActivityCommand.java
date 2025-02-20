@@ -1,4 +1,4 @@
 package kr.borntorun.api.domain.port.model;
 
-public record ParticipateActivityCommand(int activityId,
-                                         int myUserId) {}
+public record ParticipateActivityCommand(long activityId,
+										 long myUserId) {}

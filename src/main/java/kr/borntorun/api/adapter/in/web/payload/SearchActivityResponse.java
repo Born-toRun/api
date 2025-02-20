@@ -12,8 +12,8 @@ import kr.borntorun.api.domain.constant.ActivityRecruitmentType;
 public record SearchActivityResponse(@Schema(description = "모임 리스트") List<Activity> activities) {
 
   @Schema(description = "호스트")
-  public record Host(@Schema(description = "식별자") int userId,
-                     @Schema(description = "크루 식별자") int crewId,
+  public record Host(@Schema(description = "식별자") long userId,
+                     @Schema(description = "크루 식별자") Long crewId,
                      @Schema(description = "프로필 이미지") String userProfileUri,
                      @Schema(description = "성명") String userName,
                      @Schema(description = "크루 명") String crewName,
@@ -21,7 +21,7 @@ public record SearchActivityResponse(@Schema(description = "모임 리스트") L
                      @Schema(description = "런에이서 관리자 여부") Boolean isAdmin) {}
 
   @Schema(description = "모임")
-  public record Activity(@Schema(description = "모임 식별자") int id,
+  public record Activity(@Schema(description = "모임 식별자") long id,
                          @Schema(description = "모임 명칭") String title,
                          @Schema(description = "모임 호스트") Host host,
                          @Schema(description = "모임 시작 일자") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,

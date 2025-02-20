@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record SearchActivityDetailResponse(
 
     @Schema(description = "행사 식별자")
-    int id,
+    long id,
 
     @Schema(description = "행사 명칭")
     String title,
@@ -62,8 +62,8 @@ public record SearchActivityDetailResponse(
 ) {
 
   @Schema(description = "호스트")
-  public record Host(@Schema(description = "식별자") int userId,
-                     @Schema(description = "크루 식별자") int crewId,
+  public record Host(@Schema(description = "식별자") long userId,
+                     @Schema(description = "크루 식별자") Long crewId,
                      @Schema(description = "프로필 이미지") String userProfileUri,
                      @Schema(description = "성명") String userName,
                      @Schema(description = "크루 명") String crewName,

@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
+import kr.borntorun.api.domain.constant.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,10 +19,10 @@ import lombok.Getter;
 @Builder
 public class TokenDetail {
 
-  private int id;
+  private long id;
   private String userName;
   private List<String> authorities;
-  private Integer crewId;
+  private Long crewId;
   private Boolean isAdmin;
   private Boolean isManager;
 
@@ -37,9 +38,9 @@ public class TokenDetail {
     this.authorities = token.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toList());
-    this.crewId = jwt.getClaimAsString("crewId") == null ? null : Integer.valueOf(jwt.getClaimAsString("crewId"));
-    this.isAdmin = jwt.getClaimAsBoolean("isAdmin");
-    this.isManager = jwt.getClaimAsBoolean("isManager");
+    this.crewId = jwt.getClaimAsString("crewId") == null ? null : Long.valueOf(jwt.getClaimAsString("crewId"));
+    this.isAdmin = this.authorities.contains(RoleType.ADMIN.name());
+    this.isManager = this.authorities.contains(RoleType.MANAGER.name());
   }
 
   public boolean isLogin() {

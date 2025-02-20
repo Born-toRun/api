@@ -16,7 +16,7 @@ public class YellowCardGateway {
 
   private final YellowCardRepository yellowCardRepository;
 
-  public boolean exists(final int sourceUserId, final int targetUserId) {
+  public boolean exists(final long sourceUserId, final long targetUserId) {
     return yellowCardRepository.existsBySourceUserIdAndTargetUserId(sourceUserId, targetUserId);
   }
 

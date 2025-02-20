@@ -20,21 +20,21 @@ public class RecentSearchKeywordService implements RecentSearchKeywordPort {
   @Async
   @Transactional
   @Override
-  public void removeAll(final int userId) {
+  public void removeAll(final long userId) {
     redisClient.removeAll(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
   }
 
   @Async
   @Transactional
   @Override
-  public void removeKeyword(final int userId, final String searchKeyword) {
+  public void removeKeyword(final long userId, final String searchKeyword) {
     redisClient.removeValue(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId, searchKeyword);
   }
 
   @Async
   @Transactional
   @Override
-  public void add(final int userId, final String searchKeyword) {
+  public void add(final long userId, final String searchKeyword) {
     final String key = RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId;
     redisClient.add(key, searchKeyword);
 
@@ -48,7 +48,7 @@ public class RecentSearchKeywordService implements RecentSearchKeywordPort {
 
   @Transactional(readOnly = true)
   @Override
-  public List<Object> search(final int userId) {
+  public List<Object> search(final long userId) {
     return redisClient.getList(RECENT_SEARCH_KEYWORD_KEY_PREFIX + userId);
   }
 }

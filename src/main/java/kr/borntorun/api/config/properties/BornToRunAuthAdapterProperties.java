@@ -18,4 +18,5 @@ public class BornToRunAuthAdapterProperties {
   private final String grantType;
   private final String signInPath;
   private final String authTokenPath;
+  private final String refreshTokenPath;
 }

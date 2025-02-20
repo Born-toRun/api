@@ -10,17 +10,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Comment {
-  private int id;
-  private int parentId;
+  private long id;
+  private long parentId;
   private int reCommentQty;
-  private int feedId;
+  private long feedId;
   private String contents;
   private LocalDateTime registeredAt;
   private LocalDateTime updatedAt;
   private Writer writer;
   private Boolean isMyComment;
   public record Writer(
-      int userId,
+    long userId,
       String userName,
       String profileImageUri,
       String crewName,

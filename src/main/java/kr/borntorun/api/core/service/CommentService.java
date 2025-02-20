@@ -40,19 +40,19 @@ public class CommentService implements CommentPort {
   @Override
   public List<Comment> searchAll(final SearchAllCommentCommand command) {
     final List<CommentEntity> commentEntities = commentGateway.searchAll(command.feedId());
-    final Map<Integer, BornToRunUser> writersByUserIdMapping = getWritersByUserId(commentEntities);
+    final Map<Long, BornToRunUser> writersByUserIdMapping = getWritersByUserId(commentEntities);
 
     // 댓글/대댓글 정렬
     commentEntities.sort(Comparator
-      .comparingInt((CommentEntity c) -> c.isRootComment() ? c.getId() : c.getParentId())
-      .thenComparingInt(c -> c.isRootComment() ? 0 : -1)
-      .thenComparingInt(CommentEntity::getId)
+      .comparingLong((CommentEntity c) -> c.isRootComment() ? c.getId() : c.getParentId())
+      .thenComparingLong(c -> c.isRootComment() ? 0 : -1)
+      .thenComparingLong(CommentEntity::getId)
       .reversed()
     );
 
     final List<Comment> comments = commentConverter.toComments(commentEntities, writersByUserIdMapping, command.myUserId());
 
-    final Map<Integer, List<Comment>> commentsByParentId = comments.stream()
+    final Map<Long, List<Comment>> commentsByParentId = comments.stream()
       .collect(Collectors.groupingBy(Comment::getParentId));
 
     for (Comment comment : comments) {
@@ -68,12 +68,12 @@ public class CommentService implements CommentPort {
     final CommentEntity parentComment = commentGateway.search(command.commentId());
 
     final List<CommentEntity> reCommentEntities = commentGateway.searchReComments(command.commentId());
-    final Map<Integer, BornToRunUser> reCommentWritersByUserId = getWritersByUserId(reCommentEntities);
+    final Map<Long, BornToRunUser> reCommentWritersByUserId = getWritersByUserId(reCommentEntities);
 
     List<Comment> reComments = reCommentEntities.stream()
         .map(commentEntity -> commentConverter.toComment(commentEntity,
             reCommentWritersByUserId.get(commentEntity.getUserId())))
-        .sorted(Comparator.comparingInt(Comment::getId)
+        .sorted(Comparator.comparingLong(Comment::getId)
             .reversed()).toList();
 
     return commentConverter.toCommentDetail(parentComment, reComments);
@@ -88,13 +88,13 @@ public class CommentService implements CommentPort {
 
   @Transactional(readOnly = true)
   @Override
-  public int qty(final int feedId) {
+  public int qty(final long feedId) {
     return commentGateway.qty(feedId);
   }
 
   @Transactional
   @Override
-  public void remove(final int commentId) {
+  public void remove(final long commentId) {
     commentGateway.remove(commentId);
   }
 
@@ -108,11 +108,11 @@ public class CommentService implements CommentPort {
 
   @Transactional(readOnly = true)
   @Override
-  public CommentEntity search(final int commentId) {
+  public CommentEntity search(final long commentId) {
     return commentGateway.search(commentId);
   }
 
-  private Map<Integer, BornToRunUser> getWritersByUserId(final List<CommentEntity> comments) {
+  private Map<Long, BornToRunUser> getWritersByUserId(final List<CommentEntity> comments) {
     final List<UserEntity> writers = comments.parallelStream()
         .map(CommentEntity::getUserEntity)
         .toList();

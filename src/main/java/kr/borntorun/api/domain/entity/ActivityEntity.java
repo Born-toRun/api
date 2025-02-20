@@ -52,7 +52,7 @@ public class ActivityEntity {
   private LocalDateTime registeredAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", insertable = false, updatable = false)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   private UserEntity userEntity;
 
   @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.REMOVE)

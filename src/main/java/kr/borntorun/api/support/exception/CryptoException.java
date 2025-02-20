@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
+@Getter
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 public class CryptoException extends RuntimeException {
 
-  @Getter
   private final String message;
 
 

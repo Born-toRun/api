@@ -41,14 +41,14 @@ public class RecommendationEntity {
   private LocalDateTime registeredAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", insertable = false, updatable = false)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   private UserEntity userEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "contentId", insertable = false, updatable = false)
+  @JoinColumn(name = "content_id", insertable = false, updatable = false)
   private FeedEntity feedContentsEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "contentId", insertable = false, updatable = false)
+  @JoinColumn(name = "content_id", insertable = false, updatable = false)
   private CommentEntity commentContentsEntity;
 }

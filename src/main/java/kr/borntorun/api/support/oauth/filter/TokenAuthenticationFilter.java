@@ -2,6 +2,7 @@ package kr.borntorun.api.support.oauth.filter;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,9 +24,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)  throws ServletException, IOException {
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response,
+            @NotNull FilterChain filterChain)  throws ServletException, IOException {
 
         String tokenStr = HeaderSupport.getAccessToken(request);
         AuthToken token = tokenProvider.convertAuthToken(tokenStr);

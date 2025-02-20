@@ -61,7 +61,7 @@ public class AuthorizationFilter extends AbstractPreAuthenticatedProcessingFilte
               .toList()));
         }
       } catch (JwtException e) {
-        log.error("invalid jwt: [" + token + "]: " + e);
+		  log.error("invalid jwt: [{}]: ", token, e);
         super.unsuccessfulAuthentication(request, response, null);
       }
     } else {

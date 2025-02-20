@@ -43,7 +43,7 @@ public class MarathonBookmarkEntity {
   private MarathonEntity marathonEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", insertable = false, updatable = false)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   private UserEntity userEntity;
 }
 

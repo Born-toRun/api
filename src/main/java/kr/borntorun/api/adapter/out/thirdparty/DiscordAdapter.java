@@ -39,46 +39,42 @@ public class DiscordAdapter {
 
     int index = 0;
 
-    try {
-      while (index < message.length()) {
-        int length = Math.min(MESSAGE_MAX_SIZE, message.length() - index);
+	  while (index < message.length()) {
+		int length = Math.min(MESSAGE_MAX_SIZE, message.length() - index);
 
-        int nextIndex = message.indexOf("\n", index);
+		int nextIndex = message.indexOf("\n", index);
 
-        if (nextIndex != -1 && nextIndex == index + 1 && length > 10) {
-          length = MESSAGE_MAX_SIZE-1;
-        }
+		if (nextIndex != -1 && nextIndex == index + 1 && length > 10) {
+		  length = MESSAGE_MAX_SIZE-1;
+		}
 
-        slicedMessage.add(message.substring(index, index + length));
+		slicedMessage.add(message.substring(index, index + length));
 
-        index += length;
-      }
+		index += length;
+	  }
 
-      try {
-        for (String m : slicedMessage) {
-          m = m.trim();
-          if(m.isEmpty()) {
-            continue;
-          }
+	  try {
+		for (String m : slicedMessage) {
+		  m = m.trim();
+		  if(m.isEmpty()) {
+			continue;
+		  }
 
-          final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-          body.add(MESSAGE, m);
+		  final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		  body.add(MESSAGE, m);
 
-          discordConnector.post()
-              .uri(uriBuilder -> uriBuilder
-                  .path(discordProperties.getWebhookPath())
-                  .build())
-              .body(BodyInserters.fromFormData(body))
-              .retrieve()
-              .toEntity(Void.class)
-              .delayElement(Duration.ofSeconds(1))
-              .block();
-        }
-      } catch (Exception e) {
-        log.error ("Discord notify failed", e);
-      }
-    } catch (Exception e) {
-      throw e;
-    }
+		  discordConnector.post()
+			  .uri(uriBuilder -> uriBuilder
+				  .path(discordProperties.getWebhookPath())
+				  .build())
+			  .body(BodyInserters.fromFormData(body))
+			  .retrieve()
+			  .toEntity(Void.class)
+			  .delayElement(Duration.ofSeconds(1))
+			  .block();
+		}
+	  } catch (Exception e) {
+		log.error ("Discord notify failed", e);
+	  }
   }
 }

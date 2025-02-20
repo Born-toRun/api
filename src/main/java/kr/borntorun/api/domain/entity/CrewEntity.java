@@ -47,6 +47,6 @@ public class CrewEntity {
   private ObjectStorageEntity imageEntity;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "logoId", insertable = false, updatable = false)
+  @JoinColumn(name = "logo_id", insertable = false, updatable = false)
   private ObjectStorageEntity logoEntity;
 }

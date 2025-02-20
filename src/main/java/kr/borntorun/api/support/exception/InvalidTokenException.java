@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
+@Getter
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class InvalidTokenException extends RuntimeException {
 
-  @Getter
   private final String message;
 
   public InvalidTokenException(final String message) {

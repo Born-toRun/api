@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
+@Getter
 @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 public class AuthorizationException extends RuntimeException {
 
-  @Getter
   private final String message;
 
   public AuthorizationException(final String message) {

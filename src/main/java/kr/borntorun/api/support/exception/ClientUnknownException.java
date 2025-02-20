@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
+@Getter
 @ResponseStatus(code = HttpStatus.BAD_GATEWAY)
 public class ClientUnknownException extends RuntimeException {
 
-  @Getter
   private final String message;
 
   public ClientUnknownException(final String message) {

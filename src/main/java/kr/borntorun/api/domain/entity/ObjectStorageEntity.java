@@ -45,7 +45,7 @@ public class ObjectStorageEntity {
   private Set<FeedImageMappingEntity> feedImageMappingEntities;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", insertable = false, updatable = false)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   private UserEntity userEntity;
 
   @OneToOne(mappedBy = "imageEntity", cascade = CascadeType.REMOVE)

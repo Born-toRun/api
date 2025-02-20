@@ -9,27 +9,11 @@ adapter:
       access-key: ${minio.access-key}
       secret-key: ${minio.secret-key}
       cdn-host: ${cdn.host}
-  auth:
-    kakao:
-      auth-root-url: https://kauth.kakao.com
-      auth-code-path: /oauth/authorize
-      client-id: ${kakao.apikey}
-      redirect-uri: ${kakao.redirect-uri}
-      response-type: code
-      scope: openid
   redis:
     host: ${redis.host}
     port: ${redis.port}
     password: ${redis.password}
     timeout: 60000
-  borntorun-auth:
-    host: ${authentication.host}
-    client-id: ${authentication.client-id}
-    client-secret: ${authentication.client-secret}
-    grant-type: client_credentials
-    # TODO: 네이버/구글/메타 추가
-    sign-in-path: /oauth2/authorization/kakao
-    auth-token-path: /oauth2/token
 
 spring:
   cache:

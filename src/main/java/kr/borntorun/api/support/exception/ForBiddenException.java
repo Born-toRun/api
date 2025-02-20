@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
+@Getter
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
 public class ForBiddenException extends RuntimeException {
 
-  @Getter
   private final String message;
 
   public ForBiddenException(final String message) {

@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.borntorun.api.config.properties.AppProperties;
 import kr.borntorun.api.domain.constant.ProviderType;
-import kr.borntorun.api.domain.constant.RoleType;
 import kr.borntorun.api.domain.entity.UserRefreshTokenEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.UserRefreshTokenPort;
@@ -84,9 +83,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		OidcUser user = ((OidcUser)authentication.getPrincipal());
 		OAuth2UserInfo socialUser = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-		Collection<? extends GrantedAuthority> authorities = ((OidcUser)authentication.getPrincipal()).getAuthorities();
-
-		RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.GUEST;
 
 		CreateGuestCommand createGuestCommand = new CreateGuestCommand(socialUser.getId(), providerType);
 		BornToRunUser bornToRunUser;
@@ -101,7 +97,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		  bornToRunUser.userId(),
 		  bornToRunUser.userName(),
 		  bornToRunUser.crewId(),
-		  roleType.getCode(),
+		  bornToRunUser.roleType().getCode(),
 		  new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
 		);
 

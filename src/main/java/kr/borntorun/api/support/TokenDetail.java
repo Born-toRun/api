@@ -1,14 +1,12 @@
 package kr.borntorun.api.support;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import kr.borntorun.api.domain.constant.RoleType;
+import kr.borntorun.api.support.oauth.token.AuthToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,7 +20,7 @@ public class TokenDetail {
 
 	private long id;
 	private String userName;
-	private List<String> authorities;
+	private String authority;
 	private Long crewId;
 	private Boolean isAdmin;
 	private Boolean isManager;
@@ -31,15 +29,13 @@ public class TokenDetail {
 		final Jwt jwt = token.getToken();
 
 		this.id = Long.parseLong(jwt.getSubject());
-		this.userName = jwt.getClaimAsString("userName");
-		this.authorities = token.getAuthorities().stream()
-		  .map(GrantedAuthority::getAuthority)
-		  .collect(Collectors.toList());
-		this.crewId = Optional.ofNullable(jwt.getClaimAsString("crewId"))
+		this.userName = jwt.getClaimAsString(AuthToken.USER_NAME_KEY);
+		this.authority = jwt.getClaimAsString(AuthToken.AUTHORITIES_KEY);
+		this.crewId = Optional.ofNullable(jwt.getClaimAsString(AuthToken.CREW_ID_KEY))
 		  .map(Long::valueOf)
 		  .orElse(null);
-		this.isAdmin = this.authorities.contains(RoleType.ADMIN.getCode());
-		this.isManager = this.authorities.contains(RoleType.MANAGER.getCode());
+		this.isAdmin = this.authority.equals(RoleType.ADMIN.getCode());
+		this.isManager = this.authority.equals(RoleType.MANAGER.getCode());
 	}
 
 	public static TokenDetail defaultUser() {

@@ -19,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthToken {
 
 	public static final String AUTHORITIES_KEY = "role";
+	public static final String USER_NAME_KEY = "userName";
+	public static final String CREW_ID_KEY = "crewId";
+
 	@Getter
 	private final String token;
 	private final SecretKey key;
@@ -28,9 +31,9 @@ public class AuthToken {
 		this.token = createAuthToken(id, expiry);
 	}
 
-	AuthToken(long id, String role, Date expiry, SecretKey key) {
+	AuthToken(long id, String userName, Long crewId, String role, Date expiry, SecretKey key) {
 		this.key = key;
-		this.token = createAuthToken(id, role, expiry);
+		this.token = createAuthToken(id, userName, crewId, role, expiry);
 	}
 
 	private String createAuthToken(long id, Date expiry) {
@@ -41,10 +44,12 @@ public class AuthToken {
 		  .compact();
 	}
 
-	private String createAuthToken(long id, String role, Date expiry) {
+	private String createAuthToken(long id, String userName, Long crewId, String role, Date expiry) {
 		return Jwts.builder()
 		  .subject(String.valueOf(id))
 		  .claim(AUTHORITIES_KEY, role)
+		  .claim(USER_NAME_KEY, userName)
+		  .claim(CREW_ID_KEY, crewId)
 		  .signWith(key, Jwts.SIG.HS512)
 		  .expiration(expiry)
 		  .compact();

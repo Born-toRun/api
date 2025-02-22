@@ -36,7 +36,7 @@ public class AuthTokenProvider {
 	}
 
 	public AuthToken createAuthToken(long id, String userName, Long crewId, String role, Date expiry) {
-		return new AuthToken(id, role, expiry, secretKey);
+		return new AuthToken(id, userName, crewId, role, expiry, secretKey);
 	}
 
 	public AuthToken convertAuthToken(String token) {

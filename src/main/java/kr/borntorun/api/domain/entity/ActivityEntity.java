@@ -1,6 +1,7 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -52,11 +53,11 @@ public class ActivityEntity {
 	private LocalDateTime registeredAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
 	@OneToMany(mappedBy = "activityEntity", cascade = CascadeType.REMOVE)
-	private Set<ActivityParticipationEntity> activityParticipationEntities;
+	private Set<ActivityParticipationEntity> activityParticipationEntities = new HashSet<>();
 
 	public void open() {
 		this.isOpen = true;

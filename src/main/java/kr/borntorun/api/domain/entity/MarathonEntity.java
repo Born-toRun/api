@@ -1,6 +1,7 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -44,7 +45,7 @@ public class MarathonEntity {
 	private LocalDateTime registeredAt;
 
 	@OneToMany(mappedBy = "marathonEntity", cascade = CascadeType.REMOVE)
-	private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
+	private Set<MarathonBookmarkEntity> marathonBookmarkEntities = new HashSet<>();
 }
 
 

@@ -13,36 +13,20 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query(
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
-		"LEFT JOIN FETCH u.feedEntities " +
-		"LEFT JOIN FETCH u.activityEntities " +
-		"LEFT JOIN FETCH u.activityParticipationEntities " +
-		"LEFT JOIN FETCH u.authorityEntities " +
-		"LEFT JOIN FETCH u.commentEntities " +
-		"LEFT JOIN FETCH u.marathonBookmarkEntities " +
-		"LEFT JOIN FETCH u.objectStorageEntities " +
-		"LEFT JOIN FETCH u.recommendationEntities " +
-		"LEFT JOIN FETCH u.userPrivacyEntity " +
+		"LEFT JOIN FETCH u.objectStorageEntity " +
 		"LEFT JOIN FETCH u.yellowCardEntities " +
 		"WHERE u.id =:id"
 	)
 	Optional<UserEntity> findById(long id);
 
-	@Query(
-	  "SELECT u FROM UserEntity u " +
-		"JOIN FETCH u.crewEntity " +
-		"LEFT JOIN FETCH u.feedEntities " +
-		"LEFT JOIN FETCH u.activityEntities " +
-		"LEFT JOIN FETCH u.activityParticipationEntities " +
-		"LEFT JOIN FETCH u.authorityEntities " +
-		"LEFT JOIN FETCH u.commentEntities " +
-		"LEFT JOIN FETCH u.marathonBookmarkEntities " +
-		"LEFT JOIN FETCH u.objectStorageEntities " +
-		"LEFT JOIN FETCH u.recommendationEntities " +
-		"LEFT JOIN FETCH u.userPrivacyEntity " +
-		"LEFT JOIN FETCH u.yellowCardEntities " +
-		"WHERE u.name =:userName"
-	)
 	List<UserEntity> findAllByNameContaining(String userName);
 
+	@Query(
+	  "SELECT u FROM UserEntity u " +
+		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"WHERE u.socialId =:socialId"
+	)
 	Optional<UserEntity> findBySocialId(String socialId);
+
+	boolean existsBySocialId(String socialId);
 }

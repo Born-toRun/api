@@ -5,9 +5,6 @@ import java.util.Optional;
 
 import org.springframework.util.SerializationUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -57,14 +54,11 @@ public class CookieSupport {
 	}
 
 	public static <T> T deserialize(Cookie cookie, Class<T> cls) {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		try {
-			String json = new String(Base64.getUrlDecoder().decode(cookie.getValue()));
-			return objectMapper.readValue(json, cls);
-		} catch (JsonProcessingException e) {
-			throw new IllegalArgumentException("Failed to deserialize cookie JSON", e);
-		}
+		return cls.cast(
+		  SerializationUtils.deserialize(
+			Base64.getUrlDecoder().decode(cookie.getValue())
+		  )
+		);
 	}
 
 }

@@ -22,68 +22,67 @@ spring:
         order_updates: true
         format_sql: true
   security:
-    oauth2.client:
-      registration:
-        google:
-          clientId: '{구글 client-id}'
-          clientSecret: '{구글 client-secret}'
-          scope:
-            - email
-            - profile
-        facebook:
-          clientId: '{페이스북 client-id}'
-          clientSecret: '{페이스북 client-secret}'
-          scope:
-            - email
-            - public_profile
-        naver:
-          clientId: '{네이버 client-id}'
-          clientSecret: '{네이버 client-secret}'
-          clientAuthenticationMethod: post
-          authorizationGrantType: authorization_code
-          redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
-          scope:
-            - nickname
-            - email
-            - profile_image
-          clientName: Naver
-        kakao:
-          clientId: ${kakao.apikey}
-          clientSecret: ${kakao.client}
-          clientAuthenticationMethod: post
-          authorizationGrantType: authorization_code
-          redirectUri: "http://localhost:8080/login/oauth2/code/kakao"
-          scope:
-            - openid
-          clientName: Kakao
-      provider:
-        naver:
-          authorizationUri: https://nid.naver.com/oauth2.0/authorize
-          tokenUri: https://nid.naver.com/oauth2.0/token
-          userInfoUri: https://openapi.naver.com/v1/nid/me
-          userNameAttribute: response
-        kakao:
-          authorizationUri: https://kauth.kakao.com/oauth/authorize
-          tokenUri: https://kauth.kakao.com/oauth/token
-          userInfoUri: https://kapi.kakao.com/v2/user/me
-          userNameAttribute: id
+    oauth2:
+      client:
+        registration:
+          #          google:
+          #            clientId: '{구글 client-id}'
+          #            clientSecret: '{구글 client-secret}'
+          #            scope:
+          #              - email
+          #              - profile
+          #          facebook:
+          #            clientId: '{페이스북 client-id}'
+          #            clientSecret: '{페이스북 client-secret}'
+          #            scope:
+          #              - email
+          #              - public_profile
+          #          naver:
+          #            clientId: '{네이버 client-id}'
+          #            clientSecret: '{네이버 client-secret}'
+          #            clientAuthenticationMethod: post
+          #            authorizationGrantType: authorization_code
+          #            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+          #            scope:
+          #              - nickname
+          #              - email
+          #              - profile_image
+          #            clientName: Naver
+          kakao:
+            clientId: ${kakao.apikey}
+            clientSecret: ${kakao.client-secret}
+            clientAuthenticationMethod: client_secret_post
+            authorizationGrantType: authorization_code
+            redirectUri: "http://localhost:8080/login/oauth2/code/kakao"
+            scope:
+              - openid
+              - profile_image
+            clientName: Kakao
+        provider:
+          #          naver:
+          #            authorizationUri: https://nid.naver.com/oauth2.0/authorize
+          #            tokenUri: https://nid.naver.com/oauth2.0/token
+          #            userInfoUri: https://openapi.naver.com/v1/nid/me
+          #            userNameAttribute: response
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: sub
+            jwkSetUri: https://kauth.kakao.com/.well-known/jwks.json
 cors:
   allowed-origins: ${cors.origin}
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: '*'
   max-age: 3600
 
-jwt:
-  secret: '8sknjlO3NPTBqo319DHLNqsQAfRJEdKsETOds'
-
 app:
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
     tokenExpiry: 1800000
     refreshTokenExpiry: 604800000
   oauth2:
     authorizedRedirectUris:
-      - http://localhost:3000/oauth/redirect
+      - http://localhost:3000/auth/signup
 
 adapter:
   discord:
@@ -101,3 +100,14 @@ adapter:
     port: ${redis.port}
     password: ${redis.password}
     timeout: 60000
+
+logging:
+  file:
+    name: logs/runacer-api.log
+  rolling:
+    filename-pattern: "logs/api/runacer-api-%d{yyyy-MM-dd}.log"
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level] %logger{50} - %msg%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level] %logger{50} - %msg%n"
+  level:
+    root: info

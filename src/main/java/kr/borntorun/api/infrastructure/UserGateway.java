@@ -51,12 +51,16 @@ public class UserGateway {
 		userRepository.deleteById(userId);
 	}
 
-	public UserEntity create(CreateGuestQuery query) {
+	public UserEntity createAndFlush(CreateGuestQuery query) {
 		UserEntity userEntity = UserEntity.builder()
 		  .socialId(query.socialId())
 		  .providerType(query.providerType())
 		  .roleType(RoleType.GUEST)
 		  .build();
-		return userRepository.save(userEntity);
+		return userRepository.saveAndFlush(userEntity);
+	}
+
+	public boolean exists(String socialId) {
+		return userRepository.existsBySocialId(socialId);
 	}
 }

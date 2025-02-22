@@ -15,9 +15,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.borntorun.api.support.CookieSupport;
 import kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -38,5 +40,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 		authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+		log.info("Authentication failed!");
 	}
 }

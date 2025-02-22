@@ -40,7 +40,7 @@ public class UserProxy {
 	}
 
 	public RefreshTokenResult refreshToken(final String accessToken) {
-		String refreshedToken = userPort.refreshToken(accessToken);
+		String refreshedToken = userPort.getRefreshToken(accessToken);
 		return new RefreshTokenResult(refreshedToken);
 	}
 

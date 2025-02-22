@@ -51,7 +51,9 @@ public class FeedService implements FeedPort {
 	public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
 		List<Long> searchedUserIds = Optional.ofNullable(command.searchKeyword())
 		  .map(userGateway::searchByUserName)
-		  .map(users -> users.stream().map(UserEntity::getId).toList())
+		  .map(users -> users.stream()
+			.map(UserEntity::getId)
+			.toList())
 		  .orElseGet(Collections::emptyList);
 
 		SearchAllFeedQuery query = feedConverter.toSearchAllFeedQuery(command, searchedUserIds);

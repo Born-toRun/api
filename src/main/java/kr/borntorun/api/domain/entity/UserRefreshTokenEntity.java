@@ -27,7 +27,7 @@ public class UserRefreshTokenEntity {
 	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	private long userId;
 
@@ -35,6 +35,11 @@ public class UserRefreshTokenEntity {
 	private String refreshToken;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
+
+	public void add(final UserEntity userEntity) {
+		userEntity.setUserRefreshTokenEntity(this);
+		this.userEntity = userEntity;
+	}
 }

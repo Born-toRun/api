@@ -1,6 +1,7 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -42,10 +43,10 @@ public class ObjectStorageEntity {
 	private LocalDateTime uploadAt;
 
 	@OneToMany(mappedBy = "objectStorageEntity", cascade = CascadeType.REMOVE)
-	private Set<FeedImageMappingEntity> feedImageMappingEntities;
+	private Set<FeedImageMappingEntity> feedImageMappingEntities = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
 	@OneToOne(mappedBy = "imageEntity", cascade = CascadeType.REMOVE)
@@ -53,9 +54,4 @@ public class ObjectStorageEntity {
 
 	@OneToOne(mappedBy = "logoEntity", cascade = CascadeType.REMOVE)
 	private CrewEntity crewLogoEntity;
-
-	public static ObjectStorageEntity defaultEntity() {
-		return ObjectStorageEntity.builder()
-		  .build();
-	}
 }

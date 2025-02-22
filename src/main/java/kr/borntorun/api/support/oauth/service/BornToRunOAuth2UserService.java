@@ -9,22 +9,22 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import kr.borntorun.api.domain.constant.ProviderType;
-import kr.borntorun.api.domain.port.UserPort;
-import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.CreateGuestCommand;
+import kr.borntorun.api.domain.entity.UserEntity;
+import kr.borntorun.api.infrastructure.UserGateway;
+import kr.borntorun.api.infrastructure.model.CreateGuestQuery;
 import kr.borntorun.api.support.oauth.entity.UserPrincipal;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfo;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 
 /*
-access token 수신
+ * 로그인시 user loading
  */
 @Service
 @RequiredArgsConstructor
 public class BornToRunOAuth2UserService extends DefaultOAuth2UserService {
 
-	private final UserPort userPort;
+	private final UserGateway userGateway;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -46,17 +46,17 @@ public class BornToRunOAuth2UserService extends DefaultOAuth2UserService {
 		  .toUpperCase());
 
 		OAuth2UserInfo socialUser = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-		BornToRunUser bornToRunUser = userPort.searchBySocialId(socialUser.getId());
+		UserEntity userEntity = userGateway.searchBySocialId(socialUser.getId());
 
-		if (bornToRunUser == null) {
-			bornToRunUser = createUser(socialUser, providerType);
+		if (userEntity == null) {
+			userEntity = createUser(socialUser, providerType);
 		}
 
-		return UserPrincipal.create(bornToRunUser, user.getAttributes());
+		return UserPrincipal.create(userEntity, user.getAttributes());
 	}
 
-	private BornToRunUser createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-		CreateGuestCommand command = new CreateGuestCommand(userInfo.getId(), providerType);
-		return userPort.create(command);
+	private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+		CreateGuestQuery query = new CreateGuestQuery(userInfo.getId(), providerType);
+		return userGateway.createAndFlush(query);
 	}
 }

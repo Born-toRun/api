@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -24,8 +23,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kr.borntorun.api.config.jwt.AuthenticationPrincipalArgumentResolver;
-import kr.borntorun.api.config.jwt.JwtAccessDeniedHandler;
-import kr.borntorun.api.config.jwt.JwtAuthenticationEntryPoint;
 import kr.borntorun.api.config.jwt.TokenAuthenticationPrincipalArgumentResolver;
 import kr.borntorun.api.config.properties.AppProperties;
 import kr.borntorun.api.config.properties.CorsProperties;
@@ -33,7 +30,7 @@ import kr.borntorun.api.domain.constant.RoleType;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.UserRefreshTokenPort;
 import kr.borntorun.api.support.TokenDetail;
-import kr.borntorun.api.support.http.filter.AuthorizationFilter;
+import kr.borntorun.api.support.oauth.exception.RestAuthenticationEntryPoint;
 import kr.borntorun.api.support.oauth.filter.TokenAuthenticationFilter;
 import kr.borntorun.api.support.oauth.handler.OAuth2AuthenticationFailureHandler;
 import kr.borntorun.api.support.oauth.handler.OAuth2AuthenticationSuccessHandler;
@@ -51,16 +48,11 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig implements WebMvcConfigurer {
 
 	private final CorsProperties corsProperties;
-	private final AppProperties appProperties;
 	private final AuthTokenProvider tokenProvider;
-	private final BornToRunUserDetailsService userDetailsService;
-	private final BornToRunOAuth2UserService oAuth2UserService;
-	private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
+	private final AppProperties appProperties;
 	private final UserRefreshTokenPort userRefreshTokenPort;
 	private final UserPort userPort;
 
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final Converter<JwtAuthenticationToken, TokenDetail> jwtToTokenConverter;
 
 	@Override
@@ -71,7 +63,10 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
-	  final AuthorizationFilter authorizationFilter) throws Exception {
+	  BornToRunOAuth2UserService oAuth2UserService,
+	  TokenAccessDeniedHandler tokenAccessDeniedHandler,
+	  BornToRunUserDetailsService userDetailsService,
+	  AuthTokenProvider tokenProvider) throws Exception {
 		final String usersBased = "/api/v1/users";
 		final String feedsBased = "/api/v1/feeds";
 		final String marathonBookmarkBased = "/api/v1/marathons/bookmark";
@@ -90,17 +85,13 @@ public class SecurityConfig implements WebMvcConfigurer {
 		  .csrf(CsrfConfigurer::disable)
 		  .cors(Customizer.withDefaults())
 		  .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		  .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
 		  .exceptionHandling(authenticationManager -> authenticationManager
-			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			.accessDeniedHandler(jwtAccessDeniedHandler))
+			.authenticationEntryPoint(new RestAuthenticationEntryPoint())
+			.accessDeniedHandler(tokenAccessDeniedHandler))
+		  .addFilterBefore(tokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 		  .authorizeHttpRequests(
-			auth -> auth.requestMatchers("/api/**")
-			  .hasAnyAuthority(RoleType.GUEST.getCode())
-			  .requestMatchers("/api/**/admin/**")
+			auth -> auth.requestMatchers("/api/v1/admin/**")
 			  .hasAnyAuthority(RoleType.ADMIN.getCode())
-			  .anyRequest()
-			  .authenticated()
 
 			  .requestMatchers(HttpMethod.POST, "/api/v1/auth/sign-out", "/api/v1/auth/refresh")
 			  .authenticated()  // 로그아웃/토큰갱신
@@ -144,6 +135,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 			  .authenticated()
 			  .anyRequest()
 			  .permitAll())
+		  .userDetailsService(userDetailsService)
 		  .oauth2Login(oauth2 -> oauth2
 			.authorizationEndpoint(endpoint -> endpoint
 			  .baseUri("/oauth2/authorization")
@@ -157,11 +149,6 @@ public class SecurityConfig implements WebMvcConfigurer {
 		  .build();
 	}
 
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService)
-		  .passwordEncoder(passwordEncoder());
-	}
-
 	/*
 	 * security 설정 시, 사용할 인코더 설정
 	 * */
@@ -173,8 +160,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 	/*
 	 * 토큰 필터 설정
 	 * */
-	@Bean
-	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+	public TokenAuthenticationFilter tokenAuthenticationFilter(AuthTokenProvider tokenProvider) {
 		return new TokenAuthenticationFilter(tokenProvider);
 	}
 

@@ -31,10 +31,10 @@ import kr.borntorun.api.config.hazelcast.SpringCloudDiscoveryStrategyFactory;
 @Configuration
 public class HazelcastConfig {
 
-	@Value("${spring.cache.port}")
-	private int port;
 	private final DiscoveryClient discoveryClient;
 	private final Registration registration;
+	@Value("${spring.cache.port}")
+	private int port;
 
 	public HazelcastConfig(final DiscoveryClient discoveryClient,
 	  final ObjectProvider<Registration> registration) {

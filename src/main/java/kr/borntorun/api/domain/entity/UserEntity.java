@@ -1,6 +1,7 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -58,44 +59,45 @@ public class UserEntity {
 	private int yellowCardQty;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "crewId", insertable = false, updatable = false)
 	private CrewEntity crewEntity;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "imageId", insertable = false, updatable = false)
+	private ObjectStorageEntity objectStorageEntity;
 
 	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 	private UserRefreshTokenEntity userRefreshTokenEntity;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<FeedEntity> feedEntities;
+	private Set<FeedEntity> feedEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<ActivityEntity> activityEntities;
+	private Set<ActivityEntity> activityEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<ActivityParticipationEntity> activityParticipationEntities;
+	private Set<ActivityParticipationEntity> activityParticipationEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<CommentEntity> commentEntities;
+	private Set<CommentEntity> commentEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<MarathonBookmarkEntity> marathonBookmarkEntities;
+	private Set<MarathonBookmarkEntity> marathonBookmarkEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<ObjectStorageEntity> objectStorageEntities;
-
-	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<RecommendationEntity> recommendationEntities;
+	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
 
 	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 	private UserPrivacyEntity userPrivacyEntity;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<YellowCardEntity> yellowCardEntities;
+	private Set<YellowCardEntity> yellowCardEntities = new HashSet<>();
 
 	public String getProfileImageUri() {
-		return objectStorageEntities.stream()
-		  .findFirst()
-		  .orElse(ObjectStorageEntity.defaultEntity())
-		  .getFileUri();
+		if (objectStorageEntity == null || objectStorageEntity.getId() == 0) {
+			return null;
+		}
+		return objectStorageEntity.getFileUri();
 	}
 
 	public Boolean getIsAdmin() {

@@ -1,6 +1,7 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -45,15 +46,15 @@ public class CommentEntity {
 	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private FeedEntity feedEntity;
 
-	@OneToMany(mappedBy = "commentContentsEntity", cascade = CascadeType.REMOVE)
-	private Set<RecommendationEntity> recommendationEntities;
+	@OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE)
+	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
 
 	public long getRecommendationQty() {
 		return recommendationEntities.stream()

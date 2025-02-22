@@ -25,6 +25,7 @@ import kr.borntorun.api.adapter.in.web.proxy.UserProxy;
 import kr.borntorun.api.core.converter.UserConverter;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.RefreshTokenResult;
+import kr.borntorun.api.support.SessionSupport;
 import kr.borntorun.api.support.TokenDetail;
 import kr.borntorun.api.support.annotation.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,11 @@ public class UserController {
 
 	@Operation(summary = "토큰 리프레시", description = "access 토큰이 만료되면 refresh 토큰으로 재생성합니다.")
 	@PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> signIn(@RequestBody @Valid HttpServletRequest request,
-	  HttpServletRequest servletRequest) {
+	public ResponseEntity<Void> signIn(HttpServletRequest request) {
 		String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 		final RefreshTokenResult refreshToken = userProxy.refreshToken(accessToken);
-		servletRequest.getSession()
-		  .setAttribute("jwt", refreshToken.accessToken());
+
+		SessionSupport.setRefreshToken(request, refreshToken.accessToken());
 
 		return ResponseEntity.noContent().build();
 	}

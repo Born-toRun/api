@@ -7,5 +7,5 @@ public interface UserRefreshTokenPort {
 
 	UserRefreshTokenEntity searchByUserId(long userId);
 
-	UserRefreshTokenEntity saveAndFlush(CreateRefreshTokenCommand command);
+	UserRefreshTokenEntity createAndFlush(CreateRefreshTokenCommand command);
 }

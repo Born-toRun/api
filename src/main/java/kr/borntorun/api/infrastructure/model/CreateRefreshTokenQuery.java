@@ -1,4 +1,6 @@
 package kr.borntorun.api.infrastructure.model;
 
-public record CreateRefreshTokenQuery(long userId, String refreshToken) {
+import kr.borntorun.api.domain.entity.UserEntity;
+
+public record CreateRefreshTokenQuery(long userId, String refreshToken, UserEntity userEntity) {
 }

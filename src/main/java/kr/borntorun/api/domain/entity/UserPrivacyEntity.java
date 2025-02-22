@@ -33,7 +33,7 @@ public class UserPrivacyEntity {
 	private Boolean isInstagramIdPublic;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
 	public void change(boolean isInstagramIdPublic) {

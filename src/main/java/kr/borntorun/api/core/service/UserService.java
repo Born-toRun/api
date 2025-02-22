@@ -30,6 +30,7 @@ public class UserService implements UserPort {
 	private final BornToRunAuthAdapter borntorunAuthAdapter;
 	private final UserGateway userGateway;
 
+	@Transactional
 	@Override
 	public LoginResult signIn(final SignInCommand command) {
 		final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(
@@ -46,8 +47,9 @@ public class UserService implements UserPort {
 		return userGateway.modify(query);
 	}
 
+	@Transactional
 	@Override
-	public String refreshToken(String accessToken) {
+	public String getRefreshToken(String accessToken) {
 		RefreshTokenResponse refreshTokenResponse = borntorunAuthAdapter.refreshToken(accessToken);
 		return refreshTokenResponse.accessToken();
 	}
@@ -65,6 +67,7 @@ public class UserService implements UserPort {
 		return userConverter.toBornToRunUser(userEntity);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public BornToRunUser searchBySocialId(String socialId) {
 		UserEntity userEntity = userGateway.searchBySocialId(socialId);
@@ -80,10 +83,17 @@ public class UserService implements UserPort {
 		return userConverter.toBornToRunUser(modifiedUser);
 	}
 
+	@Transactional
 	@Override
-	public BornToRunUser create(CreateGuestCommand command) {
+	public BornToRunUser createAndFlush(CreateGuestCommand command) {
 		CreateGuestQuery query = userConverter.toCreateGuestQuery(command);
-		UserEntity guest = userGateway.create(query);
+		UserEntity guest = userGateway.createAndFlush(query);
 		return userConverter.toBornToRunUser(guest);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public boolean exists(String socialId) {
+		return userGateway.exists(socialId);
 	}
 }

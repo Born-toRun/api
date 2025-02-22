@@ -2,22 +2,40 @@ package kr.borntorun.api.support;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.borntorun.api.domain.constant.TokenType;
+import lombok.extern.slf4j.Slf4j;
 
-public class HeaderSupport {
+@Slf4j
+public class SessionSupport {
 
 	private final static String TOKEN_PREFIX = "Bearer ";
 
 	public static String getAccessToken(HttpServletRequest request) {
-		String headerValue = String.valueOf(request.getSession().getAttribute(TokenType.ACCESS_TOKEN.name()));
+		String value = String.valueOf(request.getSession().getAttribute(TokenType.ACCESS_TOKEN.name()));
 
-		if (headerValue == null) {
+		if (value == null || value.equals("null")) {
 			return null;
 		}
 
-		if (headerValue.startsWith(TOKEN_PREFIX)) {
-			return headerValue.substring(TOKEN_PREFIX.length());
+		if (value.startsWith(TOKEN_PREFIX)) {
+			return value.substring(TOKEN_PREFIX.length());
+		} else {
+			return value;
 		}
+	}
 
-		return null;
+	public static void setAccessToken(HttpServletRequest request, String token) {
+		setToken(request, TokenType.ACCESS_TOKEN.name(), token);
+	}
+
+	public static void setRefreshToken(HttpServletRequest request, String token) {
+		setToken(request, TokenType.REFRESH_TOKEN.name(), token);
+	}
+
+	private static void setToken(HttpServletRequest request, String tokenName, String token) {
+		if (token == null) {
+			log.warn("Token is null!");
+			return;
+		}
+		request.getSession().setAttribute(tokenName, token);
 	}
 }

@@ -1,6 +1,7 @@
 package kr.borntorun.api.support;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -26,21 +27,23 @@ public class TokenDetail {
 	private Boolean isAdmin;
 	private Boolean isManager;
 
-	public static TokenDetail defaultUser() {
-		return TokenDetail.builder().id(-1).build();
-	}
-
 	public TokenDetail(JwtAuthenticationToken token) {
 		final Jwt jwt = token.getToken();
 
-		this.id = Integer.parseInt(jwt.getClaimAsString("id"));
+		this.id = Long.parseLong(jwt.getSubject());
 		this.userName = jwt.getClaimAsString("userName");
 		this.authorities = token.getAuthorities().stream()
 		  .map(GrantedAuthority::getAuthority)
 		  .collect(Collectors.toList());
-		this.crewId = jwt.getClaimAsString("crewId") == null ? null : Long.valueOf(jwt.getClaimAsString("crewId"));
-		this.isAdmin = this.authorities.contains(RoleType.ADMIN.name());
-		this.isManager = this.authorities.contains(RoleType.MANAGER.name());
+		this.crewId = Optional.ofNullable(jwt.getClaimAsString("crewId"))
+		  .map(Long::valueOf)
+		  .orElse(null);
+		this.isAdmin = this.authorities.contains(RoleType.ADMIN.getCode());
+		this.isManager = this.authorities.contains(RoleType.MANAGER.getCode());
+	}
+
+	public static TokenDetail defaultUser() {
+		return TokenDetail.builder().id(-1).build();
 	}
 
 	public boolean isLogin() {

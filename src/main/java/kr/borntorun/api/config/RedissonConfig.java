@@ -19,9 +19,8 @@ import lombok.Setter;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedissonConfig {
 
-	private final RedisProperties redisProperties;
-
 	private static final String SCHEME = "redis://";
+	private final RedisProperties redisProperties;
 
 	@Bean
 	public RedissonClient redissonClient() {

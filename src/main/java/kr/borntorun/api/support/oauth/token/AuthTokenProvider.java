@@ -5,19 +5,20 @@ import static kr.borntorun.api.support.oauth.token.AuthToken.AUTHORITIES_KEY;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import kr.borntorun.api.support.oauth.exception.TokenValidFailedException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,15 +27,15 @@ public class AuthTokenProvider {
 
 	private final SecretKey secretKey;
 
-	public AuthTokenProvider(String secret) {
-		this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
+	public AuthTokenProvider(KeyGenerator keyGenerator) {
+		this.secretKey = keyGenerator.generateKey();
 	}
 
 	public AuthToken createAuthToken(long id, Date expiry) {
 		return new AuthToken(id, expiry, secretKey);
 	}
 
-	public AuthToken createAuthToken(long id, String role, Date expiry) {
+	public AuthToken createAuthToken(long id, String userName, Long crewId, String role, Date expiry) {
 		return new AuthToken(id, role, expiry, secretKey);
 	}
 
@@ -43,18 +44,22 @@ public class AuthTokenProvider {
 	}
 
 	public Authentication getAuthentication(AuthToken authToken) {
+		JwtDecoder jwtDecoder = NimbusJwtDecoder
+		  .withSecretKey(secretKey)
+		  .macAlgorithm(MacAlgorithm.HS512)
+		  .build();
 
 		if (authToken.isValidate()) {
 			Claims claims = authToken.getTokenClaims();
 			Collection<? extends GrantedAuthority> authorities =
 			  Arrays.stream(new String[] {claims.get(AUTHORITIES_KEY).toString()})
 				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+				.toList();
 
 			log.debug("claims subject := [{}]", claims.getSubject());
-			User principal = new User(claims.getSubject(), "", authorities);
 
-			return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
+			final Jwt jwt = jwtDecoder.decode(authToken.getToken());
+			return new JwtAuthenticationToken(jwt, authorities);
 		} else {
 			throw new TokenValidFailedException();
 		}

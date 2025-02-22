@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import kr.borntorun.api.domain.constant.RecommendationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,14 +42,24 @@ public class RecommendationEntity {
 	private LocalDateTime registeredAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "content_id", insertable = false, updatable = false)
-	private FeedEntity feedContentsEntity;
+	@JoinColumn(name = "contentId", insertable = false, updatable = false)
+	private FeedEntity feedEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "content_id", insertable = false, updatable = false)
-	private CommentEntity commentContentsEntity;
+	@JoinColumn(name = "contentId", insertable = false, updatable = false)
+	private CommentEntity commentEntity;
+
+	@Transient
+	public Object getContentEntity() {
+		if (recommendationType == RecommendationType.FEED) {
+			return feedEntity;
+		} else if (recommendationType == RecommendationType.COMMENT) {
+			return commentEntity;
+		}
+		return null;
+	}
 }

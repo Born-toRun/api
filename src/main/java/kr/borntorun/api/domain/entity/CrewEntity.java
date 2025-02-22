@@ -35,9 +35,9 @@ public class CrewEntity {
 	private String sns;
 	private String region;
 	@Setter
-	private long imageId;
+	private Long imageId;
 	@Setter
-	private long logoId;
+	private Long logoId;
 
 	@OneToMany(mappedBy = "crewEntity")
 	private Set<UserEntity> userEntities;
@@ -47,6 +47,6 @@ public class CrewEntity {
 	private ObjectStorageEntity imageEntity;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "logo_id", insertable = false, updatable = false)
+	@JoinColumn(name = "logoId", insertable = false, updatable = false)
 	private ObjectStorageEntity logoEntity;
 }

@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import kr.borntorun.api.domain.constant.ProviderType;
 import kr.borntorun.api.domain.constant.RoleType;
-import kr.borntorun.api.domain.port.model.BornToRunUser;
+import kr.borntorun.api.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +32,24 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 	private final RoleType roleType;
 	private final Collection<GrantedAuthority> authorities;
 	private Map<String, Object> attributes;
+
+	public static UserPrincipal create(UserEntity user) {
+		return new UserPrincipal(
+		  user.getId(),
+		  user.getName(),
+		  user.getSocialId(),
+		  user.getProviderType(),
+		  user.getRoleType(),
+		  Collections.singletonList(new SimpleGrantedAuthority(user.getRoleType().getCode()))
+		);
+	}
+
+	public static UserPrincipal create(UserEntity user, Map<String, Object> attributes) {
+		UserPrincipal userPrincipal = create(user);
+		userPrincipal.setAttributes(attributes);
+
+		return userPrincipal;
+	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
@@ -76,23 +94,5 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 	@Override
 	public OidcIdToken getIdToken() {
 		return null;
-	}
-
-	public static UserPrincipal create(BornToRunUser user) {
-		return new UserPrincipal(
-		  user.userId(),
-		  user.userName(),
-		  user.socialId(),
-		  user.providerType(),
-		  user.roleType(),
-		  Collections.singletonList(new SimpleGrantedAuthority(user.roleType().getCode()))
-		);
-	}
-
-	public static UserPrincipal create(BornToRunUser user, Map<String, Object> attributes) {
-		UserPrincipal userPrincipal = create(user);
-		userPrincipal.setAttributes(attributes);
-
-		return userPrincipal;
 	}
 }

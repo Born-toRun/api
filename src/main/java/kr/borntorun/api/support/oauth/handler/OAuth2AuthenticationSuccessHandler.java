@@ -1,7 +1,7 @@
 package kr.borntorun.api.support.oauth.handler;
 
 import static kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,17 +27,22 @@ import kr.borntorun.api.domain.entity.UserRefreshTokenEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.UserRefreshTokenPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
+import kr.borntorun.api.domain.port.model.CreateGuestCommand;
 import kr.borntorun.api.domain.port.model.CreateRefreshTokenCommand;
 import kr.borntorun.api.support.CookieSupport;
+import kr.borntorun.api.support.SessionSupport;
+import kr.borntorun.api.support.exception.InternalServerException;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfo;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfoFactory;
 import kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import kr.borntorun.api.support.oauth.token.AuthToken;
 import kr.borntorun.api.support.oauth.token.AuthTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	private final AuthTokenProvider tokenProvider;
@@ -58,6 +63,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		clearAuthenticationAttributes(request, response);
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+		log.info("Authentication succeed!");
 	}
 
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
@@ -66,7 +73,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		  .map(Cookie::getValue);
 
 		if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-			throw new IllegalArgumentException(
+			throw new InternalServerException(
 			  "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
 		}
 
@@ -81,11 +88,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.GUEST;
 
-		BornToRunUser bornToRunUser = userPort.searchBySocialId(socialUser.getId());
+		CreateGuestCommand createGuestCommand = new CreateGuestCommand(socialUser.getId(), providerType);
+		BornToRunUser bornToRunUser;
+		if (!userPort.exists(socialUser.getId())) {
+			bornToRunUser = userPort.createAndFlush(createGuestCommand);
+		} else {
+			bornToRunUser = userPort.searchBySocialId(socialUser.getId());
+		}
 
 		Date now = new Date();
 		AuthToken accessToken = tokenProvider.createAuthToken(
 		  bornToRunUser.userId(),
+		  bornToRunUser.userName(),
+		  bornToRunUser.crewId(),
 		  roleType.getCode(),
 		  new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
 		);
@@ -103,9 +118,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		if (userRefreshTokenEntity != null) {
 			userRefreshTokenEntity.setRefreshToken(refreshToken.getToken());
 		} else {
-			CreateRefreshTokenCommand command = new CreateRefreshTokenCommand(bornToRunUser.userId(),
+			CreateRefreshTokenCommand createRefreshTokenCommand = new CreateRefreshTokenCommand(bornToRunUser.userId(),
 			  refreshToken.getToken());
-			userRefreshTokenPort.saveAndFlush(command);
+			userRefreshTokenPort.createAndFlush(createRefreshTokenCommand);
 		}
 
 		int cookieMaxAge = (int)refreshTokenExpiry / 60;
@@ -113,8 +128,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		CookieSupport.deleteCookie(request, response, REFRESH_TOKEN);
 		CookieSupport.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-		request.getSession()
-		  .setAttribute("jwt", accessToken.getToken());
+		SessionSupport.setAccessToken(request, accessToken.getToken());
 
 		return UriComponentsBuilder.fromUriString(targetUrl)
 		  .queryParam("isMember", bornToRunUser.crewId() != null)

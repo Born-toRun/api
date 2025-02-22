@@ -13,7 +13,7 @@ public interface UserPort {
 
 	String signUp(final SignUpCommand command);
 
-	String refreshToken(final String accessToken);
+	String getRefreshToken(final String accessToken);
 
 	void remove(final long userId);
 
@@ -23,5 +23,7 @@ public interface UserPort {
 
 	BornToRunUser modify(final ModifyUserCommand command);
 
-	BornToRunUser create(CreateGuestCommand command);
+	BornToRunUser createAndFlush(final CreateGuestCommand command);
+
+	boolean exists(final String socialId);
 }

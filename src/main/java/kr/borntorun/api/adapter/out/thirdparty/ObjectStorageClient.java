@@ -38,6 +38,15 @@ public class ObjectStorageClient {
 
 	private final MinioClient minioClient;
 
+	private static String getFileExtension(final String fileName) {
+		int dotIndex = fileName.lastIndexOf('.');
+		if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+			return fileName.substring(dotIndex);
+		}
+
+		throw new InvalidException("확장자가 없는 파일은 업로드 할 수 없습니다.");
+	}
+
 	public String upload(final Upload resource) {
 		try {
 			String extension = getFileExtension(Objects.requireNonNull(resource.file().getOriginalFilename()));
@@ -121,14 +130,5 @@ public class ObjectStorageClient {
 			  .collect(Collectors.toList())))
 			.build()
 		);
-	}
-
-	private static String getFileExtension(final String fileName) {
-		int dotIndex = fileName.lastIndexOf('.');
-		if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-			return fileName.substring(dotIndex);
-		}
-
-		throw new InvalidException("확장자가 없는 파일은 업로드 할 수 없습니다.");
 	}
 }

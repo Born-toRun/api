@@ -38,9 +38,9 @@ public class CommentEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long parentId;
-	private long userId;
-	private long feedId;
+	private Long parentId;
+	private Long userId;
+	private Long feedId;
 	private String contents;
 	private LocalDateTime registeredAt;
 	private LocalDateTime updatedAt;

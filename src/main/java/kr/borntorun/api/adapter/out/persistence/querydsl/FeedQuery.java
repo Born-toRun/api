@@ -10,11 +10,15 @@ import org.springframework.stereotype.Component;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.entity.FeedEntity;
 import kr.borntorun.api.domain.entity.QFeedEntity;
+import kr.borntorun.api.domain.entity.QFeedImageMappingEntity;
+import kr.borntorun.api.domain.entity.QObjectStorageEntity;
+import kr.borntorun.api.domain.entity.QUserEntity;
 import kr.borntorun.api.infrastructure.model.SearchAllFeedQuery;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +30,9 @@ public class FeedQuery {
 
 	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
 		final QFeedEntity feed = QFeedEntity.feedEntity;
+		final QFeedImageMappingEntity feedImageMapping = QFeedImageMappingEntity.feedImageMappingEntity;
+		final QObjectStorageEntity objectStorage = QObjectStorageEntity.objectStorageEntity;
+		final QUserEntity user = QUserEntity.userEntity;
 
 		BooleanExpression whereClause = Expressions.TRUE; // 기본값 설정
 
@@ -58,14 +65,19 @@ public class FeedQuery {
 			whereClause = whereClause.and(searchWhereClause);
 		}
 
-		final int total = queryFactory
+		JPAQuery<FeedEntity> feedQuery = queryFactory
 		  .selectFrom(feed)
-		  .where(whereClause)
-		  .fetch().size();
+		  .leftJoin(feed.userEntity, user).fetchJoin()
+		  .leftJoin(feed.feedImageMappingEntities, feedImageMapping).fetchJoin()
+		  .leftJoin(feedImageMapping.objectStorageEntity, objectStorage).fetchJoin()
+		  .distinct()
+		  .where(whereClause);
 
-		final List<FeedEntity> contents = queryFactory
-		  .selectFrom(feed)
-		  .where(whereClause)
+		final int total = feedQuery
+		  .fetch()
+		  .size();
+
+		final List<FeedEntity> contents = feedQuery
 		  .orderBy(feed.id.desc())
 		  .offset(pageable.getOffset())
 		  .limit(pageable.getPageSize())

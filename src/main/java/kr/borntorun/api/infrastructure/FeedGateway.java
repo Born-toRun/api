@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import kr.borntorun.api.adapter.out.persistence.FeedImageMappingRepository;
 import kr.borntorun.api.adapter.out.persistence.FeedRepository;
 import kr.borntorun.api.adapter.out.persistence.querydsl.FeedQuery;
 import kr.borntorun.api.core.converter.FeedConverter;
@@ -24,6 +25,7 @@ public class FeedGateway {
 
 	private final FeedConverter feedConverter;
 	private final FeedRepository feedRepository;
+	private final FeedImageMappingRepository feedImageMappingRepository;
 	private final FeedQuery feedQuery;
 
 	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
@@ -34,18 +36,20 @@ public class FeedGateway {
 		feedQuery.increaseViewQty(feedId);
 	}
 
-	public FeedEntity create(final CreateFeedQuery query) {
+	public void create(final CreateFeedQuery query) {
 		final FeedEntity feedEntity = feedConverter.toFeedEntity(query);
+		feedRepository.save(feedEntity);
 
 		List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
 		  .map(imageId -> FeedImageMappingEntity.builder()
 			.imageId(imageId)
+			.feedId(feedEntity.getId())
 			.build())
 		  .toList();
 
 		feedEntity.add(feedImageMappingEntities);
 
-		return feedRepository.save(feedEntity);
+		feedImageMappingRepository.saveAll(feedImageMappingEntities);
 	}
 
 	public List<Long> removeAll(final long userId) {

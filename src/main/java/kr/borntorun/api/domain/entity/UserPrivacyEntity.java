@@ -29,7 +29,7 @@ public class UserPrivacyEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long userId;
+	private Long userId;
 	private Boolean isInstagramIdPublic;
 
 	@OneToOne(fetch = FetchType.LAZY)

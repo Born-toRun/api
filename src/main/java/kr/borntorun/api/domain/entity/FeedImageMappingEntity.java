@@ -30,16 +30,16 @@ public class FeedImageMappingEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long feedId;
-	private long imageId;
+	private Long feedId;
+	private Long imageId;
 
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "feedId", insertable = false, updatable = false)
 	private FeedEntity feedEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "imageId", insertable = false, updatable = false)
 	private ObjectStorageEntity objectStorageEntity;
 }
 

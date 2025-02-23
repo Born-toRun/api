@@ -14,7 +14,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
 		"LEFT JOIN FETCH u.objectStorageEntity " +
-		"LEFT JOIN FETCH u.yellowCardEntities " +
 		"WHERE u.id =:id"
 	)
 	Optional<UserEntity> findById(long id);

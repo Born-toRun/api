@@ -29,6 +29,10 @@ public class YellowCardEntity {
 	private String basis;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "targetUserId")
-	private UserEntity userEntity;
+	@JoinColumn(name = "targetUserId", insertable = false, updatable = false)
+	private UserEntity targetUser;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sourceUserId", insertable = false, updatable = false)
+	private UserEntity sourceUser;
 }

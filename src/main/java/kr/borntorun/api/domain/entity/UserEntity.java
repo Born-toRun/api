@@ -31,6 +31,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 // TODO: 캡슐화, 꼭 필요한 애노테이션만 쓰기!!!
+// TODO: 모든 엔티티에 대해서 단방향/양방향에 따른 연관관계 처리 확인하기!!!
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
@@ -55,7 +56,7 @@ public class UserEntity {
 	private Long crewId;
 	private String instagramId;
 	private LocalDateTime lastLoginAt;
-	private long imageId;
+	private Long imageId;
 	private int yellowCardQty;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -70,28 +71,31 @@ public class UserEntity {
 	private UserRefreshTokenEntity userRefreshTokenEntity;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<FeedEntity> feedEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<ActivityEntity> activityEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<ActivityParticipationEntity> activityParticipationEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<CommentEntity> commentEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<MarathonBookmarkEntity> marathonBookmarkEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
 
 	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 	private UserPrivacyEntity userPrivacyEntity;
-
-	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-	private Set<YellowCardEntity> yellowCardEntities = new HashSet<>();
 
 	public String getProfileImageUri() {
 		if (objectStorageEntity == null || objectStorageEntity.getId() == 0) {

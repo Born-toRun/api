@@ -29,7 +29,7 @@ public class UserRefreshTokenEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private long userId;
+	private Long userId;
 
 	@Setter
 	private String refreshToken;

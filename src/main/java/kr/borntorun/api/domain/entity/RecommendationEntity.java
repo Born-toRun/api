@@ -35,8 +35,8 @@ public class RecommendationEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long contentId;
-	private long userId;
+	private Long contentId;
+	private Long userId;
 	@Enumerated(EnumType.STRING)
 	private RecommendationType recommendationType;
 	private LocalDateTime registeredAt;

@@ -38,11 +38,12 @@ public class ObjectStorageEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private long userId;
+	private Long userId;
 	private String fileUri;
 	private LocalDateTime uploadAt;
 
 	@OneToMany(mappedBy = "objectStorageEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
 	private Set<FeedImageMappingEntity> feedImageMappingEntities = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)

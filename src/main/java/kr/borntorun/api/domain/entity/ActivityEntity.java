@@ -47,7 +47,7 @@ public class ActivityEntity {
 	private String course;
 	private String courseDetail;
 	private String path;
-	private long userId;
+	private Long userId;
 	private Boolean isOpen;
 	private LocalDateTime updatedAt;
 	private LocalDateTime registeredAt;

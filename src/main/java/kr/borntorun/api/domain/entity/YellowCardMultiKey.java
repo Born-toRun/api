@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 public class YellowCardMultiKey implements Serializable {
 
-	private long targetUserId;
-	private long sourceUserId;
+	private Long targetUserId;
+	private Long sourceUserId;
 }

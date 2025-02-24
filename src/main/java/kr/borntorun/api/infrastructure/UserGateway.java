@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import kr.borntorun.api.adapter.out.persistence.UserPrivacyRepository;
 import kr.borntorun.api.adapter.out.persistence.UserRepository;
-import kr.borntorun.api.domain.constant.RoleType;
 import kr.borntorun.api.domain.entity.UserEntity;
-import kr.borntorun.api.infrastructure.model.CreateGuestQuery;
+import kr.borntorun.api.domain.entity.UserPrivacyEntity;
+import kr.borntorun.api.infrastructure.model.CreateUserQuery;
 import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
 import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 import kr.borntorun.api.support.exception.NotFoundException;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class UserGateway {
 
 	private final UserRepository userRepository;
+
+	private final UserPrivacyRepository userPrivacyRepository;
 
 	public UserEntity searchBySocialId(String socialId) {
 		return userRepository.findBySocialId(socialId)
@@ -48,16 +51,29 @@ public class UserGateway {
 	}
 
 	public void remove(long userId) {
-		userRepository.deleteById(userId);
+		UserEntity userEntity = userRepository.findAllEntitiesById(userId)
+		  .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
+
+		userRepository.delete(userEntity);
 	}
 
-	public UserEntity createAndFlush(CreateGuestQuery query) {
+	public UserEntity createAndFlush(CreateUserQuery query) {
 		UserEntity userEntity = UserEntity.builder()
 		  .socialId(query.socialId())
 		  .providerType(query.providerType())
-		  .roleType(RoleType.GUEST)
+		  .roleType(query.roleType())
 		  .build();
-		return userRepository.saveAndFlush(userEntity);
+
+		UserPrivacyEntity userPrivacyEntity = UserPrivacyEntity.builder()
+		  .isInstagramIdPublic(false)
+		  .build();
+
+		userRepository.save(userEntity);
+		userEntity.add(userPrivacyEntity);
+
+		userPrivacyRepository.saveAndFlush(userPrivacyEntity);
+
+		return userEntity;
 	}
 
 	public boolean exists(String socialId) {

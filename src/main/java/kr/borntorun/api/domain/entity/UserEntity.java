@@ -135,4 +135,9 @@ public class UserEntity {
 			this.name = userName;
 		}
 	}
+
+	public void add(UserPrivacyEntity userPrivacyEntity) {
+		this.userPrivacyEntity = userPrivacyEntity;
+		userPrivacyEntity.setUserEntity(this);
+	}
 }

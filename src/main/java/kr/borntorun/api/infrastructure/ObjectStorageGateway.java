@@ -1,12 +1,10 @@
 package kr.borntorun.api.infrastructure;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import kr.borntorun.api.adapter.out.persistence.ObjectStorageRepository;
-import kr.borntorun.api.adapter.out.thirdparty.ObjectStorageClient;
 import kr.borntorun.api.adapter.out.thirdparty.model.Remove;
 import kr.borntorun.api.adapter.out.thirdparty.model.RemoveAll;
 import kr.borntorun.api.config.properties.MinioProperties;
@@ -25,13 +23,12 @@ import lombok.RequiredArgsConstructor;
 public class ObjectStorageGateway {
 
 	private final ObjectStorageConverter objectStorageConverter;
-	private final ObjectStorageClient objectStorageClient;
 	private final MinioProperties minioProperties;
 	private final ObjectStorageRepository objectStorageRepository;
+	private final MinioGateway minioGateway;
 
 	public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
-		final String uploadedFileName = objectStorageClient.upload(
-		  objectStorageConverter.toUpload(query));
+		final String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
 
 		final String cdnUri = minioProperties.getCdnHost()
 		  + "/"
@@ -47,6 +44,11 @@ public class ObjectStorageGateway {
 
 	}
 
+	public ObjectStorageEntity search(long id) {
+		return objectStorageRepository.findById(id)
+		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
+	}
+
 	public List<ObjectStorageEntity> searchAll(final List<Long> fileIds) {
 		return objectStorageRepository.findAllById(fileIds);
 	}
@@ -56,8 +58,7 @@ public class ObjectStorageGateway {
 			return;
 		}
 
-		ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.targetFileId())
-		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
+		ObjectStorageEntity objectStorage = search(query.targetFileId());
 
 		if (!query.my().getIsAdmin()) {
 			if (query.my().getId() != objectStorage.getUserId()) {
@@ -67,10 +68,9 @@ public class ObjectStorageGateway {
 
 		objectStorageRepository.deleteById(objectStorage.getId());
 
-		objectStorageClient.remove(Remove.builder()
-		  .bucket(query.bucket().getBucketName())
-		  .objectName(objectStorage.getFileUri().substring(objectStorage.getFileUri().lastIndexOf("/") + 1))
-		  .build());
+		minioGateway.removeObject(new Remove(query.bucket(), objectStorage.getFileUri()
+		  .substring(objectStorage.getFileUri()
+			.lastIndexOf("/") + 1)));
 	}
 
 	public void removeAll(final RemoveAllObjectStorageQuery query) {
@@ -86,44 +86,37 @@ public class ObjectStorageGateway {
 			throw new InvalidException("본인이 올린 파일만 제거할 수 있습니다.");
 		}
 
-		objectStorageRepository.saveAll(objectStorages);
 		objectStorageRepository.deleteAllById(objectStorages.stream()
 		  .map(ObjectStorageEntity::getId)
 		  .toList());
 
-		objectStorageClient.removeAll(RemoveAll.builder()
-		  .bucket(query.bucket())
-		  .objectNames(objectStorages.stream()
-			.map(e -> e.getFileUri().substring(e.getFileUri().lastIndexOf("/") + 1))
-			.collect(Collectors.toList()))
-		  .build());
+		minioGateway.removeObjects(new RemoveAll(query.bucket(), objectStorages.stream()
+		  .map(e -> e.getFileUri().substring(e.getFileUri().lastIndexOf("/") + 1))
+		  .toList()));
 	}
 
 	public String modify(final ModifyObjectStorageQuery query) {
-		ObjectStorageEntity objectStorage = objectStorageRepository.findById(query.getTargetFileId())
-		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
+		ObjectStorageEntity objectStorage = search(query.targetFileId());
 
-		if (!query.getMy().getIsAdmin()) {
-			if (query.getMy().getId() != objectStorage.getUserId()) {
+		if (!query.my().getIsAdmin()) {
+			if (query.my().getId() != objectStorage.getUserId()) {
 				throw new InvalidException("본인이 올린 파일만 수정할 수 있습니다.");
 			}
 		}
 
-		final String uploadedFileName = objectStorageClient.upload(objectStorageConverter.toUpload(query));
-
+		final String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
 		final String targetCdnUri = objectStorage.getFileUri();
 		final String cdnUri = minioProperties.getCdnHost()
 		  + "/"
-		  + query.getBucket()
+		  + query.bucket()
 		  + "/"
 		  + uploadedFileName;
 
 		objectStorage.setFileUri(cdnUri);
+		objectStorageRepository.save(objectStorage);
 
-		final Remove remove = objectStorageConverter.toRemove(query);
-		remove.setObjectName(targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1)));
-
-		objectStorageClient.remove(remove);
+		minioGateway.removeObject(new Remove(query.bucket(),
+		  targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1))));
 
 		return cdnUri;
 	}

@@ -57,13 +57,13 @@ public class FeedEntity {
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
-	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<CommentEntity> commentEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<FeedImageMappingEntity> feedImageMappingEntities = new HashSet<>();
 
-	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
 
 	public void add(final List<FeedImageMappingEntity> feedImageMappingEntities) {

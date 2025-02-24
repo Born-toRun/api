@@ -14,10 +14,25 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
 		"LEFT JOIN FETCH u.objectStorageEntity " +
-		"LEFT JOIN FETCH u.userPrivacyEntity " +
 		"WHERE u.id =:id"
 	)
 	Optional<UserEntity> findById(long id);
+
+	@Query(
+	  "SELECT distinct u FROM UserEntity u " +
+		"LEFT JOIN FETCH u.crewEntity " +
+		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.userRefreshTokenEntity " +
+		"LEFT JOIN FETCH u.userPrivacyEntity " +
+		"LEFT JOIN FETCH u.feedEntities " +
+		"LEFT JOIN FETCH u.activityEntities " +
+		"LEFT JOIN FETCH u.activityParticipationEntities " +
+		"LEFT JOIN FETCH u.commentEntities " +
+		"LEFT JOIN FETCH u.marathonBookmarkEntities " +
+		"LEFT JOIN FETCH u.recommendationEntities " +
+		"WHERE u.id =:id"
+	)
+	Optional<UserEntity> findAllEntitiesById(long id);
 
 	List<UserEntity> findAllByNameContaining(String userName);
 

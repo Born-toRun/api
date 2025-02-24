@@ -1,7 +1,7 @@
 package kr.borntorun.api.domain.port;
 
 import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.CreateGuestCommand;
+import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.domain.port.model.LoginResult;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
 import kr.borntorun.api.domain.port.model.SignInCommand;
@@ -23,7 +23,7 @@ public interface UserPort {
 
 	BornToRunUser modify(final ModifyUserCommand command);
 
-	BornToRunUser createAndFlush(final CreateGuestCommand command);
+	BornToRunUser createAndFlush(final CreateUserCommand command);
 
 	boolean exists(final String socialId);
 }

@@ -11,13 +11,13 @@ import kr.borntorun.api.core.converter.UserConverter;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.CreateGuestCommand;
+import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.domain.port.model.LoginResult;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
 import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.infrastructure.UserGateway;
-import kr.borntorun.api.infrastructure.model.CreateGuestQuery;
+import kr.borntorun.api.infrastructure.model.CreateUserQuery;
 import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
 import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 import lombok.RequiredArgsConstructor;
@@ -85,8 +85,8 @@ public class UserService implements UserPort {
 
 	@Transactional
 	@Override
-	public BornToRunUser createAndFlush(CreateGuestCommand command) {
-		CreateGuestQuery query = userConverter.toCreateGuestQuery(command);
+	public BornToRunUser createAndFlush(CreateUserCommand command) {
+		CreateUserQuery query = userConverter.toCreateUserQuery(command);
 		UserEntity guest = userGateway.createAndFlush(query);
 		return userConverter.toBornToRunUser(guest);
 	}

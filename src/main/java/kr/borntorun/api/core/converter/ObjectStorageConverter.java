@@ -31,7 +31,6 @@ public interface ObjectStorageConverter {
 	@Mapping(target = "id", source = "id")
 	ObjectStorage toObjectStorage(final ObjectStorageEntity source);
 
-	@Mapping(target = "bucket", source = "bucketName")
 	Upload toUpload(final UploadObjectStorageQuery source);
 
 	@Mapping(target = "myUserId", source = "my.id")

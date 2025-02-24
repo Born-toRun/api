@@ -1,13 +1,7 @@
 package kr.borntorun.api.adapter.out.thirdparty.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import kr.borntorun.api.domain.constant.Bucket;
 
-@Builder
-@Getter
-@Setter
-public class Remove {
-	private String bucket;
-	private String objectName;
+public record Remove(Bucket bucket,
+					 String objectName) {
 }

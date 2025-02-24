@@ -9,9 +9,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import kr.borntorun.api.domain.constant.ProviderType;
+import kr.borntorun.api.domain.constant.RoleType;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.infrastructure.UserGateway;
-import kr.borntorun.api.infrastructure.model.CreateGuestQuery;
+import kr.borntorun.api.infrastructure.model.CreateUserQuery;
 import kr.borntorun.api.support.oauth.entity.UserPrincipal;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfo;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfoFactory;
@@ -49,14 +50,14 @@ public class BornToRunOAuth2UserService extends DefaultOAuth2UserService {
 		UserEntity userEntity = userGateway.searchBySocialId(socialUser.getId());
 
 		if (userEntity == null) {
-			userEntity = createUser(socialUser, providerType);
+			userEntity = createGuest(socialUser, providerType);
 		}
 
 		return UserPrincipal.create(userEntity, user.getAttributes());
 	}
 
-	private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-		CreateGuestQuery query = new CreateGuestQuery(userInfo.getId(), providerType);
+	private UserEntity createGuest(OAuth2UserInfo userInfo, ProviderType providerType) {
+		CreateUserQuery query = new CreateUserQuery(userInfo.getId(), providerType, RoleType.GUEST);
 		return userGateway.createAndFlush(query);
 	}
 }

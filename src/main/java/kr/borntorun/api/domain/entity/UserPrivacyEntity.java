@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -34,6 +35,7 @@ public class UserPrivacyEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
+	@Setter
 	private UserEntity userEntity;
 
 	public void change(boolean isInstagramIdPublic) {

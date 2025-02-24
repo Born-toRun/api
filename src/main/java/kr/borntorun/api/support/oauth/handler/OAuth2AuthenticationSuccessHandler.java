@@ -22,11 +22,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.borntorun.api.config.properties.AppProperties;
 import kr.borntorun.api.domain.constant.ProviderType;
+import kr.borntorun.api.domain.constant.RoleType;
 import kr.borntorun.api.domain.entity.UserRefreshTokenEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.UserRefreshTokenPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.CreateGuestCommand;
+import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.domain.port.model.CreateRefreshTokenCommand;
 import kr.borntorun.api.support.CookieSupport;
 import kr.borntorun.api.support.SessionSupport;
@@ -84,10 +85,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		OidcUser user = ((OidcUser)authentication.getPrincipal());
 		OAuth2UserInfo socialUser = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
 
-		CreateGuestCommand createGuestCommand = new CreateGuestCommand(socialUser.getId(), providerType);
+		CreateUserCommand createUserCommand = new CreateUserCommand(socialUser.getId(), providerType, RoleType.GUEST);
 		BornToRunUser bornToRunUser;
 		if (!userPort.exists(socialUser.getId())) {
-			bornToRunUser = userPort.createAndFlush(createGuestCommand);
+			bornToRunUser = userPort.createAndFlush(createUserCommand);
 		} else {
 			bornToRunUser = userPort.searchBySocialId(socialUser.getId());
 		}

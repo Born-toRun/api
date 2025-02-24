@@ -54,7 +54,7 @@ public class ObjectStorageClient {
 			log.info("{}에 {}을 저장합니다.", resource.bucket(), uploadedFileName);
 
 			minioClient.putObject(PutObjectArgs.builder()
-			  .bucket(resource.bucket())
+			  .bucket(resource.bucket().getBucketName())
 			  .object(uploadedFileName)
 			  .contentType("image/" + extension.substring(1))
 			  .stream(resource.file().getInputStream(), resource.file().getSize(), -1)
@@ -91,8 +91,8 @@ public class ObjectStorageClient {
 	public void remove(final Remove resource) {
 		try {
 			minioClient.removeObject(RemoveObjectArgs.builder()
-			  .bucket(resource.getBucket())
-			  .object(resource.getObjectName())
+			  .bucket(resource.bucket().getBucketName())
+			  .object(resource.objectName())
 			  .build());
 		} catch (ErrorResponseException | ServerException e) {
 			log.error("MinIO 서버 오류: ", e);
@@ -124,8 +124,8 @@ public class ObjectStorageClient {
 	public void removeAll(final RemoveAll resource) {
 		minioClient.removeObjects(
 		  RemoveObjectsArgs.builder()
-			.bucket(resource.getBucket().getBucketName())
-			.objects(new ArrayList<>(resource.getObjectNames().stream()
+			.bucket(resource.bucket().getBucketName())
+			.objects(new ArrayList<>(resource.objectNames().stream()
 			  .map(DeleteObject::new)
 			  .collect(Collectors.toList())))
 			.build()

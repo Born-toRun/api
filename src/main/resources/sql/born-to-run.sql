@@ -274,9 +274,6 @@ ALTER TABLE activity_participation
 ALTER TABLE feed_image_mapping
     ADD CONSTRAINT fk__feed_image_mapping__object_storage
         FOREIGN KEY (image_id) REFERENCES object_storage (id) ON DELETE CASCADE;
-ALTER TABLE feed_image_mapping
-    ADD CONSTRAINT fk__feed_image_mapping__feed
-        FOREIGN KEY (feed_id) REFERENCES feed (id) ON DELETE CASCADE;
 
 ALTER TABLE recommendation
     ADD CONSTRAINT fk__recommendation__user

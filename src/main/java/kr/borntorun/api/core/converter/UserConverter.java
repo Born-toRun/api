@@ -11,11 +11,11 @@ import kr.borntorun.api.adapter.in.web.payload.UserDetailResponse;
 import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInRequest;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.CreateGuestCommand;
+import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
 import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
-import kr.borntorun.api.infrastructure.model.CreateGuestQuery;
+import kr.borntorun.api.infrastructure.model.CreateUserQuery;
 import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
 import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 
@@ -46,5 +46,5 @@ public interface UserConverter {
 
 	ModifyUserResponse toModifyUserResponse(final BornToRunUser source);
 
-	CreateGuestQuery toCreateGuestQuery(final CreateGuestCommand source);
+	CreateUserQuery toCreateUserQuery(final CreateUserCommand source);
 }

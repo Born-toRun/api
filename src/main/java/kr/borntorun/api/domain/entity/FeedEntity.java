@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.DynamicInsert;
 
@@ -59,7 +60,7 @@ public class FeedEntity {
 	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
 	private Set<CommentEntity> commentEntities = new HashSet<>();
 
-	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<FeedImageMappingEntity> feedImageMappingEntities = new HashSet<>();
 
 	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE)
@@ -73,10 +74,25 @@ public class FeedEntity {
 		this.feedImageMappingEntities.addAll(feedImageMappingEntities);
 	}
 
+	public void modify(final List<FeedImageMappingEntity> feedImageMappingEntities) {
+		for (final FeedImageMappingEntity entity : feedImageMappingEntities) {
+			entity.setFeedEntity(this);
+		}
+
+		this.feedImageMappingEntities.clear();
+		this.feedImageMappingEntities.addAll(feedImageMappingEntities);
+	}
+
 	public void modify(final ModifyFeedQuery query) {
 		this.accessLevel = query.accessLevel();
 		this.contents = query.contents();
 		this.category = query.category();
+
+		add(query.imageIds().stream()
+		  .map(imageId -> FeedImageMappingEntity.builder()
+			.imageId(imageId)
+			.build())
+		  .collect(Collectors.toList()));
 	}
 
 	public long getRecommendationQty() {

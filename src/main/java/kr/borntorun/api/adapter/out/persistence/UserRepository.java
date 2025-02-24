@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
 		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.userPrivacyEntity " +
 		"WHERE u.id =:id"
 	)
 	Optional<UserEntity> findById(long id);
@@ -23,6 +24,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query(
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.userPrivacyEntity " +
 		"WHERE u.socialId =:socialId"
 	)
 	Optional<UserEntity> findBySocialId(String socialId);

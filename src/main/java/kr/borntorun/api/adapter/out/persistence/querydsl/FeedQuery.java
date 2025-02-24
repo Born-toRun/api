@@ -15,10 +15,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.entity.FeedEntity;
+import kr.borntorun.api.domain.entity.QCommentEntity;
+import kr.borntorun.api.domain.entity.QCrewEntity;
 import kr.borntorun.api.domain.entity.QFeedEntity;
 import kr.borntorun.api.domain.entity.QFeedImageMappingEntity;
 import kr.borntorun.api.domain.entity.QObjectStorageEntity;
+import kr.borntorun.api.domain.entity.QRecommendationEntity;
 import kr.borntorun.api.domain.entity.QUserEntity;
+import kr.borntorun.api.domain.entity.QUserPrivacyEntity;
 import kr.borntorun.api.infrastructure.model.SearchAllFeedQuery;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +37,10 @@ public class FeedQuery {
 		final QFeedImageMappingEntity feedImageMapping = QFeedImageMappingEntity.feedImageMappingEntity;
 		final QObjectStorageEntity objectStorage = QObjectStorageEntity.objectStorageEntity;
 		final QUserEntity user = QUserEntity.userEntity;
+		final QRecommendationEntity recommendation = QRecommendationEntity.recommendationEntity;
+		final QCommentEntity comment = QCommentEntity.commentEntity;
+		final QCrewEntity crew = QCrewEntity.crewEntity;
+		final QUserPrivacyEntity userPrivacy = QUserPrivacyEntity.userPrivacyEntity;
 
 		BooleanExpression whereClause = Expressions.TRUE; // 기본값 설정
 
@@ -67,9 +75,13 @@ public class FeedQuery {
 
 		JPAQuery<FeedEntity> feedQuery = queryFactory
 		  .selectFrom(feed)
-		  .leftJoin(feed.userEntity, user).fetchJoin()
+		  .innerJoin(feed.userEntity, user).fetchJoin()
+		  .innerJoin(user.crewEntity, crew).fetchJoin()
+		  .innerJoin(user.userPrivacyEntity, userPrivacy).fetchJoin()
 		  .leftJoin(feed.feedImageMappingEntities, feedImageMapping).fetchJoin()
 		  .leftJoin(feedImageMapping.objectStorageEntity, objectStorage).fetchJoin()
+		  .leftJoin(feed.commentEntities, comment).fetchJoin()
+		  .leftJoin(feed.recommendationEntities, recommendation).fetchJoin()
 		  .distinct()
 		  .where(whereClause);
 

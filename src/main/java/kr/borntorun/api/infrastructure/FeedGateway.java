@@ -1,7 +1,6 @@
 package kr.borntorun.api.infrastructure;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,30 +51,22 @@ public class FeedGateway {
 		feedImageMappingRepository.saveAll(feedImageMappingEntities);
 	}
 
-	public List<Long> removeAll(final long userId) {
-		final List<FeedEntity> feeds = feedRepository.findAllByUserId(userId);
-		final List<Long> feedIds = feeds.stream()
-		  .map(FeedEntity::getId)
-		  .collect(Collectors.toList());
-
-		feedRepository.deleteAllById(feedIds);
-
-		return feedIds;
-	}
-
 	public void remove(final long feedId) {
 		feedRepository.deleteById(feedId);
 	}
 
 	public FeedEntity modify(final ModifyFeedQuery query) {
 		final FeedEntity feedEntity = search(query.feedId());
-		feedEntity.modify(query);
 
-		feedEntity.add(query.imageIds().stream()
+		List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
 		  .map(imageId -> FeedImageMappingEntity.builder()
 			.imageId(imageId)
 			.build())
-		  .collect(Collectors.toList()));
+		  .toList();
+
+		feedEntity.modify(query);
+		feedEntity.modify(feedImageMappingEntities);
+		feedImageMappingRepository.saveAll(feedImageMappingEntities);
 
 		return feedRepository.save(feedEntity);
 	}

@@ -64,13 +64,14 @@ public class UserGateway {
 		  .roleType(query.roleType())
 		  .build();
 
+		userRepository.save(userEntity);
+
 		UserPrivacyEntity userPrivacyEntity = UserPrivacyEntity.builder()
 		  .isInstagramIdPublic(false)
+		  .userId(userEntity.getId())
 		  .build();
 
-		userRepository.save(userEntity);
 		userEntity.add(userPrivacyEntity);
-
 		userPrivacyRepository.saveAndFlush(userPrivacyEntity);
 
 		return userEntity;

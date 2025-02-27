@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import kr.borntorun.api.core.event.MinioRemoveListener;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,12 +35,14 @@ import lombok.ToString;
 @Setter
 @Builder
 @DynamicInsert
+@EntityListeners(MinioRemoveListener.class)
 public class ObjectStorageEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private Long userId;
+	private String bucketName;
 	private String fileUri;
 	private LocalDateTime uploadAt;
 

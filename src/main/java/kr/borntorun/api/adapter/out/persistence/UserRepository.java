@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query(
 	  "SELECT u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
-		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.profileImageEntity " +
 		"WHERE u.id =:id"
 	)
 	Optional<UserEntity> findById(long id);
@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query(
 	  "SELECT distinct u FROM UserEntity u " +
 		"LEFT JOIN FETCH u.crewEntity " +
-		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.profileImageEntity " +
 		"LEFT JOIN FETCH u.userRefreshTokenEntity " +
 		"LEFT JOIN FETCH u.userPrivacyEntity " +
 		"LEFT JOIN FETCH u.feedEntities " +
@@ -38,7 +38,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 	@Query(
 	  "SELECT u FROM UserEntity u " +
-		"LEFT JOIN FETCH u.objectStorageEntity " +
+		"LEFT JOIN FETCH u.profileImageEntity " +
 		"LEFT JOIN FETCH u.userPrivacyEntity " +
 		"WHERE u.socialId =:socialId"
 	)

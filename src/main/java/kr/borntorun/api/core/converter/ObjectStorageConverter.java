@@ -6,7 +6,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.borntorun.api.adapter.in.web.payload.UploadFileResponse;
 import kr.borntorun.api.adapter.out.thirdparty.model.Remove;
+import kr.borntorun.api.adapter.out.thirdparty.model.RemoveAll;
 import kr.borntorun.api.adapter.out.thirdparty.model.Upload;
+import kr.borntorun.api.core.event.model.MinioRemoveAllEventModel;
+import kr.borntorun.api.core.event.model.MinioRemoveEventModel;
 import kr.borntorun.api.domain.constant.Bucket;
 import kr.borntorun.api.domain.entity.ObjectStorageEntity;
 import kr.borntorun.api.domain.port.model.ObjectStorage;
@@ -41,6 +44,7 @@ public interface ObjectStorageConverter {
 	@Mapping(target = "fileId", source = "id")
 	UploadFileResponse toUploadFileResponse(final ObjectStorage source);
 
-	@Mapping(target = "objectName", ignore = true)
-	Remove toRemove(final ModifyObjectStorageQuery source);
+	Remove toRemove(final MinioRemoveEventModel source);
+
+	RemoveAll toRemoveAll(final MinioRemoveAllEventModel source);
 }

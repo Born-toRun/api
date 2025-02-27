@@ -2,13 +2,14 @@ package kr.borntorun.api.infrastructure;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import kr.borntorun.api.adapter.out.persistence.ObjectStorageRepository;
-import kr.borntorun.api.adapter.out.thirdparty.model.Remove;
-import kr.borntorun.api.adapter.out.thirdparty.model.RemoveAll;
 import kr.borntorun.api.config.properties.MinioProperties;
 import kr.borntorun.api.core.converter.ObjectStorageConverter;
+import kr.borntorun.api.core.event.model.MinioRemoveAllEventModel;
+import kr.borntorun.api.core.event.model.MinioRemoveEventModel;
 import kr.borntorun.api.domain.entity.ObjectStorageEntity;
 import kr.borntorun.api.infrastructure.model.ModifyObjectStorageQuery;
 import kr.borntorun.api.infrastructure.model.RemoveAllObjectStorageQuery;
@@ -26,6 +27,7 @@ public class ObjectStorageGateway {
 	private final MinioProperties minioProperties;
 	private final ObjectStorageRepository objectStorageRepository;
 	private final MinioGateway minioGateway;
+	private final ApplicationEventPublisher eventPublisher;
 
 	public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
 		final String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
@@ -40,6 +42,7 @@ public class ObjectStorageGateway {
 		  ObjectStorageEntity.builder()
 			.fileUri(cdnUri)
 			.userId(query.myUserId())
+			.bucketName(query.getBucketName())
 			.build());
 
 	}
@@ -68,7 +71,7 @@ public class ObjectStorageGateway {
 
 		objectStorageRepository.deleteById(objectStorage.getId());
 
-		minioGateway.removeObject(new Remove(query.bucket(), objectStorage.getFileUri()
+		eventPublisher.publishEvent(new MinioRemoveEventModel(query.bucket(), objectStorage.getFileUri()
 		  .substring(objectStorage.getFileUri()
 			.lastIndexOf("/") + 1)));
 	}
@@ -90,7 +93,7 @@ public class ObjectStorageGateway {
 		  .map(ObjectStorageEntity::getId)
 		  .toList());
 
-		minioGateway.removeObjects(new RemoveAll(query.bucket(), objectStorages.stream()
+		eventPublisher.publishEvent(new MinioRemoveAllEventModel(query.bucket(), objectStorages.stream()
 		  .map(e -> e.getFileUri().substring(e.getFileUri().lastIndexOf("/") + 1))
 		  .toList()));
 	}
@@ -115,8 +118,8 @@ public class ObjectStorageGateway {
 		objectStorage.setFileUri(cdnUri);
 		objectStorageRepository.save(objectStorage);
 
-		minioGateway.removeObject(new Remove(query.bucket(),
-		  targetCdnUri.substring(targetCdnUri.lastIndexOf("/" + 1))));
+		eventPublisher.publishEvent(new MinioRemoveEventModel(query.bucket(),
+		  targetCdnUri.substring(targetCdnUri.lastIndexOf("/") + 1)));
 
 		return cdnUri;
 	}

@@ -65,7 +65,11 @@ public class UserEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "imageId", insertable = false, updatable = false)
-	private ObjectStorageEntity objectStorageEntity;
+	private ObjectStorageEntity profileImageEntity;
+
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+	@Builder.Default
+	private Set<ObjectStorageEntity> objectStorageEntities = new HashSet<>();
 
 	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 	private UserRefreshTokenEntity userRefreshTokenEntity;
@@ -98,10 +102,10 @@ public class UserEntity {
 	private UserPrivacyEntity userPrivacyEntity;
 
 	public String getProfileImageUri() {
-		if (objectStorageEntity == null || objectStorageEntity.getId() == 0) {
+		if (profileImageEntity == null || profileImageEntity.getId() == 0) {
 			return null;
 		}
-		return objectStorageEntity.getFileUri();
+		return profileImageEntity.getFileUri();
 	}
 
 	public Boolean getIsAdmin() {

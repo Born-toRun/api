@@ -25,8 +25,8 @@ import kr.borntorun.api.adapter.in.web.payload.SearchFeedRequest;
 import kr.borntorun.api.adapter.in.web.payload.SearchFeedResponse;
 import kr.borntorun.api.adapter.in.web.proxy.FeedProxy;
 import kr.borntorun.api.core.converter.FeedConverter;
-import kr.borntorun.api.domain.port.model.Feed;
 import kr.borntorun.api.domain.port.model.FeedCard;
+import kr.borntorun.api.domain.port.model.FeedResult;
 import kr.borntorun.api.support.TokenDetail;
 import kr.borntorun.api.support.annotation.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -44,10 +44,10 @@ public class FeedController {
 	@Operation(summary = "피드 상세 보기", description = "특정 피드를 조회합니다.")
 	@GetMapping(value = "{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DetailFeedResponse> detail(@AuthUser TokenDetail my, @PathVariable final long feedId) {
-		final Feed feed = feedProxy.searchDetail(my, feedId);
+		final FeedResult feedResult = feedProxy.searchDetail(my, feedId);
 		feedProxy.increaseViewQty(feedId);
 
-		return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feed));
+		return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feedResult));
 	}
 
 	@Operation(summary = "피드 작성", description = "피드를 작성합니다.")

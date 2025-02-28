@@ -23,7 +23,7 @@ public record DetailFeedResponse(@Schema(description = "글 번호") long id,
 								 @Schema(description = "조회자") Viewer viewer) {
 
 	@Schema(description = "이미지")
-	public record Image(@Schema(description = "이미지 식별자") long imageId,
+	public record Image(@Schema(description = "이미지 식별자") Long imageId,
 						@Schema(description = "이미지 uri") String imageUri) {
 	}
 

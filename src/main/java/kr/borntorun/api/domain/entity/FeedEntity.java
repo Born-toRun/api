@@ -112,20 +112,12 @@ public class FeedEntity {
 		  .toList();
 	}
 
-	public boolean hasComment(final long myUserId) {
-		if (myUserId == -1) {
-			return false;
-		}
-
+	public boolean hasMyComment(final long myUserId) {
 		return commentEntities.stream()
 		  .anyMatch(e -> e.getUserId() == myUserId);
 	}
 
-	public boolean hasRecommendation(final long myUserId) {
-		if (myUserId == -1) {
-			return false;
-		}
-
+	public boolean hasMyRecommendation(final long myUserId) {
 		return recommendationEntities.stream()
 		  .anyMatch(e -> e.getUserId() == myUserId);
 	}

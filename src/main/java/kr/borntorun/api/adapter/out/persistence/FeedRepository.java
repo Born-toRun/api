@@ -1,12 +1,21 @@
 package kr.borntorun.api.adapter.out.persistence;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import kr.borntorun.api.domain.entity.FeedEntity;
 
 public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
 
-	List<FeedEntity> findAllByUserId(final long userId);
+	@Query(
+	  "SELECT distinct f FROM FeedEntity f " +
+		"LEFT JOIN FETCH f.userEntity " +
+		"LEFT JOIN FETCH f.commentEntities " +
+		"LEFT JOIN FETCH f.feedImageMappingEntities " +
+		"LEFT JOIN FETCH f.recommendationEntities " +
+		"WHERE f.id =:id"
+	)
+	Optional<FeedEntity> findById(final long id);
 }

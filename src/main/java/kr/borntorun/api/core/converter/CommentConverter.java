@@ -1,7 +1,7 @@
 package kr.borntorun.api.core.converter;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -14,9 +14,9 @@ import kr.borntorun.api.adapter.in.web.payload.ModifyCommentResponse;
 import kr.borntorun.api.adapter.in.web.payload.SearchCommentDetailResponse;
 import kr.borntorun.api.adapter.in.web.payload.SearchCommentResponse;
 import kr.borntorun.api.domain.entity.CommentEntity;
-import kr.borntorun.api.domain.port.model.BornToRunUser;
-import kr.borntorun.api.domain.port.model.Comment;
+import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.model.CommentDetail;
+import kr.borntorun.api.domain.port.model.CommentResult;
 import kr.borntorun.api.domain.port.model.CreateCommentCommand;
 import kr.borntorun.api.domain.port.model.ModifyCommentCommand;
 import kr.borntorun.api.infrastructure.model.CreateCommentQuery;
@@ -32,61 +32,70 @@ public interface CommentConverter {
 
 	@Mapping(target = "userId", source = "myUserId")
 	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "parentId", ignore = true)
+	@Mapping(target = "parentId", source = "parentCommentId")
 	@Mapping(target = "registeredAt", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "feedEntity", ignore = true)
 	@Mapping(target = "userEntity", ignore = true)
+	@Mapping(target = "parent", ignore = true)
+	@Mapping(target = "child", ignore = true)
 	@Mapping(target = "recommendationEntities", ignore = true)
 	CommentEntity toCommentEntity(final CreateCommentQuery source);
 
-	@Mapping(target = "id", source = "source.id")
-	@Mapping(target = "writer", expression = "java(new Comment.Writer(source.getUserId(), user.userName(), user.profileImageUri(), user.crewName(), user.isAdmin(), user.isManager()))")
-	@Mapping(target = "reCommentQty", ignore = true)
-	@Mapping(target = "isMyComment", source = "source.userId", qualifiedByName = "convertIsMyCommentByBornToRunUser")
-	Comment toComment(final CommentEntity source, @Context final BornToRunUser user);
+	@Mapping(target = "writer", source = "source.userEntity", qualifiedByName = "convertCommentWriter")
+	@Mapping(target = "reCommentQty", expression = "java(source.getChild().size())")
+	@Mapping(target = "isMyComment", expression = "java(source.getUserId() == myUserId)")
+	CommentResult toCommentResult(final CommentEntity source, final long myUserId);
 
-	@Mapping(target = "writer", source = "userId", qualifiedByName = "convertCommentWriter")
-	@Mapping(target = "isMyComment", source = "source.userId", qualifiedByName = "convertIsMyComment")
-	List<Comment> toComments(final List<CommentEntity> source,
-	  @Context final Map<Long, BornToRunUser> writersByUserIdMapping, @Context final long myUserId);
-
-	List<SearchCommentResponse.Comment> toSearchCommentResponseComment(final List<Comment> source);
+	List<SearchCommentResponse.Comment> toSearchCommentResponseComment(final List<CommentResult> source);
 
 	@Mapping(target = "id", source = "source.id")
 	@Mapping(target = "writer", expression = "java(new CommentDetail.Writer(source.getUserId(), source.getUserEntity().getName(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsAdmin(), source.getUserEntity().getIsManager()))")
-	CommentDetail toCommentDetail(final CommentEntity source, final List<Comment> reComments);
+	CommentDetail toCommentDetail(final CommentEntity source, final List<CommentResult> reCommentResults);
 
 	@Mapping(target = "writer", expression = "java(new SearchCommentDetailResponse.Writer(source.writer().userId(), source.writer().userName(), source.writer().profileImageUri(), source.writer().crewName(), source.writer().isAdmin(), source.writer().isManager()))")
-	@Mapping(target = "reComments", source = "reComments", qualifiedByName = "convertReComments")
+	@Mapping(target = "reComments", source = "reCommentResults", qualifiedByName = "convertReComments")
 	SearchCommentDetailResponse toSearchCommentDetailResponse(final CommentDetail source, @Context final long myUserId);
 
-	List<SearchCommentDetailResponse.ReComment> toSearchCommentDetailResponseReComment(final List<Comment> source,
-	  @Context long myUserId);
-
-	SearchCommentDetailResponse.ReComment toSearchCommentDetailResponseReComment(final Comment source,
+	List<SearchCommentDetailResponse.ReComment> toSearchCommentDetailResponseReComment(final List<CommentResult> source,
 	  @Context long myUserId);
 
 	ModifyCommentCommand toModifyCommentCommand(final ModifyCommentRequest source, final long commentId);
 
 	ModifyCommentQuery toModifyCommentQuery(final ModifyCommentCommand source);
 
-	@Mapping(target = "writer", expression = "java(new Comment.Writer(source.getUserId(), source.getUserEntity().getName(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsAdmin(), source.getUserEntity().getIsManager()))")
+	@Mapping(target = "writer", source = "source.userEntity", qualifiedByName = "convertCommentWriter")
 	@Mapping(target = "id", source = "id")
 	@Mapping(target = "reCommentQty", ignore = true)
 	@Mapping(target = "isMyComment", ignore = true)
-	Comment toComment(final CommentEntity source);
+	CommentResult toCommentResult(final CommentEntity source);
 
-	ModifyCommentResponse toModifyCommentResponse(final Comment source);
+	ModifyCommentResponse toModifyCommentResponse(final CommentResult source);
+
+	default List<CommentResult> toCommentResult(final List<CommentEntity> source, long myUserId) {
+		if (source == null) {
+			return Collections.emptyList();
+		}
+
+		return source.stream()
+		  .map(entity -> toCommentResult(entity, myUserId)) // 명확한 메서드 호출
+		  .toList();
+	}
 
 	@Named("convertIsMyCommentByBornToRunUser")
-	default boolean convertIsMyCommentByBornToRunUser(final long userId, @Context final BornToRunUser user) {
-		return userId == user.userId();
+	default boolean convertIsMyCommentByBornToRunUser(final long userId, @Context final long myUserId) {
+		return userId == myUserId;
+	}
+
+	@Named("convertCommentWriter")
+	default CommentResult.Writer convertCommentWriter(final UserEntity source) {
+		return new CommentResult.Writer(source.getId(), source.getName(), source.getProfileImageUri(),
+		  source.getCrewEntity().getName(), source.getIsAdmin(), source.getIsManager());
 	}
 
 	@Named("convertReComments")
-	default List<SearchCommentDetailResponse.ReComment> convertReComments(final List<Comment> reComments,
+	default List<SearchCommentDetailResponse.ReComment> convertReComments(final List<CommentResult> reCommentResults,
 	  @Context final long myUserId) {
-		return toSearchCommentDetailResponseReComment(reComments, myUserId);
+		return toSearchCommentDetailResponseReComment(reCommentResults, myUserId);
 	}
 }

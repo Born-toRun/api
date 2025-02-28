@@ -24,8 +24,8 @@ import kr.borntorun.api.adapter.in.web.payload.SearchCommentDetailResponse;
 import kr.borntorun.api.adapter.in.web.payload.SearchCommentResponse;
 import kr.borntorun.api.adapter.in.web.proxy.CommentProxy;
 import kr.borntorun.api.core.converter.CommentConverter;
-import kr.borntorun.api.domain.port.model.Comment;
 import kr.borntorun.api.domain.port.model.CommentDetail;
+import kr.borntorun.api.domain.port.model.CommentResult;
 import kr.borntorun.api.support.TokenDetail;
 import kr.borntorun.api.support.annotation.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +43,9 @@ public class CommentController {
 	@Operation(summary = "댓글 목록 조회", description = "모든 댓글을 조회합니다.")
 	@GetMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SearchCommentResponse> searchAll(@AuthUser TokenDetail my, @PathVariable long feedId) {
-		List<Comment> comments = commentProxy.searchAll(feedId, my);
+		List<CommentResult> commentResults = commentProxy.searchAll(feedId, my);
 		List<SearchCommentResponse.Comment> searchCommentResponseComments = commentConverter.toSearchCommentResponseComment(
-		  comments);
+		  commentResults);
 		SearchCommentResponse response = new SearchCommentResponse(searchCommentResponseComments);
 		return ResponseEntity.ok(response);
 	}
@@ -76,8 +76,8 @@ public class CommentController {
 	@PutMapping(value = "/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ModifyCommentResponse> modify(@AuthUser TokenDetail my, @PathVariable long commentId,
 	  @RequestBody @Valid ModifyCommentRequest request) {
-		final Comment comment = commentProxy.modify(commentId, request);
-		ModifyCommentResponse response = commentConverter.toModifyCommentResponse(comment);
+		final CommentResult commentResult = commentProxy.modify(commentId, request);
+		ModifyCommentResponse response = commentConverter.toModifyCommentResponse(commentResult);
 		return ResponseEntity.ok(response);
 	}
 

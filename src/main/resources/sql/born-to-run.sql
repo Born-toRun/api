@@ -38,11 +38,11 @@ CREATE TABLE `user`
 
 CREATE TABLE `object_storage`
 (
-    `id`        bigint(20)   NOT NULL AUTO_INCREMENT,
-    `user_id`   bigint(20)   NOT NULL COMMENT '업로드한 사용자의 식별자',
-    `file_uri`  varchar(255) NOT NULL COMMENT '파일의 cdn full uri',
-    `bucket_name` varchar(32) NOT NULL,
-    `upload_at` datetime     NOT NULL DEFAULT current_timestamp(),
+    `id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `user_id`     bigint(20)   NOT NULL COMMENT '업로드한 사용자의 식별자',
+    `file_uri`    varchar(255) NOT NULL COMMENT '파일의 cdn full uri',
+    `bucket_name` varchar(32)  NOT NULL,
+    `upload_at`   datetime     NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 3
@@ -102,7 +102,7 @@ CREATE TABLE `recommendation`
 CREATE TABLE `comment`
 (
     `id`            bigint(20) NOT NULL AUTO_INCREMENT,
-    `parent_id`     bigint(20) NOT NULL DEFAULT 0 COMMENT '부모 댓글 식별자(대댓글)',
+    `parent_id`     bigint(20)     NULL COMMENT '부모 댓글 식별자(대댓글)',
     `user_id`       bigint(20) NOT NULL COMMENT '작성자',
     `feed_id`       bigint(20)          DEFAULT NULL,
     `contents`      text       NOT NULL COMMENT '내용',

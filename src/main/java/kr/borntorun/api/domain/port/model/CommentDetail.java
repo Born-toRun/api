@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record CommentDetail(long id,
-							long parentId,
-							long feedId,
+							Long parentId,
+							Long feedId,
 							String contents,
 							LocalDateTime registeredAt,
 							LocalDateTime updatedAt,
 							Writer writer,
-							List<Comment> reComments) {
+							List<CommentResult> reCommentResults) {
 
 	public record Writer(long userId,
 						 String userName,

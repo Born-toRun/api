@@ -13,8 +13,8 @@ import kr.borntorun.api.adapter.in.web.payload.SearchFeedRequest;
 import kr.borntorun.api.core.converter.FeedConverter;
 import kr.borntorun.api.core.service.FeedService;
 import kr.borntorun.api.domain.port.model.CreateFeedCommand;
-import kr.borntorun.api.domain.port.model.Feed;
 import kr.borntorun.api.domain.port.model.FeedCard;
+import kr.borntorun.api.domain.port.model.FeedResult;
 import kr.borntorun.api.domain.port.model.ModifyFeedCommand;
 import kr.borntorun.api.domain.port.model.RemoveFeedCommand;
 import kr.borntorun.api.domain.port.model.SearchAllFeedCommand;
@@ -34,7 +34,7 @@ public class FeedProxy {
 	private final FeedService feedService;
 
 	@Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
-	public Feed searchDetail(final TokenDetail my, final long feedId) {
+	public FeedResult searchDetail(final TokenDetail my, final long feedId) {
 		SearchFeedDetailCommand command = feedConverter.toSearchFeedDetailCommand(feedId, my);
 		return feedService.searchDetail(command);
 	}

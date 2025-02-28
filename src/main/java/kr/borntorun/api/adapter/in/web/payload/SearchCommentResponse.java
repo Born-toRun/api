@@ -14,7 +14,7 @@ public record SearchCommentResponse(@Schema(description = "댓글") List<Comment
 
 	@Schema(description = "댓글")
 	public record Comment(@Schema(description = "댓글 번호") long id,
-						  @Schema(description = "부모 댓글 번호") long parentId,
+						  @Schema(description = "부모 댓글 번호") Long parentId,
 						  @Schema(description = "대댓글 개수") int reCommentQty,
 						  @Schema(description = "작성자") Writer writer,
 						  @Schema(description = "내용") String contents,
@@ -23,7 +23,7 @@ public record SearchCommentResponse(@Schema(description = "댓글") List<Comment
 
 		@Schema(description = "대댓글 여부")
 		public boolean getIsReComment() {
-			return parentId > 0;
+			return parentId != null;
 		}
 	}
 

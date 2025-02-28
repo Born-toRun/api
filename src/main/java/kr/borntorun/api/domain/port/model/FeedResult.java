@@ -6,7 +6,7 @@ import java.util.List;
 import kr.borntorun.api.domain.constant.FeedAccessLevel;
 import kr.borntorun.api.domain.constant.FeedCategory;
 
-public record Feed(
+public record FeedResult(
   long id,
   String contents,
   List<Image> images,

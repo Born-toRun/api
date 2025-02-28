@@ -1,7 +1,9 @@
 package kr.borntorun.api.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -50,11 +52,25 @@ public class CommentEntity {
 	private UserEntity userEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "feedId", insertable = false, updatable = false)
 	private FeedEntity feedEntity;
 
 	@OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE)
 	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parentId", insertable = false, updatable = false)
+	private CommentEntity parent;
+
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CommentEntity> child = new ArrayList<>();
+
+	public void addParent(CommentEntity parent) {
+		this.parent = parent;
+		if (parent != null) {
+			parent.getChild().add(this);
+		}
+	}
 
 	public long getRecommendationQty() {
 		return recommendationEntities.stream()
@@ -63,7 +79,7 @@ public class CommentEntity {
 	}
 
 	public boolean isRootComment() {
-		return parentId == 0;
+		return parentId == null;
 	}
 }
 

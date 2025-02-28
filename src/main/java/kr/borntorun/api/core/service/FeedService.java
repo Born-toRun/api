@@ -16,8 +16,8 @@ import kr.borntorun.api.domain.entity.FeedImageMappingEntity;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.FeedPort;
 import kr.borntorun.api.domain.port.model.CreateFeedCommand;
-import kr.borntorun.api.domain.port.model.Feed;
 import kr.borntorun.api.domain.port.model.FeedCard;
+import kr.borntorun.api.domain.port.model.FeedResult;
 import kr.borntorun.api.domain.port.model.ModifyFeedCommand;
 import kr.borntorun.api.domain.port.model.RemoveFeedCommand;
 import kr.borntorun.api.domain.port.model.SearchAllFeedCommand;
@@ -41,7 +41,7 @@ public class FeedService implements FeedPort {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Feed searchDetail(final SearchFeedDetailCommand command) {
+	public FeedResult searchDetail(final SearchFeedDetailCommand command) {
 		final FeedEntity feedEntity = feedGateway.search(command.feedId());
 		return feedConverter.toFeed(feedEntity, command.my());
 	}
@@ -60,12 +60,13 @@ public class FeedService implements FeedPort {
 		Page<FeedEntity> feedPage = feedGateway.searchAllByFilter(query, pageable);
 
 		return feedPage.map(entity -> feedConverter.toFeedCard(entity,
-		  entity.hasComment(command.my().getId()),
-		  entity.hasRecommendation(command.my().getId())));
+		  entity.hasMyComment(command.my().getId()),
+		  entity.hasMyRecommendation(command.my().getId())));
 	}
 
 	@Async
 	@Override
+	@Transactional
 	public void increaseViewQty(final long feedId) {
 		feedGateway.increaseViewQty(feedId);
 	}

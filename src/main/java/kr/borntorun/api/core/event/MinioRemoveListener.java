@@ -18,8 +18,9 @@ public class MinioRemoveListener {
 	@PreRemove
 	public void onPreRemove(ObjectStorageEntity objectStorageEntity) {
 		if (objectStorageEntity.getFileUri() != null) {
-			eventPublisher.publishEvent(new MinioRemoveEventModel(Bucket.valueOf(objectStorageEntity.getBucketName().toUpperCase()),
-			  objectStorageEntity.getFileUri().substring(objectStorageEntity.getFileUri().lastIndexOf("/") + 1)));
+			eventPublisher.publishEvent(
+			  new MinioRemoveEventModel(Bucket.valueOf(objectStorageEntity.getBucketName().toUpperCase()),
+				objectStorageEntity.getFileUri().substring(objectStorageEntity.getFileUri().lastIndexOf("/") + 1)));
 		}
 	}
 }

@@ -11,8 +11,8 @@ import kr.borntorun.api.adapter.in.web.payload.CreateCommentRequest;
 import kr.borntorun.api.adapter.in.web.payload.ModifyCommentRequest;
 import kr.borntorun.api.core.converter.CommentConverter;
 import kr.borntorun.api.core.service.CommentService;
-import kr.borntorun.api.domain.port.model.Comment;
 import kr.borntorun.api.domain.port.model.CommentDetail;
+import kr.borntorun.api.domain.port.model.CommentResult;
 import kr.borntorun.api.domain.port.model.CreateCommentCommand;
 import kr.borntorun.api.domain.port.model.DetailCommentCommand;
 import kr.borntorun.api.domain.port.model.ModifyCommentCommand;
@@ -30,7 +30,7 @@ public class CommentProxy {
 	private final CommentService commentService;
 
 	@Cacheable(key = "'searchAll: ' + #feedId + #my.id")
-	public List<Comment> searchAll(final long feedId, final TokenDetail my) {
+	public List<CommentResult> searchAll(final long feedId, final TokenDetail my) {
 		SearchAllCommentCommand command = new SearchAllCommentCommand(feedId, my.getId());
 		return commentService.searchAll(command);
 	}
@@ -58,7 +58,7 @@ public class CommentProxy {
 	}
 
 	@CacheEvict(allEntries = true)
-	public Comment modify(final long commentId, final ModifyCommentRequest request) {
+	public CommentResult modify(final long commentId, final ModifyCommentRequest request) {
 		ModifyCommentCommand command = commentConverter.toModifyCommentCommand(request, commentId);
 		return commentService.modify(command);
 	}

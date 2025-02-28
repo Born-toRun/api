@@ -81,7 +81,7 @@ public class HazelcastConfig {
 		  .setEvictionConfig(new EvictionConfig()
 			.setEvictionPolicy(EvictionPolicy.LRU)
 			.setMaxSizePolicy(MaxSizePolicy.USED_HEAP_PERCENTAGE)
-			.setSize(10))
+			.setSize(20))
 		  .addEntryListenerConfig(new EntryListenerConfig()
 			.setImplementation(new HazelcastMapEventLogger())
 			.setLocal(false)

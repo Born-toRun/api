@@ -39,7 +39,8 @@ public class FeedProxy {
 		return feedService.searchDetail(command);
 	}
 
-	@Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.pageSize : 'searchAll: ' + #my.id + #request.hashCode() + #pageable.pageSize")
+	@Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.offset :"
+	  + "'searchAll: ' + #my.id + #request.hashCode() + #pageable.offset")
 	public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final long lastFeedId,
 	  final Pageable pageable) {
 		SearchAllFeedCommand command = feedConverter.toSearchAllFeedCommand(request, my, lastFeedId);

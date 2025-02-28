@@ -72,7 +72,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 		final String marathonBookmarkBased = "/api/v1/marathons/bookmark";
 		final String commentBased = "/api/v1/comments";
 		final String objectStorageBased = "/api/v1/object-storage";
-		final String recommendationBased = "/api/v1/recommendation";
+		final String recommendationBased = "/api/v1/recommendations";
 		final String activityBased = "/api/v1/activities";
 		final String recentSearchKeywordBased = "/api/v1/recent-search-keyword";
 		final String privacyBased = "/api/v1/privacy";

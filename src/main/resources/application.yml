@@ -1,6 +1,10 @@
 server:
   servlet:
     session:
+      cookie:
+        same-site: strict
+        http-only: true
+        path: /
       timeout: 3600
 spring:
   cache:
@@ -86,7 +90,7 @@ app:
     refreshTokenExpiry: 604800000
   oauth2:
     authorizedRedirectUris:
-      - http://localhost:3000/auth/signup
+      - https://localhost:3000/auth/signup
 
 adapter:
   discord:
@@ -115,3 +119,4 @@ logging:
     file: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level] %logger{50} - %msg%n"
   level:
     root: DEBUG
+    org.hibernate.orm.jdbc.bind: trace

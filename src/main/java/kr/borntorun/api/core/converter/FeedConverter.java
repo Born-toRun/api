@@ -123,7 +123,7 @@ public interface FeedConverter {
 	@Named("convertHasMyComment")
 	default Boolean convertHasMyComment(final FeedEntity source, @Context final TokenDetail my) {
 		if (my != null) {
-			if (FeedAccessLevel.IN_CREW.equals(source.getAccessLevel()) && !my.getCrewId()
+			if (FeedAccessLevel.IN_CREW.equals(source.getAccessLevel()) && my.getCrewId()
 			  .equals(source.getUserEntity().getCrewId())) {
 				throw new InvalidException("타 크루원이 열람할 수 없는 피드입니다.");
 			}

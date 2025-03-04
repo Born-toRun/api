@@ -64,7 +64,7 @@ public class FeedQuery {
 
 		// 내용 내 검색어
 		if (query.isUsedIntegratedSearch()) {
-			BooleanExpression searchWhereClause = feed.contents.matches(query.searchKeyword());
+			BooleanExpression searchWhereClause = feed.contents.contains(query.searchKeyword());
 
 			if (!query.searchedUserIds().isEmpty()) {
 				searchWhereClause = searchWhereClause.or(feed.userId.in(query.searchedUserIds()));

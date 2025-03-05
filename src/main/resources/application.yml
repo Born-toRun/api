@@ -61,7 +61,7 @@ spring:
             clientSecret: ${kakao.client-secret}
             clientAuthenticationMethod: client_secret_post
             authorizationGrantType: authorization_code
-            redirectUri: "http://localhost:8080/login/oauth2/code/kakao"
+            redirectUri: ${kakao.redirectUrl}
             scope:
               - openid
               - profile_image
@@ -88,9 +88,6 @@ app:
   auth:
     tokenExpiry: 3600000
     refreshTokenExpiry: 604800000
-  oauth2:
-    authorizedRedirectUris:
-      - https://localhost:3000/auth/signup
 
 adapter:
   discord:

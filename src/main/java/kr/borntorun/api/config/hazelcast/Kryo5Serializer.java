@@ -5,6 +5,7 @@ import java.io.OutputStream;
 
 import org.jetbrains.annotations.NotNull;
 import org.objenesis.strategy.StdInstantiatorStrategy;
+import org.springframework.data.domain.PageImpl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.InputChunked;
@@ -64,6 +65,7 @@ public class Kryo5Serializer implements StreamSerializer<Object> {
 			final Kryo kryo = new Kryo(classResolver, null);
 			//      final Kryo kryo = new Kryo();
 			kryo.setReferences(true);
+			kryo.register(PageImpl.class);
 			kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 			kryo.addDefaultSerializer(Enum.class, EnumNameSerializer.class);
 			kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));

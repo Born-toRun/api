@@ -5,7 +5,7 @@ server:
         same-site: strict
         http-only: true
         path: /
-        secure: true
+#        secure: true
       timeout: 3600
 spring:
   cache:

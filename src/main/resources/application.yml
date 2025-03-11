@@ -2,10 +2,9 @@ server:
   servlet:
     session:
       cookie:
-        same-site: strict
+        same-site: none
         http-only: true
         path: /
-#        secure: true
       timeout: 3600
 spring:
   cache:

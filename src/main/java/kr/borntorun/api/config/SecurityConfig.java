@@ -84,6 +84,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 		  .httpBasic(HttpBasicConfigurer::disable)
 		  .csrf(CsrfConfigurer::disable)
 		  .cors(Customizer.withDefaults())
+		  .x509(Customizer.withDefaults())
 		  .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		  .exceptionHandling(authenticationManager -> authenticationManager
 			.authenticationEntryPoint(new RestAuthenticationEntryPoint())

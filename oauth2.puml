@@ -38,16 +38,22 @@ create control 리소스서버 as resource
 be -> resource: 유저 정보 요청
 be <- resource
 
-be -> db: 본투런 유저 생성
+be --> db: 본투런 유저 생성
 be --> be: access token, refresh token 생성
-be -> db: 유저의 토큰 맵핑
+be --> db: 유저의 토큰 맵핑
 be --> fe: 로그인 후 접근할 페이지 리다이렉트
 
 note left
-  {base-url}/home
+  {base-url}/home?isMember={isMember}&accessToken={jwt}
 end note
 
-fe --> fe: 로컬 스토리지에 jwt 저장
+'vue.js에서는 보통 mutations로 jwt를 관리함
+fe --> fe: ????에 jwt 저장
+alt#Gold #Pink isMember=true case
+    fe -> be: 회원가입(성명, 인스타그램 등)
+    be --> db: 회원 정보 수정
+    fe <- be
+end
 u <- fe: 로그인 완료
 
 end box

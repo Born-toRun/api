@@ -9,7 +9,7 @@ import kr.borntorun.api.domain.entity.CommentEntity;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-	List<CommentEntity> findAllByParentId(final long parentId);
+	List<CommentEntity> findAllByParentId(long parentId);
 
 	@Query(
 	  "SELECT distinct c FROM CommentEntity c " +
@@ -18,11 +18,11 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 		"LEFT JOIN FETCH c.recommendationEntities " +
 		"WHERE c.feedId =:feedId"
 	)
-	List<CommentEntity> findAllByFeedId(final long feedId);
+	List<CommentEntity> findAllByFeedId(long feedId);
 
-	List<CommentEntity> findAllByFeedIdIn(final List<Long> feedIds);
+	List<CommentEntity> findAllByFeedIdIn(List<Long> feedIds);
 
-	int countByFeedId(final long feedId);
+	int countByFeedId(long feedId);
 
-	List<CommentEntity> findAllByUserId(final long userId);
+	List<CommentEntity> findAllByUserId(long userId);
 }

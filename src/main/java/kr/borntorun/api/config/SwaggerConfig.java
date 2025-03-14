@@ -33,8 +33,8 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI customizeOpenAPI() {
-		final String securitySchemeName = "Bearer Authentication";
-		final String cookieSchemeName = "CookieAuth";
+		String securitySchemeName = "Bearer Authentication";
+		String cookieSchemeName = "CookieAuth";
 
 		return new OpenAPI()
 		  .addSecurityItem(new SecurityRequirement()

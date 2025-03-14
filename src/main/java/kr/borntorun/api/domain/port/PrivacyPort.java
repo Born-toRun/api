@@ -5,7 +5,7 @@ import kr.borntorun.api.domain.port.model.UserPrivacy;
 
 public interface PrivacyPort {
 
-	void modifyUserPrivacy(final ModifyUserPrivacyCommand command);
+	void modifyUserPrivacy(ModifyUserPrivacyCommand command);
 
-	UserPrivacy searchUserPrivacy(final long userId);
+	UserPrivacy searchUserPrivacy(long userId);
 }

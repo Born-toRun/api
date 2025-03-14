@@ -23,28 +23,28 @@ import kr.borntorun.api.support.TokenDetail;
 @Mapper(componentModel = "spring")
 public interface ObjectStorageConverter {
 
-	UploadObjectStorageCommand toUploadObjectStorageCommand(final long myUserId, final MultipartFile file,
-	  final Bucket bucket);
+	UploadObjectStorageCommand toUploadObjectStorageCommand(long myUserId, MultipartFile file,
+	  Bucket bucket);
 
-	RemoveObjectStorageCommand toRemoveObjectStorageCommand(final TokenDetail my, final long targetFileId,
-	  final Bucket bucket);
+	RemoveObjectStorageCommand toRemoveObjectStorageCommand(TokenDetail my, long targetFileId,
+	  Bucket bucket);
 
-	UploadObjectStorageQuery toUploadObjectStorageQuery(final UploadObjectStorageCommand source);
+	UploadObjectStorageQuery toUploadObjectStorageQuery(UploadObjectStorageCommand source);
 
 	@Mapping(target = "id", source = "id")
-	ObjectStorage toObjectStorage(final ObjectStorageEntity source);
+	ObjectStorage toObjectStorage(ObjectStorageEntity source);
 
-	Upload toUpload(final UploadObjectStorageQuery source);
+	Upload toUpload(UploadObjectStorageQuery source);
 
 	@Mapping(target = "myUserId", source = "my.id")
-	Upload toUpload(final ModifyObjectStorageQuery source);
+	Upload toUpload(ModifyObjectStorageQuery source);
 
-	RemoveObjectStorageQuery toRemoveObjectStorageQuery(final RemoveObjectStorageCommand source);
+	RemoveObjectStorageQuery toRemoveObjectStorageQuery(RemoveObjectStorageCommand source);
 
 	@Mapping(target = "fileId", source = "id")
-	UploadFileResponse toUploadFileResponse(final ObjectStorage source);
+	UploadFileResponse toUploadFileResponse(ObjectStorage source);
 
-	Remove toRemove(final MinioRemoveEventModel source);
+	Remove toRemove(MinioRemoveEventModel source);
 
-	RemoveAll toRemoveAll(final MinioRemoveAllEventModel source);
+	RemoveAll toRemoveAll(MinioRemoveAllEventModel source);
 }

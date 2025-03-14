@@ -33,14 +33,14 @@ public class UserGateway {
 	}
 
 	public UserEntity modify(ModifyUserQuery query) {
-		final UserEntity userEntity = searchById(query.userId());
+		UserEntity userEntity = searchById(query.userId());
 
 		userEntity.modify(query.instagramId(), query.profileImageId());
 		return userRepository.save(userEntity);
 	}
 
 	public String modify(SignUpUserQuery query) {
-		final UserEntity userEntity = searchById(query.userId());
+		UserEntity userEntity = searchById(query.userId());
 
 		userEntity.modify(query.userName(), query.crewId(), query.instagramId());
 		return userRepository.save(userEntity).getName();

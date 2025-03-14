@@ -12,25 +12,25 @@ import kr.borntorun.api.domain.port.model.SearchAllActivityCommand;
 
 public interface ActivityPort {
 
-	void create(final CreateActivityCommand command);
+	void create(CreateActivityCommand command);
 
-	void modify(final ModifyActivityCommand command);
+	void modify(ModifyActivityCommand command);
 
-	void removeAll(final long userId);
+	void removeAll(long userId);
 
-	void remove(final long activityId);
+	void remove(long activityId);
 
-	void participate(final ParticipateActivityCommand command);
+	void participate(ParticipateActivityCommand command);
 
-	void participateCancel(final long participationId);
+	void participateCancel(long participationId);
 
-	List<Activity> searchAll(final SearchAllActivityCommand command);
+	List<Activity> searchAll(SearchAllActivityCommand command);
 
-	Activity search(final long activityId, final long myUserId);
+	Activity search(long activityId, long myUserId);
 
-	Activity open(final long activityId);
+	Activity open(long activityId);
 
-	void attendance(final AttendanceActivityCommand command);
+	void attendance(AttendanceActivityCommand command);
 
-	AttendanceResult getAttendance(final long activityId);
+	AttendanceResult getAttendance(long activityId);
 }

@@ -12,5 +12,5 @@ public interface FeedImageMappingRepository extends JpaRepository<FeedImageMappi
 
 	// List<FeedImageMappingEntity> findAllByImageIdIn(final List<Long> imageIds);
 
-	void deleteAllByImageIdIn(final List<Long> imageIds);
+	void deleteAllByImageIdIn(List<Long> imageIds);
 }

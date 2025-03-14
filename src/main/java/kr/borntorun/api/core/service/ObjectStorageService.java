@@ -24,7 +24,7 @@ public class ObjectStorageService implements ObjectStoragePort {
 
 	@Transactional
 	@Override
-	public ObjectStorage upload(final UploadObjectStorageCommand command) {
+	public ObjectStorage upload(UploadObjectStorageCommand command) {
 		UploadObjectStorageQuery query = objectStorageConverter.toUploadObjectStorageQuery(command);
 		ObjectStorageEntity uploaded = objectStorageGateway.upload(query);
 		return objectStorageConverter.toObjectStorage(uploaded);
@@ -33,7 +33,7 @@ public class ObjectStorageService implements ObjectStoragePort {
 
 	@Transactional
 	@Override
-	public void remove(final RemoveObjectStorageCommand command) {
+	public void remove(RemoveObjectStorageCommand command) {
 		RemoveObjectStorageQuery query = objectStorageConverter.toRemoveObjectStorageQuery(command);
 		objectStorageGateway.remove(query);
 	}

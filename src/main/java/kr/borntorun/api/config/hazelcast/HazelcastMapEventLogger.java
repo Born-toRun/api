@@ -11,36 +11,36 @@ import lombok.extern.slf4j.Slf4j;
 public class HazelcastMapEventLogger implements EntryListener<Object, Object> {
 
 	@Override
-	public void entryAdded(final EntryEvent<Object, Object> event) {
+	public void entryAdded(EntryEvent<Object, Object> event) {
 		log(event);
 	}
 
 	@Override
-	public void entryEvicted(final EntryEvent<Object, Object> event) {
+	public void entryEvicted(EntryEvent<Object, Object> event) {
 		log(event);
 	}
 
 	@Override
-	public void entryRemoved(final EntryEvent<Object, Object> event) {
+	public void entryRemoved(EntryEvent<Object, Object> event) {
 		log(event);
 	}
 
 	@Override
-	public void entryUpdated(final EntryEvent<Object, Object> event) {
+	public void entryUpdated(EntryEvent<Object, Object> event) {
 		log(event);
 	}
 
 	@Override
-	public void mapCleared(final MapEvent event) {
+	public void mapCleared(MapEvent event) {
 		log(event);
 	}
 
 	@Override
-	public void mapEvicted(final MapEvent event) {
+	public void mapEvicted(MapEvent event) {
 		log(event);
 	}
 
-	private void log(final AbstractIMapEvent event) {
+	private void log(AbstractIMapEvent event) {
 		log.debug(event.toString());
 	}
 

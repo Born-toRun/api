@@ -17,5 +17,5 @@ public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
 		"LEFT JOIN FETCH f.recommendationEntities " +
 		"WHERE f.id =:id"
 	)
-	Optional<FeedEntity> findById(final long id);
+	Optional<FeedEntity> findById(long id);
 }

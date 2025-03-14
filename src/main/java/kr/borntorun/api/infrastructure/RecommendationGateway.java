@@ -23,7 +23,7 @@ public class RecommendationGateway {
 		  query.contentIds());
 	}
 
-	public void create(final CreateRecommendationQuery query) {
+	public void create(CreateRecommendationQuery query) {
 		RecommendationEntity recommendationEntity = RecommendationEntity.builder()
 		  .userId(query.myUserId())
 		  .contentId(query.contentId())
@@ -33,13 +33,13 @@ public class RecommendationGateway {
 		recommendationRepository.save(recommendationEntity);
 	}
 
-	public void remove(final RemoveRecommendationQuery query) {
-		final RecommendationEntity recommendationEntity = recommendationRepository.findByUserIdAndRecommendationTypeAndContentId(
+	public void remove(RemoveRecommendationQuery query) {
+		RecommendationEntity recommendationEntity = recommendationRepository.findByUserIdAndRecommendationTypeAndContentId(
 		  query.myUserId(), query.recommendationType(), query.contentId());
 		recommendationRepository.deleteById(recommendationEntity.getId());
 	}
 
-	public void removeAll(final long userId) {
+	public void removeAll(long userId) {
 		recommendationRepository.deleteAllById(recommendationRepository.findAllByUserId(userId).stream()
 		  .map(RecommendationEntity::getId)
 		  .collect(Collectors.toList()));

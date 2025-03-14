@@ -15,5 +15,5 @@ public interface MarathonBookmarkConverter {
 	@Mapping(target = "marathonEntity", ignore = true)
 	@Mapping(target = "userEntity", ignore = true)
 	@Mapping(target = "userId", source = "query.myUserId")
-	MarathonBookmarkEntity toMarathonBookmarkEntity(final BookmarkMarathonQuery query);
+	MarathonBookmarkEntity toMarathonBookmarkEntity(BookmarkMarathonQuery query);
 }

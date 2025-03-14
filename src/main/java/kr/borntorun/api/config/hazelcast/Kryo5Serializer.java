@@ -26,9 +26,9 @@ public class Kryo5Serializer implements StreamSerializer<Object> {
 	private static final Pool<Kryo> pool = new KryoPool();
 
 	@Override
-	public void write(@NotNull final ObjectDataOutput out, @NotNull final Object object) {
-		final Kryo kryo = pool.obtain();
-		final OutputChunked output = new OutputChunked((OutputStream)out);
+	public void write(@NotNull ObjectDataOutput out, @NotNull Object object) {
+		Kryo kryo = pool.obtain();
+		OutputChunked output = new OutputChunked((OutputStream)out);
 		kryo.writeClassAndObject(output, object);
 		output.endChunk();
 		output.flush();
@@ -37,9 +37,9 @@ public class Kryo5Serializer implements StreamSerializer<Object> {
 
 	@NotNull
 	@Override
-	public Object read(@NotNull final ObjectDataInput in) {
-		final Kryo kryo = pool.obtain();
-		final Object object = kryo.readClassAndObject(new InputChunked((InputStream)in));
+	public Object read(@NotNull ObjectDataInput in) {
+		Kryo kryo = pool.obtain();
+		Object object = kryo.readClassAndObject(new InputChunked((InputStream)in));
 		pool.free(kryo);
 		return object;
 	}
@@ -64,8 +64,8 @@ public class Kryo5Serializer implements StreamSerializer<Object> {
 
 		@Override
 		protected Kryo create() {
-			final Kryo kryo = new Kryo(classResolver, null);
-			//      final Kryo kryo = new Kryo();
+			// TODO: resolver
+			Kryo kryo = new Kryo(classResolver, null);
 			kryo.setReferences(true);
 			kryo.register(PageImpl.class);
 			kryo.register(Sort.class);
@@ -81,8 +81,8 @@ public class Kryo5Serializer implements StreamSerializer<Object> {
 	static class ClassResolver extends DefaultClassResolver {
 
 		@Override
-		protected Class<?> getTypeByName(final String className) {
-			final Class<?> type = super.getTypeByName(className);
+		protected Class<?> getTypeByName(String className) {
+			Class<?> type = super.getTypeByName(className);
 			if (type != null) {
 				return type;
 			}

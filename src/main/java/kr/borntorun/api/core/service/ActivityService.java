@@ -38,83 +38,83 @@ public class ActivityService implements ActivityPort {
 
 	@Transactional
 	@Override
-	public void create(final CreateActivityCommand command) {
+	public void create(CreateActivityCommand command) {
 		CreateActivityQuery query = activityConverter.toCreateActivityQuery(command);
 		activityGateway.create(query);
 	}
 
 	@Transactional
 	@Override
-	public void modify(final ModifyActivityCommand command) {
+	public void modify(ModifyActivityCommand command) {
 		ModifyActivityQuery query = activityConverter.toModifyActivityQuery(command);
 		activityGateway.modify(query);
 	}
 
 	@Transactional
 	@Override
-	public void removeAll(final long userId) {
+	public void removeAll(long userId) {
 		activityGateway.removeAll(userId);
 	}
 
 	@Transactional
 	@Override
-	public void remove(final long activityId) {
+	public void remove(long activityId) {
 		activityGateway.remove(activityId);
 	}
 
 	@Transactional
 	@Override
-	public void participate(final ParticipateActivityCommand command) {
+	public void participate(ParticipateActivityCommand command) {
 		ParticipateActivityQuery query = activityParticipationConverter.toParticipateActivityQuery(command);
 		activityGateway.participate(query);
 	}
 
 	@Transactional
 	@Override
-	public void participateCancel(final long participationId) {
+	public void participateCancel(long participationId) {
 		activityGateway.participateCancel(participationId);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Activity> searchAll(final SearchAllActivityCommand command) {
+	public List<Activity> searchAll(SearchAllActivityCommand command) {
 		SearchAllActivityQuery query = activityConverter.toSearchAllActivityQuery(command);
-		final List<ActivityEntity> activityEntities = activityGateway.searchAll(query);
+		List<ActivityEntity> activityEntities = activityGateway.searchAll(query);
 
 		return activityConverter.toActivityByUserId(activityEntities, command.myUserId());
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Activity search(final long activityId, final long myUserId) {
+	public Activity search(long activityId, long myUserId) {
 		ActivityEntity activityEntity = activityGateway.search(activityId);
 		return activityConverter.toActivityByUserId(activityEntity, myUserId);
 	}
 
 	@Transactional
 	@Override
-	public Activity open(final long activityId) {
-		final ActivityEntity opened = activityGateway.open(activityId);
+	public Activity open(long activityId) {
+		ActivityEntity opened = activityGateway.open(activityId);
 		int accessCode = activityGateway.initAccessCode(activityId);
 		return activityConverter.toActivity(opened, accessCode);
 	}
 
 	@Transactional
 	@Override
-	public void attendance(final AttendanceActivityCommand command) {
+	public void attendance(AttendanceActivityCommand command) {
 		AttendanceActivityQuery query = activityConverter.toAttendanceActivityQuery(command);
 		activityGateway.attendance(query);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public AttendanceResult getAttendance(final long activityId) {
-		final List<ActivityParticipationEntity> activityParticipationEntities = activityGateway.searchParticipation(
+	public AttendanceResult getAttendance(long activityId) {
+		List<ActivityParticipationEntity> activityParticipationEntities = activityGateway.searchParticipation(
 		  activityId);
-		final List<UserEntity> participants = activityParticipationEntities.stream()
+		List<UserEntity> participants = activityParticipationEntities.stream()
 		  .map(ActivityParticipationEntity::getUserEntity)
 		  .toList();
-		final UserEntity host = activityGateway.search(activityId)
+		UserEntity host = activityGateway.search(activityId)
 		  .getUserEntity();
 
 		return activityParticipationConverter.toAttendanceResult(host, participants);

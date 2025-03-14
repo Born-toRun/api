@@ -29,24 +29,24 @@ public class MarathonService implements MarathonPort {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Marathon> search(final SearchAllMarathonCommand command) {
+	public List<Marathon> search(SearchAllMarathonCommand command) {
 		SearchMarathonQuery query = marathonConverter.toSearchMarathonQuery(command);
-		final List<MarathonEntity> marathons = marathonGateway.search(query);
+		List<MarathonEntity> marathons = marathonGateway.search(query);
 
 		return marathonConverter.toMarathon(marathons, command.myUserId());
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public MarathonDetail detail(final SearchMarathonDetailCommand command) {
-		final MarathonEntity marathonEntity = marathonGateway.detail(command.marathonId());
+	public MarathonDetail detail(SearchMarathonDetailCommand command) {
+		MarathonEntity marathonEntity = marathonGateway.detail(command.marathonId());
 
 		return marathonConverter.toMarathonDetail(marathonEntity, command.myUserId());
 	}
 
 	@Transactional
 	@Override
-	public long bookmark(final BookmarkMarathonCommand command) {
+	public long bookmark(BookmarkMarathonCommand command) {
 		BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
 		marathonGateway.bookmark(query);
 
@@ -55,7 +55,7 @@ public class MarathonService implements MarathonPort {
 
 	@Transactional
 	@Override
-	public long cancelBookmark(final CancelBookmarkMarathonCommand command) {
+	public long cancelBookmark(CancelBookmarkMarathonCommand command) {
 		BookmarkMarathonQuery query = marathonConverter.toBookmarkMarathonQuery(command);
 		marathonGateway.cancelBookmark(query);
 

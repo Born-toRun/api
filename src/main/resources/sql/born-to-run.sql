@@ -102,7 +102,7 @@ CREATE TABLE `recommendation`
 CREATE TABLE `comment`
 (
     `id`            bigint(20) NOT NULL AUTO_INCREMENT,
-    `parent_id`     bigint(20)     NULL COMMENT '부모 댓글 식별자(대댓글)',
+    `parent_id`     bigint(20) NULL COMMENT '부모 댓글 식별자(대댓글)',
     `user_id`       bigint(20) NOT NULL COMMENT '작성자',
     `feed_id`       bigint(20)          DEFAULT NULL,
     `contents`      text       NOT NULL COMMENT '내용',

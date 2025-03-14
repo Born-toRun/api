@@ -20,13 +20,13 @@ public class ObjectStorageProxy {
 
 	private final ObjectStorageService objectStorageService;
 
-	public ObjectStorage upload(final TokenDetail my, final Bucket bucket, final MultipartFile file) {
+	public ObjectStorage upload(TokenDetail my, Bucket bucket, MultipartFile file) {
 		UploadObjectStorageCommand command = objectStorageConverter.toUploadObjectStorageCommand(my.getId(), file,
 		  bucket);
 		return objectStorageService.upload(command);
 	}
 
-	public void remove(final TokenDetail my, final Bucket bucket, final long fileId) {
+	public void remove(TokenDetail my, Bucket bucket, long fileId) {
 		RemoveObjectStorageCommand command = objectStorageConverter.toRemoveObjectStorageCommand(my, fileId, bucket);
 		objectStorageService.remove(command);
 	}

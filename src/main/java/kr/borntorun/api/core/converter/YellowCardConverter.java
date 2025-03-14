@@ -11,10 +11,10 @@ import kr.borntorun.api.infrastructure.model.CreateYellowCardQuery;
 @Mapper(componentModel = "spring")
 public interface YellowCardConverter {
 
-	CreateYellowCardCommand toCreateYellowCardCommand(final CreateYellowCardRequest source, final long sourceUserId);
+	CreateYellowCardCommand toCreateYellowCardCommand(CreateYellowCardRequest source, long sourceUserId);
 
-	CreateYellowCardQuery toCreateYellowCardQuery(final CreateYellowCardCommand source, final UserEntity sourceUser,
-	  final UserEntity targetUser);
+	CreateYellowCardQuery toCreateYellowCardQuery(CreateYellowCardCommand source, UserEntity sourceUser,
+	  UserEntity targetUser);
 
-	YellowCardEntity toYellowCardEntity(final CreateYellowCardQuery source);
+	YellowCardEntity toYellowCardEntity(CreateYellowCardQuery source);
 }

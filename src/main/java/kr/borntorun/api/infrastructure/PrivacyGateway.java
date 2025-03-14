@@ -14,19 +14,19 @@ public class PrivacyGateway {
 
 	private final UserPrivacyRepository userPrivacyRepository;
 
-	public void modifyUserPrivacy(final ModifyUserPrivacyQuery query) {
-		final UserPrivacyEntity userPrivacy = searchUserPrivacy(query.myUserId());
+	public void modifyUserPrivacy(ModifyUserPrivacyQuery query) {
+		UserPrivacyEntity userPrivacy = searchUserPrivacy(query.myUserId());
 		userPrivacy.change(query.isInstagramIdPublic());
 
 		userPrivacyRepository.save(userPrivacy);
 	}
 
-	public UserPrivacyEntity searchUserPrivacy(final long userId) {
+	public UserPrivacyEntity searchUserPrivacy(long userId) {
 		return userPrivacyRepository.findByUserId(userId)
 		  .orElseThrow(() -> new NotFoundException("정보 노출 동의 내용을 찾을 수 없습니다."));
 	}
 
-	public void remove(final long userId) {
+	public void remove(long userId) {
 		UserPrivacyEntity userPrivacyEntity = searchUserPrivacy(userId);
 		userPrivacyRepository.deleteById(userPrivacyEntity.getId());
 	}

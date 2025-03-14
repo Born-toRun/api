@@ -78,7 +78,7 @@ public class ActivityController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SearchActivityResponse> searchAll(@AuthUser TokenDetail my,
 	  @ModelAttribute @Valid SearchAllActivityRequest request) {
-		final List<Activity> activityEntities = activityProxy.searchAll(request, my);
+		List<Activity> activityEntities = activityProxy.searchAll(request, my);
 		List<SearchActivityResponse.Activity> activities = activityConverter.toSearchActivityResponseActivity(
 		  activityEntities);
 		SearchActivityResponse response = new SearchActivityResponse(activities);
@@ -89,7 +89,7 @@ public class ActivityController {
 	@GetMapping(value = "/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SearchActivityDetailResponse> search(@AuthUser TokenDetail my,
 	  @PathVariable long activityId) {
-		final Activity activity = activityProxy.search(activityId, my);
+		Activity activity = activityProxy.search(activityId, my);
 		SearchActivityDetailResponse response = activityConverter.toSearchActivityDetailResponse(activity);
 		return ResponseEntity.ok(response);
 	}
@@ -97,7 +97,7 @@ public class ActivityController {
 	@Operation(summary = "모임 오픈", description = "모임를 오픈합니다.")
 	@PutMapping(value = "/open/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<OpenActivityResponse> open(@AuthUser TokenDetail my, @PathVariable long activityId) {
-		final Activity activity = activityProxy.open(activityId);
+		Activity activity = activityProxy.open(activityId);
 		OpenActivityResponse response = activityConverter.toOpenActivityResponse(activity);
 		return ResponseEntity.ok(response);
 	}
@@ -106,7 +106,7 @@ public class ActivityController {
 	@GetMapping(value = "/attendance/{activityId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AttendanceActivityResponse> searchAttendance(@AuthUser TokenDetail my,
 	  @PathVariable long activityId) {
-		final AttendanceResult attendanceResult = activityProxy.getAttendance(activityId);
+		AttendanceResult attendanceResult = activityProxy.getAttendance(activityId);
 		AttendanceActivityResponse response = activityConverter.toAttendanceActivityResponse(attendanceResult);
 		return ResponseEntity.ok(response);
 	}

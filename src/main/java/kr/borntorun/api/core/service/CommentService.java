@@ -30,8 +30,8 @@ public class CommentService implements CommentPort {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<CommentResult> searchAll(final SearchAllCommentCommand command) {
-		final List<CommentEntity> commentEntities = commentGateway.searchAll(command.feedId());
+	public List<CommentResult> searchAll(SearchAllCommentCommand command) {
+		List<CommentEntity> commentEntities = commentGateway.searchAll(command.feedId());
 
 		// 댓글/대댓글 정렬
 		commentEntities.sort(Comparator
@@ -46,10 +46,10 @@ public class CommentService implements CommentPort {
 
 	@Transactional(readOnly = true)
 	@Override
-	public CommentDetail detail(final DetailCommentCommand command) {
-		final CommentEntity parentComment = commentGateway.search(command.commentId());
+	public CommentDetail detail(DetailCommentCommand command) {
+		CommentEntity parentComment = commentGateway.search(command.commentId());
 
-		final List<CommentEntity> reCommentEntities = commentGateway.searchReComments(command.commentId());
+		List<CommentEntity> reCommentEntities = commentGateway.searchReComments(command.commentId());
 
 		List<CommentResult> reCommentResults = reCommentEntities.stream()
 		  .map(re -> commentConverter.toCommentResult(re, command.myUserId()))
@@ -61,43 +61,34 @@ public class CommentService implements CommentPort {
 
 	@Transactional
 	@Override
-	public void create(final CreateCommentCommand command) {
+	public void create(CreateCommentCommand command) {
 		CreateCommentQuery query = commentConverter.toCreateCommentQuery(command);
 		commentGateway.create(query);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public int qty(final long feedId) {
+	public int qty(long feedId) {
 		return commentGateway.qty(feedId);
 	}
 
 	@Transactional
 	@Override
-	public void remove(final long commentId) {
+	public void remove(long commentId) {
 		commentGateway.remove(commentId);
 	}
 
 	@Transactional
 	@Override
-	public CommentResult modify(final ModifyCommentCommand command) {
+	public CommentResult modify(ModifyCommentCommand command) {
 		ModifyCommentQuery query = commentConverter.toModifyCommentQuery(command);
-		final CommentEntity modified = commentGateway.modify(query);
+		CommentEntity modified = commentGateway.modify(query);
 		return commentConverter.toCommentResult(modified);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public CommentEntity search(final long commentId) {
+	public CommentEntity search(long commentId) {
 		return commentGateway.search(commentId);
 	}
-
-	// private Map<Long, BornToRunUser> getWritersByUserId(final List<CommentEntity> comments) {
-	// 	final List<UserEntity> writers = comments.parallelStream()
-	// 	  .map(CommentEntity::getUserEntity)
-	// 	  .toList();
-	//
-	// 	return writers.stream()
-	// 	  .collect(Collectors.toMap(UserEntity::getId, userConverter::toBornToRunUser));
-	// }
 }

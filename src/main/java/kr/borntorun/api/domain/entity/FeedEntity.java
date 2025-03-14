@@ -66,16 +66,16 @@ public class FeedEntity {
 	@OneToMany(mappedBy = "feedEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<RecommendationEntity> recommendationEntities = new HashSet<>();
 
-	public void add(final List<FeedImageMappingEntity> feedImageMappingEntities) {
-		for (final FeedImageMappingEntity entity : feedImageMappingEntities) {
+	public void add(List<FeedImageMappingEntity> feedImageMappingEntities) {
+		for (FeedImageMappingEntity entity : feedImageMappingEntities) {
 			entity.setFeedEntity(this);
 		}
 
 		this.feedImageMappingEntities.addAll(feedImageMappingEntities);
 	}
 
-	public void modify(final List<FeedImageMappingEntity> feedImageMappingEntities) {
-		for (final FeedImageMappingEntity entity : feedImageMappingEntities) {
+	public void modify(List<FeedImageMappingEntity> feedImageMappingEntities) {
+		for (FeedImageMappingEntity entity : feedImageMappingEntities) {
 			entity.setFeedEntity(this);
 		}
 
@@ -83,7 +83,7 @@ public class FeedEntity {
 		this.feedImageMappingEntities.addAll(feedImageMappingEntities);
 	}
 
-	public void modify(final ModifyFeedQuery query) {
+	public void modify(ModifyFeedQuery query) {
 		this.accessLevel = query.accessLevel();
 		this.contents = query.contents();
 		this.category = query.category();
@@ -112,12 +112,12 @@ public class FeedEntity {
 		  .toList();
 	}
 
-	public boolean hasMyComment(final long myUserId) {
+	public boolean hasMyComment(long myUserId) {
 		return commentEntities.stream()
 		  .anyMatch(e -> e.getUserId() == myUserId);
 	}
 
-	public boolean hasMyRecommendation(final long myUserId) {
+	public boolean hasMyRecommendation(long myUserId) {
 		return recommendationEntities.stream()
 		  .anyMatch(e -> e.getUserId() == myUserId);
 	}

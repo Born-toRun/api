@@ -22,14 +22,14 @@ public class RecommendationProxy {
 	private final RecommendationService recommendationService;
 
 	@CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
-	public void create(final TokenDetail my, final RecommendationType recommendationType, final long contentId) {
+	public void create(TokenDetail my, RecommendationType recommendationType, long contentId) {
 		CreateRecommendationCommand command = recommendationConverter.toCreateRecommendationCommand(my.getId(),
 		  recommendationType, contentId);
 		recommendationService.create(command);
 	}
 
 	@CacheEvict(allEntries = true, cacheNames = {"recommendation", "feed"})
-	public void remove(final TokenDetail my, final RecommendationType recommendationType, final long contentId) {
+	public void remove(TokenDetail my, RecommendationType recommendationType, long contentId) {
 		RemoveRecommendationCommand command = recommendationConverter.toRemoveRecommendationCommand(my.getId(),
 		  recommendationType, contentId);
 		recommendationService.remove(command);

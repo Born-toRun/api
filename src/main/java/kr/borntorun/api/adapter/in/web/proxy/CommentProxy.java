@@ -30,35 +30,35 @@ public class CommentProxy {
 	private final CommentService commentService;
 
 	@Cacheable(key = "'searchAll: ' + #feedId + #my.id")
-	public List<CommentResult> searchAll(final long feedId, final TokenDetail my) {
+	public List<CommentResult> searchAll(long feedId, TokenDetail my) {
 		SearchAllCommentCommand command = new SearchAllCommentCommand(feedId, my.getId());
 		return commentService.searchAll(command);
 	}
 
 	@Cacheable(key = "'detail: ' + #commentId + #my.id")
-	public CommentDetail detail(final long commentId, final TokenDetail my) {
+	public CommentDetail detail(long commentId, TokenDetail my) {
 		DetailCommentCommand command = new DetailCommentCommand(commentId, my.getId());
 		return commentService.detail(command);
 	}
 
 	@CacheEvict(allEntries = true, cacheNames = {"comment", "feed"})
-	public void create(final TokenDetail my, final long feedId, final CreateCommentRequest request) {
+	public void create(TokenDetail my, long feedId, CreateCommentRequest request) {
 		CreateCommentCommand command = commentConverter.toCreateCommentCommand(my.getId(), feedId, request);
 		commentService.create(command);
 	}
 
 	@Cacheable(key = "'qty: ' + #feedId")
-	public int qty(final long feedId) {
+	public int qty(long feedId) {
 		return commentService.qty(feedId);
 	}
 
 	@CacheEvict(allEntries = true, cacheNames = {"comment", "feed"})
-	public void remove(final long commentId) {
+	public void remove(long commentId) {
 		commentService.remove(commentId);
 	}
 
 	@CacheEvict(allEntries = true)
-	public CommentResult modify(final long commentId, final ModifyCommentRequest request) {
+	public CommentResult modify(long commentId, ModifyCommentRequest request) {
 		ModifyCommentCommand command = commentConverter.toModifyCommentCommand(request, commentId);
 		return commentService.modify(command);
 	}

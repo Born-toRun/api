@@ -35,7 +35,7 @@ public class ObjectStorageController {
 	@PostMapping(value = "/{bucket}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<UploadFileResponse> removeFile(@AuthUser TokenDetail my, @PathVariable Bucket bucket,
 	  @RequestParam(value = "file") MultipartFile file) {
-		final ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
+		ObjectStorage objectStorage = objectStorageProxy.upload(my, bucket, file);
 		UploadFileResponse response = objectStorageConverter.toUploadFileResponse(objectStorage);
 		return ResponseEntity.ok(response);
 	}

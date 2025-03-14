@@ -27,7 +27,7 @@ public class SpringCloudDiscoveryStrategyFactory implements DiscoveryStrategyFac
 
 	private final DiscoveryClient discoveryClient;
 
-	public SpringCloudDiscoveryStrategyFactory(final DiscoveryClient discoveryClient) {
+	public SpringCloudDiscoveryStrategyFactory(DiscoveryClient discoveryClient) {
 		this.discoveryClient = discoveryClient;
 	}
 
@@ -37,8 +37,8 @@ public class SpringCloudDiscoveryStrategyFactory implements DiscoveryStrategyFac
 	}
 
 	@Override
-	public DiscoveryStrategy newDiscoveryStrategy(final DiscoveryNode discoveryNode, final ILogger logger,
-	  final Map<String, Comparable> properties) {
+	public DiscoveryStrategy newDiscoveryStrategy(DiscoveryNode discoveryNode, ILogger logger,
+	  Map<String, Comparable> properties) {
 		return new SpringCloudDiscoveryStrategy(discoveryClient, logger, properties);
 	}
 

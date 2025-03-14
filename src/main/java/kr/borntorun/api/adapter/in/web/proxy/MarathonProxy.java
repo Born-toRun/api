@@ -29,25 +29,25 @@ public class MarathonProxy {
 	private final MarathonService marathonService;
 
 	@Cacheable(key = "'searchAll: ' + #request.hashCode() + #my.id")
-	public List<Marathon> search(final SearchAllMarathonRequest request, final TokenDetail my) {
+	public List<Marathon> search(SearchAllMarathonRequest request, TokenDetail my) {
 		SearchAllMarathonCommand command = marathonConverter.toSearchAllMarathonCommand(request, my.getId());
 		return marathonService.search(command);
 	}
 
 	@Cacheable(key = "'search: ' + #marathonId + #my.id")
-	public MarathonDetail detail(final long marathonId, final TokenDetail my) {
+	public MarathonDetail detail(long marathonId, TokenDetail my) {
 		SearchMarathonDetailCommand command = marathonConverter.toSearchMarathonDetailCommand(marathonId, my.getId());
 		return marathonService.detail(command);
 	}
 
 	@CacheEvict(allEntries = true)
-	public long bookmark(final long marathonId, final TokenDetail my) {
+	public long bookmark(long marathonId, TokenDetail my) {
 		BookmarkMarathonCommand command = marathonConverter.toBookmarkMarathonCommand(marathonId, my.getId());
 		return marathonService.bookmark(command);
 	}
 
 	@CacheEvict(allEntries = true)
-	public long cancelBookmark(final long marathonId, final TokenDetail my) {
+	public long cancelBookmark(long marathonId, TokenDetail my) {
 		CancelBookmarkMarathonCommand command = marathonConverter.toCancelBookmarkMarathonCommand(marathonId,
 		  my.getId());
 		return marathonService.cancelBookmark(command);

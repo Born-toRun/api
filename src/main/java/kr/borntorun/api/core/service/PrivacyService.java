@@ -22,14 +22,14 @@ public class PrivacyService implements PrivacyPort {
 
 	@Transactional
 	@Override
-	public void modifyUserPrivacy(final ModifyUserPrivacyCommand command) {
+	public void modifyUserPrivacy(ModifyUserPrivacyCommand command) {
 		ModifyUserPrivacyQuery query = privacyConverter.toModifyUserPrivacyQuery(command);
 		privacyGateway.modifyUserPrivacy(query);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserPrivacy searchUserPrivacy(final long userId) {
+	public UserPrivacy searchUserPrivacy(long userId) {
 		UserPrivacyEntity userPrivacyEntity = privacyGateway.searchUserPrivacy(userId);
 		return privacyConverter.toUserPrivacy(userPrivacyEntity);
 	}

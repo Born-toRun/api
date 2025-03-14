@@ -28,23 +28,23 @@ public class FeedWriterValidationAspect {
 	}
 
 	@Before("onModifyUser() && args(my, feedId, request, ..)")
-	public void validateModify(final TokenDetail my, final long feedId, final ModifyFeedRequest request) throws
+	public void validateModify(TokenDetail my, long feedId, ModifyFeedRequest request) throws
 	  IllegalArgumentException {
 		validate(my.getId(), feedId);
 	}
 
 	@Before("onDeleteUser() && args(my, feedId, ..)")
-	public void validateDelete(final TokenDetail my, final long feedId) throws IllegalArgumentException {
+	public void validateDelete(TokenDetail my, long feedId) throws IllegalArgumentException {
 		validate(my.getId(), feedId);
 	}
 
-	private void validate(final long userId, final long feedId) {
+	private void validate(long userId, long feedId) {
 		if (!isValid(userId, feedId)) {
 			throw new ForBiddenException("잘못된 접근입니다.");
 		}
 	}
 
-	private boolean isValid(final long userId, final long feedId) {
+	private boolean isValid(long userId, long feedId) {
 		return feedRepository.findById(feedId)
 		  .orElseThrow(() -> new NotFoundException("피드를 찾을 수 없습니다."))
 		  .getUserId() == userId;

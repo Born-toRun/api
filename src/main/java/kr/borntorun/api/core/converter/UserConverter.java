@@ -19,24 +19,24 @@ import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 @Mapper(componentModel = "spring")
 public interface UserConverter {
 
-	SignUpCommand toSignUpCommand(final SignUpRequest source, final long userId);
+	SignUpCommand toSignUpCommand(SignUpRequest source, long userId);
 
 	@Mapping(target = "userId", source = "id")
 	@Mapping(target = "userName", source = "name")
 	@Mapping(target = "crewName", source = "crewEntity.name")
 	@Mapping(target = "isInstagramIdPublic", source = "userPrivacyEntity.isInstagramIdPublic")
 	@Mapping(target = "refreshToken", source = "userRefreshTokenEntity.refreshToken")
-	BornToRunUser toBornToRunUser(final UserEntity source);
+	BornToRunUser toBornToRunUser(UserEntity source);
 
-	UserDetailResponse toUserDetailResponse(final BornToRunUser source);
+	UserDetailResponse toUserDetailResponse(BornToRunUser source);
 
-	ModifyUserCommand toModifyUserCommand(final ModifyUserRequest source, final long userId);
+	ModifyUserCommand toModifyUserCommand(ModifyUserRequest source, long userId);
 
-	ModifyUserQuery toModifyUserQuery(final ModifyUserCommand source);
+	ModifyUserQuery toModifyUserQuery(ModifyUserCommand source);
 
-	SignUpUserQuery toSignUpUserQuery(final SignUpCommand source);
+	SignUpUserQuery toSignUpUserQuery(SignUpCommand source);
 
-	ModifyUserResponse toModifyUserResponse(final BornToRunUser source);
+	ModifyUserResponse toModifyUserResponse(BornToRunUser source);
 
-	CreateUserQuery toCreateUserQuery(final CreateUserCommand source);
+	CreateUserQuery toCreateUserQuery(CreateUserCommand source);
 }

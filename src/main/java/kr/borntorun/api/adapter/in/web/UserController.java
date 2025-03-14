@@ -55,7 +55,7 @@ public class UserController {
 	@Operation(summary = "회원가입", description = "회원가입 합니다.")
 	@PutMapping(value = "/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SignUpResponse> signUp(@AuthUser TokenDetail my, @RequestBody @Valid SignUpRequest request) {
-		final String createdUserName = userProxy.signUp(my, request);
+		String createdUserName = userProxy.signUp(my, request);
 		return ResponseEntity.ok(new SignUpResponse(createdUserName));
 	}
 
@@ -68,7 +68,7 @@ public class UserController {
 	@Operation(summary = "나의 회원 정보 조회", description = "나의 회원정보를 조회합니다.")
 	@GetMapping(value = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDetailResponse> detail(@AuthUser TokenDetail my) {
-		final BornToRunUser user = userProxy.search(my);
+		BornToRunUser user = userProxy.search(my);
 		return ResponseEntity.ok(
 		  userConverter.toUserDetailResponse(user));
 	}
@@ -76,7 +76,7 @@ public class UserController {
 	@Operation(summary = "회원 정보 조회", description = "회원정보를 조회합니다.")
 	@GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDetailResponse> detail(@PathVariable long userId) {
-		final BornToRunUser user = userProxy.search(userId);
+		BornToRunUser user = userProxy.search(userId);
 		UserDetailResponse userDetailResponse = userConverter.toUserDetailResponse(user);
 		return ResponseEntity.ok(userDetailResponse);
 	}

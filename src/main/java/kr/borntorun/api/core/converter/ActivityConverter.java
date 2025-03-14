@@ -35,9 +35,9 @@ import kr.borntorun.api.support.TokenDetail;
 public interface ActivityConverter {
 
 	@Mapping(target = "myUserId", source = "my.id")
-	CreateActivityCommand toCreateActivityCommand(final CreateActivityRequest source, final TokenDetail my);
+	CreateActivityCommand toCreateActivityCommand(CreateActivityRequest source, TokenDetail my);
 
-	CreateActivityQuery toCreateActivityQuery(final CreateActivityCommand source);
+	CreateActivityQuery toCreateActivityQuery(CreateActivityCommand source);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
@@ -46,58 +46,58 @@ public interface ActivityConverter {
 	@Mapping(target = "userEntity", ignore = true)
 	@Mapping(target = "activityParticipationEntities", ignore = true)
 	@Mapping(target = "userId", source = "myUserId")
-	ActivityEntity toActivityEntity(final CreateActivityQuery source);
+	ActivityEntity toActivityEntity(CreateActivityQuery source);
 
-	ModifyActivityCommand toModifyActivityCommand(final ModifyActivityRequest source, final long activityId);
+	ModifyActivityCommand toModifyActivityCommand(ModifyActivityRequest source, long activityId);
 
-	ModifyActivityQuery toModifyActivityQuery(final ModifyActivityCommand source);
+	ModifyActivityQuery toModifyActivityQuery(ModifyActivityCommand source);
 
 	@Mapping(target = "id", source = "source.id")
 	@Mapping(target = "host", ignore = true)
 	@Mapping(target = "participantsQty", ignore = true)
 	@Mapping(target = "recruitmentType", ignore = true)
-	Activity toActivity(final ActivityEntity source, final int attendanceCode);
+	Activity toActivity(ActivityEntity source, int attendanceCode);
 
-	List<Activity> toActivityByUserId(final List<ActivityEntity> source, @Context final long myUserId);
+	List<Activity> toActivityByUserId(List<ActivityEntity> source, @Context long myUserId);
 
 	@Mapping(target = "recruitmentType", source = ".", qualifiedByName = "convertRecruitmentType")
 	@Mapping(target = "attendanceCode", ignore = true)
 	@Mapping(target = "id", source = "id")
 	@Mapping(target = "participantsQty", expression = "java(source.getActivityParticipationEntities().size())")
 	@Mapping(target = "host", expression = "java(new Activity.Host(source.getUserId(), source.getUserEntity().getCrewEntity().getId(), source.getUserEntity().getProfileImageUri(), source.getUserEntity().getName(), source.getUserEntity().getCrewEntity().getName(), source.getUserEntity().getIsManager(), source.getUserEntity().getIsAdmin()))")
-	Activity toActivityByUserId(final ActivityEntity source, @Context final long myUserId);
+	Activity toActivityByUserId(ActivityEntity source, @Context long myUserId);
 
-	List<SearchActivityResponse.Activity> toSearchActivityResponseActivity(final List<Activity> source);
+	List<SearchActivityResponse.Activity> toSearchActivityResponseActivity(List<Activity> source);
 
 	@Mapping(target = "host", expression = "java(new SearchActivityResponse.Host(source.host().userId(), source.host().crewId(), source.host().userProfileUri(), source.host().userName(), source.host().crewName(), source.host().isManager(), source.host().isAdmin()))")
-	SearchActivityResponse.Activity toSearchActivityResponseActivity(final Activity source);
+	SearchActivityResponse.Activity toSearchActivityResponseActivity(Activity source);
 
 	@Mapping(target = "activityId", source = "id")
-	OpenActivityResponse toOpenActivityResponse(final Activity source);
+	OpenActivityResponse toOpenActivityResponse(Activity source);
 
 	@Mapping(target = "myCrewId", source = "my.id")
 	@Mapping(target = "myUserId", source = "my.id")
 	@Mapping(target = "courses", source = "source.courses")
 	@Mapping(target = "recruitmentType", source = "source.recruitmentType")
-	SearchAllActivityCommand toSearchAllActivityCommand(final SearchAllActivityRequest source, final TokenDetail my);
+	SearchAllActivityCommand toSearchAllActivityCommand(SearchAllActivityRequest source, TokenDetail my);
 
-	SearchAllActivityQuery toSearchAllActivityQuery(final SearchAllActivityCommand source);
+	SearchAllActivityQuery toSearchAllActivityQuery(SearchAllActivityCommand source);
 
 	@Mapping(target = "host", expression = "java(new SearchActivityDetailResponse.Host(source.host().userId(), source.host().crewId(), source.host().userProfileUri(), source.host().userName(), source.host().crewName(), source.host().isManager(), source.host().isAdmin()))")
-	SearchActivityDetailResponse toSearchActivityDetailResponse(final Activity source);
+	SearchActivityDetailResponse toSearchActivityDetailResponse(Activity source);
 
-	AttendanceActivityCommand toAttendanceActivityCommand(final AttendanceActivityRequest source, final long activityId,
-	  final long myUserId);
+	AttendanceActivityCommand toAttendanceActivityCommand(AttendanceActivityRequest source, long activityId,
+	  long myUserId);
 
-	AttendanceActivityQuery toAttendanceActivityQuery(final AttendanceActivityCommand source);
+	AttendanceActivityQuery toAttendanceActivityQuery(AttendanceActivityCommand source);
 
 	@Mapping(target = "host", expression = "java(new AttendanceActivityResponse.Person(source.host().userId(), source.host().userName(), source.host().crewName(), source.host().userProfileUri()))")
 	@Mapping(target = "participants", source = "participants", qualifiedByName = "convertParticipants")
-	AttendanceActivityResponse toAttendanceActivityResponse(final AttendanceResult source);
+	AttendanceActivityResponse toAttendanceActivityResponse(AttendanceResult source);
 
 	@Named("convertParticipants")
 	default List<AttendanceActivityResponse.Person> convertParticipants(
-	  final List<AttendanceResult.Participant> source) {
+	  List<AttendanceResult.Participant> source) {
 		return source.stream()
 		  .map(e -> new AttendanceActivityResponse.Person(e.userId(),
 			e.userName(),
@@ -107,7 +107,7 @@ public interface ActivityConverter {
 	}
 
 	@Named("convertRecruitmentType")
-	default ActivityRecruitmentType convertRecruitmentType(final ActivityEntity source, @Context final long myUserId) {
+	default ActivityRecruitmentType convertRecruitmentType(ActivityEntity source, @Context long myUserId) {
 		if (source.getActivityParticipationEntities().stream()
 		  .anyMatch(e -> e.getUserEntity().getId() == myUserId)) {
 			return ActivityRecruitmentType.ALREADY_PARTICIPATING;

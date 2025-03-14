@@ -32,14 +32,14 @@ public class MarathonGateway {
 	}
 
 	public void bookmark(BookmarkMarathonQuery query) {
-		final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
+		MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
 			query.getMyUserId(), query.getMarathonId())
 		  .orElse(marathonBookmarkConverter.toMarathonBookmarkEntity(query));
 		marathonBookmarkRepository.save(marathonBookmarkEntity);
 	}
 
 	public void cancelBookmark(BookmarkMarathonQuery query) {
-		final MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
+		MarathonBookmarkEntity marathonBookmarkEntity = marathonBookmarkRepository.findByUserIdAndMarathonId(
 			query.getMyUserId(), query.getMarathonId())
 		  .orElseThrow(() -> new NotFoundException("북마크가 되지 않았거나 이미 취소되었습니다."));
 		marathonBookmarkRepository.deleteById(marathonBookmarkEntity.getId());

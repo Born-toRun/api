@@ -7,19 +7,19 @@ import kr.borntorun.api.domain.port.model.SignUpCommand;
 
 public interface UserPort {
 
-	String signUp(final SignUpCommand command);
+	String signUp(SignUpCommand command);
 
-	String getRefreshToken(final String accessToken);
+	String getRefreshToken(String accessToken);
 
-	void remove(final long userId);
+	void remove(long userId);
 
-	BornToRunUser searchById(final long userId);
+	BornToRunUser searchById(long userId);
 
-	BornToRunUser searchBySocialId(final String socialId);
+	BornToRunUser searchBySocialId(String socialId);
 
-	BornToRunUser modify(final ModifyUserCommand command);
+	BornToRunUser modify(ModifyUserCommand command);
 
-	BornToRunUser createAndFlush(final CreateUserCommand command);
+	BornToRunUser createAndFlush(CreateUserCommand command);
 
-	boolean exists(final String socialId);
+	boolean exists(String socialId);
 }

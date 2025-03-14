@@ -25,8 +25,8 @@ public class YellowCardService implements YellowCardPort {
 
 	@Transactional
 	@Override
-	public void create(final CreateYellowCardCommand command) {
-		final boolean isExists = yellowCardGateway.exists(command.sourceUserId(), command.targetUserId());
+	public void create(CreateYellowCardCommand command) {
+		boolean isExists = yellowCardGateway.exists(command.sourceUserId(), command.targetUserId());
 		if (isExists) {
 			throw new DuplicationException(
 			  "이미 신고한 사용자입니다. [{" + command.sourceUserId() + " to " + command.targetUserId() + "}]");

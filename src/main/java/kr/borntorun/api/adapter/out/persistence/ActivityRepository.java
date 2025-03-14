@@ -8,5 +8,5 @@ import kr.borntorun.api.domain.entity.ActivityEntity;
 
 public interface ActivityRepository extends JpaRepository<ActivityEntity, Long> {
 
-	List<ActivityEntity> findAllByUserId(final long userId);
+	List<ActivityEntity> findAllByUserId(long userId);
 }

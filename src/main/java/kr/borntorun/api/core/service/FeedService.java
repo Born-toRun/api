@@ -41,14 +41,14 @@ public class FeedService implements FeedPort {
 
 	@Transactional(readOnly = true)
 	@Override
-	public FeedResult searchDetail(final SearchFeedDetailCommand command) {
-		final FeedEntity feedEntity = feedGateway.search(command.feedId());
+	public FeedResult searchDetail(SearchFeedDetailCommand command) {
+		FeedEntity feedEntity = feedGateway.search(command.feedId());
 		return feedConverter.toFeed(feedEntity, command.my());
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable) {
+	public Page<FeedCard> searchAll(SearchAllFeedCommand command, Pageable pageable) {
 		List<Long> searchedUserIds = Optional.ofNullable(command.searchKeyword())
 		  .map(userGateway::searchByUserName)
 		  .map(users -> users.stream()
@@ -67,30 +67,30 @@ public class FeedService implements FeedPort {
 	@Async
 	@Override
 	@Transactional
-	public void increaseViewQty(final long feedId) {
+	public void increaseViewQty(long feedId) {
 		feedGateway.increaseViewQty(feedId);
 	}
 
 	@Transactional
 	@Override
-	public void create(final CreateFeedCommand command) {
+	public void create(CreateFeedCommand command) {
 		CreateFeedQuery query = feedConverter.toCreateFeedQuery(command);
 		feedGateway.create(query);
 	}
 
 	@Transactional
 	@Override
-	public void remove(final RemoveFeedCommand command) {
+	public void remove(RemoveFeedCommand command) {
 		feedGateway.remove(command.feedId());
 	}
 
 	@Transactional
 	@Override
-	public void modify(final ModifyFeedCommand command) {
+	public void modify(ModifyFeedCommand command) {
 		ModifyFeedQuery query = feedConverter.toModifyFeedQuery(command);
-		final FeedEntity modified = feedGateway.modify(query);
+		FeedEntity modified = feedGateway.modify(query);
 
-		final List<Long> removedImageIds = modified.getFeedImageMappingEntities().stream()
+		List<Long> removedImageIds = modified.getFeedImageMappingEntities().stream()
 		  .map(FeedImageMappingEntity::getImageId)
 		  .filter(imageId -> !command.imageIds().contains(imageId))
 		  .toList();

@@ -12,17 +12,17 @@ import kr.borntorun.api.domain.port.model.SearchAllCommentCommand;
 
 public interface CommentPort {
 
-	List<CommentResult> searchAll(final SearchAllCommentCommand command);
+	List<CommentResult> searchAll(SearchAllCommentCommand command);
 
-	CommentDetail detail(final DetailCommentCommand command);
+	CommentDetail detail(DetailCommentCommand command);
 
-	void create(final CreateCommentCommand command);
+	void create(CreateCommentCommand command);
 
-	int qty(final long feedId);
+	int qty(long feedId);
 
-	void remove(final long commentId);
+	void remove(long commentId);
 
-	CommentResult modify(final ModifyCommentCommand command);
+	CommentResult modify(ModifyCommentCommand command);
 
-	CommentEntity search(final long commentId);
+	CommentEntity search(long commentId);
 }

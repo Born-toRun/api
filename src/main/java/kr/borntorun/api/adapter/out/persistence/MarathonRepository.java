@@ -14,5 +14,5 @@ public interface MarathonRepository extends JpaRepository<MarathonEntity, Long> 
 		"LEFT JOIN FETCH m.marathonBookmarkEntities mb " +
 		"WHERE (m.location IN :locations OR :locations IS NULL) AND " +
 		"(m.course IN :courses OR :courses IS NULL)")
-	List<MarathonEntity> findAllByLocationInAndCourseIn(final List<String> locations, final List<String> courses);
+	List<MarathonEntity> findAllByLocationInAndCourseIn(List<String> locations, List<String> courses);
 }

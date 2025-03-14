@@ -11,13 +11,13 @@ import kr.borntorun.api.infrastructure.model.RemoveRecommendationQuery;
 @Mapper(componentModel = "spring")
 public interface RecommendationConverter {
 
-	CreateRecommendationCommand toCreateRecommendationCommand(final long myUserId,
-	  final RecommendationType recommendationType, final long contentId);
+	CreateRecommendationCommand toCreateRecommendationCommand(long myUserId,
+	  RecommendationType recommendationType, long contentId);
 
-	RemoveRecommendationCommand toRemoveRecommendationCommand(final long myUserId,
-	  final RecommendationType recommendationType, final long contentId);
+	RemoveRecommendationCommand toRemoveRecommendationCommand(long myUserId,
+	  RecommendationType recommendationType, long contentId);
 
-	CreateRecommendationQuery toCreateRecommendationQuery(final CreateRecommendationCommand source);
+	CreateRecommendationQuery toCreateRecommendationQuery(CreateRecommendationCommand source);
 
-	RemoveRecommendationQuery toRemoveRecommendationQuery(final RemoveRecommendationCommand source);
+	RemoveRecommendationQuery toRemoveRecommendationQuery(RemoveRecommendationCommand source);
 }

@@ -36,15 +36,15 @@ public class HazelcastConfig {
 	@Value("${spring.cache.port}")
 	private int port;
 
-	public HazelcastConfig(final DiscoveryClient discoveryClient,
-	  final ObjectProvider<Registration> registration) {
+	public HazelcastConfig(DiscoveryClient discoveryClient,
+	  ObjectProvider<Registration> registration) {
 		this.discoveryClient = discoveryClient;
 		this.registration = registration.getIfAvailable();
 	}
 
 	@Bean
 	public Config config() {
-		final Config config = new Config();
+		Config config = new Config();
 		config.setInstanceName("borntorun");
 		configureNetwork(config.getNetworkConfig());
 		configureDefaultMapConfig(config.getMapConfig("default"));
@@ -52,8 +52,8 @@ public class HazelcastConfig {
 		return config;
 	}
 
-	private void configureNetwork(final NetworkConfig networkConfig) {
-		final JoinConfig joinConfig = networkConfig.getJoin();
+	private void configureNetwork(NetworkConfig networkConfig) {
+		JoinConfig joinConfig = networkConfig.getJoin();
 		networkConfig.setPort(port);
 		if (registration == null) {
 			System.setProperty("hazelcast.local.localAddress", "127.0.0.1");
@@ -63,12 +63,12 @@ public class HazelcastConfig {
 		}
 	}
 
-	private void configureDiscovery(final DiscoveryConfig discoveryConfig, final String serviceId, final int port) {
+	private void configureDiscovery(DiscoveryConfig discoveryConfig, String serviceId, int port) {
 		System.setProperty(ClusterProperty.DISCOVERY_SPI_ENABLED.getName(), "true");
 		System.setProperty(ClusterProperty.WAIT_SECONDS_BEFORE_JOIN.getName(), "1");
 		System.setProperty(ClusterProperty.MERGE_FIRST_RUN_DELAY_SECONDS.getName(), "10");
 
-		final HashMap<String, String> properties = new HashMap<>();
+		HashMap<String, String> properties = new HashMap<>();
 		properties.put("serviceId", serviceId);
 		properties.put("port", String.valueOf(port));
 		discoveryConfig.addDiscoveryStrategyConfig(new DiscoveryStrategyConfig()
@@ -76,7 +76,7 @@ public class HazelcastConfig {
 		  .setProperties(Collections.unmodifiableMap(properties)));
 	}
 
-	private void configureDefaultMapConfig(final MapConfig mapConfig) {
+	private void configureDefaultMapConfig(MapConfig mapConfig) {
 		mapConfig.setTimeToLiveSeconds(60)
 		  .setEvictionConfig(new EvictionConfig()
 			.setEvictionPolicy(EvictionPolicy.LRU)
@@ -88,7 +88,7 @@ public class HazelcastConfig {
 			.setIncludeValue(false));
 	}
 
-	private void configureSerialization(final SerializationConfig serializationConfig) {
+	private void configureSerialization(SerializationConfig serializationConfig) {
 		serializationConfig.setGlobalSerializerConfig(new GlobalSerializerConfig()
 		  .setImplementation(new Kryo5Serializer())
 		  .setOverrideJavaSerialization(true));

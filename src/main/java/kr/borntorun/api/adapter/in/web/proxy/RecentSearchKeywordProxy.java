@@ -18,22 +18,22 @@ public class RecentSearchKeywordProxy {
 	private final RecentSearchKeywordService recentSearchKeywordService;
 
 	@CacheEvict(allEntries = true)
-	public void removeAll(final long userId) {
+	public void removeAll(long userId) {
 		recentSearchKeywordService.removeAll(userId);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void removeKeyword(final long userId, final String searchKeyword) {
+	public void removeKeyword(long userId, String searchKeyword) {
 		recentSearchKeywordService.removeKeyword(userId, searchKeyword);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void add(final long userId, final String searchKeyword) {
+	public void add(long userId, String searchKeyword) {
 		recentSearchKeywordService.add(userId, searchKeyword);
 	}
 
 	@Cacheable(key = "'search: ' + #userId")
-	public List<Object> search(final long userId) {
+	public List<Object> search(long userId) {
 		return recentSearchKeywordService.search(userId);
 	}
 }

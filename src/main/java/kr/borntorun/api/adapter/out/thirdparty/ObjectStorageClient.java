@@ -38,7 +38,7 @@ public class ObjectStorageClient {
 
 	private final MinioClient minioClient;
 
-	private static String getFileExtension(final String fileName) {
+	private static String getFileExtension(String fileName) {
 		int dotIndex = fileName.lastIndexOf('.');
 		if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
 			return fileName.substring(dotIndex);
@@ -47,10 +47,10 @@ public class ObjectStorageClient {
 		throw new InvalidException("확장자가 없는 파일은 업로드 할 수 없습니다.");
 	}
 
-	public String upload(final Upload resource) {
+	public String upload(Upload resource) {
 		try {
 			String extension = getFileExtension(Objects.requireNonNull(resource.file().getOriginalFilename()));
-			final String uploadedFileName = UUID.randomUUID() + extension;
+			String uploadedFileName = UUID.randomUUID() + extension;
 			log.info("{}에 {}을 저장합니다.", resource.bucket(), uploadedFileName);
 
 			minioClient.putObject(PutObjectArgs.builder()
@@ -88,7 +88,7 @@ public class ObjectStorageClient {
 		}
 	}
 
-	public void remove(final Remove resource) {
+	public void remove(Remove resource) {
 		try {
 			minioClient.removeObject(RemoveObjectArgs.builder()
 			  .bucket(resource.bucket().getBucketName())
@@ -121,7 +121,7 @@ public class ObjectStorageClient {
 		}
 	}
 
-	public void removeAll(final RemoveAll resource) {
+	public void removeAll(RemoveAll resource) {
 		minioClient.removeObjects(
 		  RemoveObjectsArgs.builder()
 			.bucket(resource.bucket().getBucketName())

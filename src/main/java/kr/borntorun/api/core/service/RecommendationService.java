@@ -22,14 +22,14 @@ public class RecommendationService implements RecommendationPort {
 
 	@Transactional
 	@Override
-	public void create(final CreateRecommendationCommand command) {
+	public void create(CreateRecommendationCommand command) {
 		CreateRecommendationQuery query = recommendationConverter.toCreateRecommendationQuery(command);
 		recommendationGateway.create(query);
 	}
 
 	@Transactional
 	@Override
-	public void remove(final RemoveRecommendationCommand command) {
+	public void remove(RemoveRecommendationCommand command) {
 		RemoveRecommendationQuery query = recommendationConverter.toRemoveRecommendationQuery(command);
 		recommendationGateway.remove(query);
 	}

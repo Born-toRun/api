@@ -19,14 +19,14 @@ public class ActivityQuery {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<ActivityEntity> searchAllByFilter(final SearchAllActivityQuery query) {
-		final QActivityEntity activity = QActivityEntity.activityEntity;
+	public List<ActivityEntity> searchAllByFilter(SearchAllActivityQuery query) {
+		QActivityEntity activity = QActivityEntity.activityEntity;
 
 		BooleanExpression whereClause = activity.userEntity.crewId.eq(query.myCrewId());
 		BooleanExpression optionalWhereClause = null;
 
 		if (!ObjectUtils.isEmpty(query.courses())) {
-			for (final String course : query.courses()) {
+			for (String course : query.courses()) {
 				if (optionalWhereClause == null) {
 					optionalWhereClause = activity.course.contains(course);
 				} else {

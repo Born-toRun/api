@@ -34,38 +34,38 @@ public class FeedProxy {
 	private final FeedService feedService;
 
 	@Cacheable(key = "'searchDetail: ' + #feedId + #my.id")
-	public FeedResult searchDetail(final TokenDetail my, final long feedId) {
+	public FeedResult searchDetail(TokenDetail my, long feedId) {
 		SearchFeedDetailCommand command = feedConverter.toSearchFeedDetailCommand(feedId, my);
 		return feedService.searchDetail(command);
 	}
 
 	@Cacheable(key = "#request == null ? 'searchAll: ' + #my.id + #pageable.offset :"
 	  + "'searchAll: ' + #my.id + #request.hashCode() + #pageable.offset")
-	public Page<FeedCard> searchAll(final SearchFeedRequest request, final TokenDetail my, final long lastFeedId,
-	  final Pageable pageable) {
+	public Page<FeedCard> searchAll(SearchFeedRequest request, TokenDetail my, long lastFeedId,
+	  Pageable pageable) {
 		SearchAllFeedCommand command = feedConverter.toSearchAllFeedCommand(request, my, lastFeedId);
 		return feedService.searchAll(command, pageable);
 	}
 
 	//  @DistributedLock(key = "'FeedView-'.concat(#id)", waitTime = 10L)
-	public void increaseViewQty(final long feedId) {
+	public void increaseViewQty(long feedId) {
 		feedService.increaseViewQty(feedId);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void create(final CreateFeedRequest request, final TokenDetail my) {
+	public void create(CreateFeedRequest request, TokenDetail my) {
 		CreateFeedCommand command = feedConverter.toCreateFeedCommand(request, my);
 		feedService.create(command);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void remove(final long feedId, final TokenDetail my) {
+	public void remove(long feedId, TokenDetail my) {
 		RemoveFeedCommand command = feedConverter.toRemoveFeedCommand(feedId, my);
 		feedService.remove(command);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void modify(final ModifyFeedRequest request, final long feedId) {
+	public void modify(ModifyFeedRequest request, long feedId) {
 		ModifyFeedCommand command = feedConverter.toModifyFeedCommand(request, feedId);
 		feedService.modify(command);
 	}

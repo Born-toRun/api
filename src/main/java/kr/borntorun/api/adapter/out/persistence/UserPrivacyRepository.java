@@ -14,5 +14,5 @@ public interface UserPrivacyRepository extends JpaRepository<UserPrivacyEntity, 
 		"JOIN FETCH u.userEntity " +
 		"WHERE u.userId =:userId"
 	)
-	Optional<UserPrivacyEntity> findByUserId(final long userId);
+	Optional<UserPrivacyEntity> findByUserId(long userId);
 }

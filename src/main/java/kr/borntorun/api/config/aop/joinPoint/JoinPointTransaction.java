@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JoinPointTransaction {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Object proceed(final ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object proceed(ProceedingJoinPoint joinPoint) throws Throwable {
 		return joinPoint.proceed();
 	}
 }

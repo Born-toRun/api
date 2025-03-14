@@ -16,7 +16,7 @@ public class YellowCardProxy {
 
 	private final YellowCardService yellowCardService;
 
-	public void create(final long myUserId, final CreateYellowCardRequest request) {
+	public void create(long myUserId, CreateYellowCardRequest request) {
 		CreateYellowCardCommand command = yellowCardConverter.toCreateYellowCardCommand(request, myUserId);
 		yellowCardService.create(command);
 	}

@@ -9,11 +9,11 @@ import kr.borntorun.api.domain.entity.RecommendationEntity;
 
 public interface RecommendationRepository extends JpaRepository<RecommendationEntity, Long> {
 
-	RecommendationEntity findByUserIdAndRecommendationTypeAndContentId(final long userId,
-	  final RecommendationType recommendationType, final long contentId);
+	RecommendationEntity findByUserIdAndRecommendationTypeAndContentId(long userId,
+	  RecommendationType recommendationType, long contentId);
 
-	List<RecommendationEntity> findAllByUserId(final long userId);
+	List<RecommendationEntity> findAllByUserId(long userId);
 
-	List<RecommendationEntity> findAllByRecommendationTypeAndContentIdIn(final RecommendationType recommendationType,
-	  final List<Long> contentIds);
+	List<RecommendationEntity> findAllByRecommendationTypeAndContentIdIn(RecommendationType recommendationType,
+	  List<Long> contentIds);
 }

@@ -27,16 +27,16 @@ public class FeedGateway {
 	private final FeedImageMappingRepository feedImageMappingRepository;
 	private final FeedQuery feedQuery;
 
-	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
+	public Page<FeedEntity> searchAllByFilter(SearchAllFeedQuery query, Pageable pageable) {
 		return feedQuery.searchAllByFilter(query, pageable);
 	}
 
-	public void increaseViewQty(final long feedId) {
+	public void increaseViewQty(long feedId) {
 		feedQuery.increaseViewQty(feedId);
 	}
 
-	public void create(final CreateFeedQuery query) {
-		final FeedEntity feedEntity = feedConverter.toFeedEntity(query);
+	public void create(CreateFeedQuery query) {
+		FeedEntity feedEntity = feedConverter.toFeedEntity(query);
 		feedRepository.save(feedEntity);
 
 		List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
@@ -51,12 +51,12 @@ public class FeedGateway {
 		feedImageMappingRepository.saveAll(feedImageMappingEntities);
 	}
 
-	public void remove(final long feedId) {
+	public void remove(long feedId) {
 		feedRepository.deleteById(feedId);
 	}
 
-	public FeedEntity modify(final ModifyFeedQuery query) {
-		final FeedEntity feedEntity = search(query.feedId());
+	public FeedEntity modify(ModifyFeedQuery query) {
+		FeedEntity feedEntity = search(query.feedId());
 
 		List<FeedImageMappingEntity> feedImageMappingEntities = query.imageIds().stream()
 		  .map(imageId -> FeedImageMappingEntity.builder()
@@ -71,7 +71,7 @@ public class FeedGateway {
 		return feedRepository.save(feedEntity);
 	}
 
-	public FeedEntity search(final long feedId) {
+	public FeedEntity search(long feedId) {
 		return feedRepository.findById(feedId)
 		  .orElseThrow(() -> new NotFoundException("해당 피드를 찾을 수 없습니다."));
 	}

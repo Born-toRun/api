@@ -43,8 +43,8 @@ public class FeedController {
 
 	@Operation(summary = "피드 상세 보기", description = "특정 피드를 조회합니다.")
 	@GetMapping(value = "{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DetailFeedResponse> detail(@AuthUser TokenDetail my, @PathVariable final long feedId) {
-		final FeedResult feedResult = feedProxy.searchDetail(my, feedId);
+	public ResponseEntity<DetailFeedResponse> detail(@AuthUser TokenDetail my, @PathVariable long feedId) {
+		FeedResult feedResult = feedProxy.searchDetail(my, feedId);
 		feedProxy.increaseViewQty(feedId);
 
 		return ResponseEntity.ok(feedConverter.toDetailFeedResponse(feedResult));
@@ -52,19 +52,19 @@ public class FeedController {
 
 	@Operation(summary = "피드 작성", description = "피드를 작성합니다.")
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public void create(@AuthUser TokenDetail my, @RequestBody @Valid final CreateFeedRequest request) {
+	public void create(@AuthUser TokenDetail my, @RequestBody @Valid CreateFeedRequest request) {
 		feedProxy.create(request, my);
 	}
 
 	@Operation(summary = "피드 삭제", description = "피드를 삭제합니다.")
 	@DeleteMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public void remove(@AuthUser TokenDetail my, @PathVariable final long feedId) {
+	public void remove(@AuthUser TokenDetail my, @PathVariable long feedId) {
 		feedProxy.remove(feedId, my);
 	}
 
 	@Operation(summary = "피드 수정", description = "피드를 수정합니다.")
 	@PutMapping(value = "/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public void modify(@AuthUser TokenDetail my, @PathVariable final long feedId,
+	public void modify(@AuthUser TokenDetail my, @PathVariable long feedId,
 	  @RequestBody @Valid final ModifyFeedRequest request) {
 		feedProxy.modify(request, feedId);
 	}
@@ -75,7 +75,7 @@ public class FeedController {
 	  @Valid @ModelAttribute SearchFeedRequest request,
 	  @RequestParam(defaultValue = "0") long lastFeedId,
 	  @RequestParam(defaultValue = "10") int size) {
-		final Page<FeedCard> feedPage = feedProxy.searchAll(request, my, lastFeedId, PageRequest.of(0, size));
+		Page<FeedCard> feedPage = feedProxy.searchAll(request, my, lastFeedId, PageRequest.of(0, size));
 
 		return ResponseEntity.ok(feedPage.map(feedConverter::toSearchFeedResponse));
 	}

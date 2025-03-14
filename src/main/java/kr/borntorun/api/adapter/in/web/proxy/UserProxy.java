@@ -26,33 +26,33 @@ public class UserProxy {
 	private final UserPort userPort;
 
 	@CacheEvict(allEntries = true)
-	public String signUp(final TokenDetail my, final SignUpRequest request) {
+	public String signUp(TokenDetail my, SignUpRequest request) {
 		SignUpCommand command = userConverter.toSignUpCommand(request, my.getId());
 		return userPort.signUp(command);
 	}
 
-	public RefreshTokenResult refreshToken(final String accessToken) {
+	public RefreshTokenResult refreshToken(String accessToken) {
 		String refreshedToken = userPort.getRefreshToken(accessToken);
 		return new RefreshTokenResult(refreshedToken);
 	}
 
 	@CacheEvict(allEntries = true)
-	public void remove(final long myUserId) {
+	public void remove(long myUserId) {
 		userPort.remove(myUserId);
 	}
 
 	@Cacheable(key = "'search: ' + #my.hashCode()")
-	public BornToRunUser search(final TokenDetail my) {
+	public BornToRunUser search(TokenDetail my) {
 		return userPort.searchById(my.getId());
 	}
 
 	@Cacheable(key = "'search: ' + #userId")
-	public BornToRunUser search(final long userId) {
+	public BornToRunUser search(long userId) {
 		return userPort.searchById(userId);
 	}
 
 	@CacheEvict(allEntries = true)
-	public BornToRunUser modify(final TokenDetail my, final ModifyUserRequest request) {
+	public BornToRunUser modify(TokenDetail my, ModifyUserRequest request) {
 		ModifyUserCommand command = userConverter.toModifyUserCommand(request, my.getId());
 		return userPort.modify(command);
 	}

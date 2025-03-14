@@ -32,15 +32,15 @@ public class FeedQuery {
 
 	private final JPAQueryFactory queryFactory;
 
-	public Page<FeedEntity> searchAllByFilter(final SearchAllFeedQuery query, final Pageable pageable) {
-		final QFeedEntity feed = QFeedEntity.feedEntity;
-		final QFeedImageMappingEntity feedImageMapping = QFeedImageMappingEntity.feedImageMappingEntity;
-		final QObjectStorageEntity objectStorage = QObjectStorageEntity.objectStorageEntity;
-		final QUserEntity user = QUserEntity.userEntity;
-		final QRecommendationEntity recommendation = QRecommendationEntity.recommendationEntity;
-		final QCommentEntity comment = QCommentEntity.commentEntity;
-		final QCrewEntity crew = QCrewEntity.crewEntity;
-		final QUserPrivacyEntity userPrivacy = QUserPrivacyEntity.userPrivacyEntity;
+	public Page<FeedEntity> searchAllByFilter(SearchAllFeedQuery query, Pageable pageable) {
+		QFeedEntity feed = QFeedEntity.feedEntity;
+		QFeedImageMappingEntity feedImageMapping = QFeedImageMappingEntity.feedImageMappingEntity;
+		QObjectStorageEntity objectStorage = QObjectStorageEntity.objectStorageEntity;
+		QUserEntity user = QUserEntity.userEntity;
+		QRecommendationEntity recommendation = QRecommendationEntity.recommendationEntity;
+		QCommentEntity comment = QCommentEntity.commentEntity;
+		QCrewEntity crew = QCrewEntity.crewEntity;
+		QUserPrivacyEntity userPrivacy = QUserPrivacyEntity.userPrivacyEntity;
 
 		BooleanExpression whereClause = Expressions.TRUE; // 기본값 설정
 
@@ -85,11 +85,11 @@ public class FeedQuery {
 		  .distinct()
 		  .where(whereClause);
 
-		final int total = feedQuery
+		int total = feedQuery
 		  .fetch()
 		  .size();
 
-		final List<FeedEntity> contents = feedQuery
+		List<FeedEntity> contents = feedQuery
 		  .orderBy(feed.id.desc())
 		  .offset(pageable.getOffset())
 		  .limit(pageable.getPageSize())
@@ -98,8 +98,8 @@ public class FeedQuery {
 		return new PageImpl<>(contents, pageable, total);
 	}
 
-	public void increaseViewQty(final long feedId) {
-		final QFeedEntity feed = QFeedEntity.feedEntity;
+	public void increaseViewQty(long feedId) {
+		QFeedEntity feed = QFeedEntity.feedEntity;
 
 		queryFactory.update(feed)
 		  .set(feed.viewQty, feed.viewQty.add(1))

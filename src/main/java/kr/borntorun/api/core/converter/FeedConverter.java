@@ -33,7 +33,7 @@ import kr.borntorun.api.support.exception.InvalidException;
 @Mapper(componentModel = "spring")
 public interface FeedConverter {
 
-	SearchFeedDetailCommand toSearchFeedDetailCommand(final long feedId, final TokenDetail my);
+	SearchFeedDetailCommand toSearchFeedDetailCommand(long feedId, TokenDetail my);
 
 	@Mapping(target = "hasMyRecommendation", source = ".", qualifiedByName = "convertHasMyRecommendation")
 	@Mapping(target = "hasMyComment", source = ".", qualifiedByName = "convertHasMyComment")
@@ -41,25 +41,25 @@ public interface FeedConverter {
 	@Mapping(target = "recommendationQty", source = "source.recommendationQty")
 	@Mapping(target = "images", source = "source.feedImageMappingEntities", qualifiedByName = "convertImages")
 	@Mapping(target = "writer", source = "userEntity", qualifiedByName = "convertFeedResultWriter")
-	FeedResult toFeed(final FeedEntity source, @Context final TokenDetail my);
+	FeedResult toFeed(FeedEntity source, @Context TokenDetail my);
 
 	@Mapping(target = "images", source = "images", qualifiedByName = "convertDetailResponseImages")
 	@Mapping(target = "writer", source = "writer", qualifiedByName = "convertDetailResponseWriter")
 	@Mapping(target = "viewer.hasMyRecommendation", source = "hasMyRecommendation")
 	@Mapping(target = "viewer.hasMyComment", source = "hasMyComment")
-	DetailFeedResponse toDetailFeedResponse(final FeedResult source);
+	DetailFeedResponse toDetailFeedResponse(FeedResult source);
 
-	ModifyFeedCommand toModifyFeedCommand(final ModifyFeedRequest source, final long feedId);
+	ModifyFeedCommand toModifyFeedCommand(ModifyFeedRequest source, long feedId);
 
-	ModifyFeedQuery toModifyFeedQuery(final ModifyFeedCommand source);
+	ModifyFeedQuery toModifyFeedQuery(ModifyFeedCommand source);
 
-	RemoveFeedCommand toRemoveFeedCommand(final long feedId, final TokenDetail my);
+	RemoveFeedCommand toRemoveFeedCommand(long feedId, TokenDetail my);
 
 	@Mapping(target = "myUserId", source = "my.id")
-	CreateFeedCommand toCreateFeedCommand(final CreateFeedRequest source, final TokenDetail my);
+	CreateFeedCommand toCreateFeedCommand(CreateFeedRequest source, TokenDetail my);
 
 	@Mapping(target = "userId", source = "myUserId")
-	CreateFeedQuery toCreateFeedQuery(final CreateFeedCommand source);
+	CreateFeedQuery toCreateFeedQuery(CreateFeedCommand source);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "viewQty", ignore = true)
@@ -70,13 +70,13 @@ public interface FeedConverter {
 	@Mapping(target = "userEntity", ignore = true)
 	@Mapping(target = "recommendationEntities", ignore = true)
 	@Mapping(target = "imageUris", ignore = true)
-	FeedEntity toFeedEntity(final CreateFeedQuery source);
+	FeedEntity toFeedEntity(CreateFeedQuery source);
 
 	@Mapping(target = "isMyCrew", source = "request.myCrew")
-	SearchAllFeedCommand toSearchAllFeedCommand(final SearchFeedRequest request, final TokenDetail my,
-	  final long lastFeedId);
+	SearchAllFeedCommand toSearchAllFeedCommand(SearchFeedRequest request, TokenDetail my,
+	  long lastFeedId);
 
-	SearchAllFeedQuery toSearchAllFeedQuery(final SearchAllFeedCommand source, final List<Long> searchedUserIds);
+	SearchAllFeedQuery toSearchAllFeedQuery(SearchAllFeedCommand source, List<Long> searchedUserIds);
 
 	@Mapping(target = "writer.userName", source = "writer.userName")
 	@Mapping(target = "writer.crewName", source = "writer.crewName")
@@ -85,7 +85,7 @@ public interface FeedConverter {
 	@Mapping(target = "writer.isManager", source = "writer.isManager")
 	@Mapping(target = "viewer.hasMyRecommendation", source = "hasRecommendation")
 	@Mapping(target = "viewer.hasMyComment", source = "hasComment")
-	SearchFeedResponse toSearchFeedResponse(final FeedCard source);
+	SearchFeedResponse toSearchFeedResponse(FeedCard source);
 
 	@Mapping(target = "id", source = "source.id")
 	@Mapping(target = "imageUris", source = "source.imageUris")
@@ -99,10 +99,10 @@ public interface FeedConverter {
 	@Mapping(target = "writer.profileImageUri", source = "source.userEntity.profileImageUri")
 	@Mapping(target = "writer.isAdmin", source = "source.userEntity.isAdmin")
 	@Mapping(target = "writer.isManager", source = "source.userEntity.isManager")
-	FeedCard toFeedCard(final FeedEntity source, final boolean hasComment, final boolean hasRecommendation);
+	FeedCard toFeedCard(FeedEntity source, boolean hasComment, boolean hasRecommendation);
 
 	@Named("convertHasMyRecommendation")
-	default Boolean convertHasMyRecommendation(final FeedEntity source, @Context final TokenDetail my) {
+	default Boolean convertHasMyRecommendation(FeedEntity source, @Context TokenDetail my) {
 		if (my != null) {
 			if (FeedAccessLevel.IN_CREW.equals(source.getAccessLevel()) && my.getCrewId()
 			  .equals(source.getUserEntity().getCrewId())) {
@@ -121,7 +121,7 @@ public interface FeedConverter {
 	}
 
 	@Named("convertHasMyComment")
-	default Boolean convertHasMyComment(final FeedEntity source, @Context final TokenDetail my) {
+	default Boolean convertHasMyComment(FeedEntity source, @Context TokenDetail my) {
 		if (my != null) {
 			if (FeedAccessLevel.IN_CREW.equals(source.getAccessLevel()) && my.getCrewId()
 			  .equals(source.getUserEntity().getCrewId())) {
@@ -140,7 +140,7 @@ public interface FeedConverter {
 	}
 
 	@Named("convertImages")
-	default List<FeedResult.Image> convertImages(final Set<FeedImageMappingEntity> source) {
+	default List<FeedResult.Image> convertImages(Set<FeedImageMappingEntity> source) {
 		return source.stream()
 		  .map(FeedImageMappingEntity::getObjectStorageEntity)
 		  .map(e -> new FeedResult.Image(e.getId(), e.getFileUri()))
@@ -148,14 +148,14 @@ public interface FeedConverter {
 	}
 
 	@Named("convertDetailResponseImages")
-	default List<DetailFeedResponse.Image> convertDetailResponseImages(final List<FeedResult.Image> source) {
+	default List<DetailFeedResponse.Image> convertDetailResponseImages(List<FeedResult.Image> source) {
 		return source.stream()
 		  .map(e -> new DetailFeedResponse.Image(e.id(), e.imageUri()))
 		  .toList();
 	}
 
 	@Named("convertDetailResponseWriter")
-	default DetailFeedResponse.Writer convertDetailResponseWriter(final FeedResult.Writer source) {
+	default DetailFeedResponse.Writer convertDetailResponseWriter(FeedResult.Writer source) {
 		return new DetailFeedResponse.Writer(source.userId(),
 		  source.userName(),
 		  source.crewName(),
@@ -165,7 +165,7 @@ public interface FeedConverter {
 	}
 
 	@Named("convertFeedResultWriter")
-	default FeedResult.Writer convertFeedResultWriter(final UserEntity source) {
+	default FeedResult.Writer convertFeedResultWriter(UserEntity source) {
 		return new FeedResult.Writer(source.getId(), source.getName(),
 		  source.getCrewEntity().getName(), source.getProfileImageUri(),
 		  source.getIsAdmin(), source.getIsManager());

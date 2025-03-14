@@ -31,7 +31,7 @@ public class RecentSearchKeywordController {
 
 	@Operation(summary = "최근 검색어 추가", description = "최근 검색어를 추가합니다.")
 	@PostMapping(value = "/{keyword}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public void getRecentSearchKeyword(@AuthUser TokenDetail my, @PathVariable final String keyword) {
+	public void getRecentSearchKeyword(@AuthUser TokenDetail my, @PathVariable String keyword) {
 		if (my.isLogin()) {
 			recentSearchKeywordProxy.add(my.getId(), keyword);
 		}
@@ -45,7 +45,7 @@ public class RecentSearchKeywordController {
 
 	@Operation(summary = "최근 검색어 삭제", description = "최근 검색어를 삭제합니다.")
 	@DeleteMapping(value = "/{keyword}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public void removeKeyword(@AuthUser TokenDetail my, @PathVariable final String keyword) {
+	public void removeKeyword(@AuthUser TokenDetail my, @PathVariable String keyword) {
 		recentSearchKeywordProxy.removeKeyword(my.getId(), keyword);
 	}
 
@@ -58,7 +58,7 @@ public class RecentSearchKeywordController {
 			return ResponseEntity.ok(response);
 		}
 
-		final Set<Object> recentSearchKeywords = new HashSet<>(recentSearchKeywordProxy.search(my.getId()));
+		Set<Object> recentSearchKeywords = new HashSet<>(recentSearchKeywordProxy.search(my.getId()));
 		response = new RecentSearchKeywordResponse(recentSearchKeywords);
 		return ResponseEntity.ok(response);
 	}

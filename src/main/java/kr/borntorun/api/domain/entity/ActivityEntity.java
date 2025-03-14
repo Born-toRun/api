@@ -63,7 +63,7 @@ public class ActivityEntity {
 		this.isOpen = true;
 	}
 
-	public void modify(final ModifyActivityQuery query) {
+	public void modify(ModifyActivityQuery query) {
 		if (!ObjectUtils.isEmpty(query.title())) {
 			this.title = query.title();
 		}

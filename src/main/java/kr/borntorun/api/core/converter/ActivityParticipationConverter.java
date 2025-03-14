@@ -21,11 +21,11 @@ public interface ActivityParticipationConverter {
 	@Mapping(target = "activityEntity", ignore = true)
 	@Mapping(target = "userEntity", ignore = true)
 	@Mapping(target = "userId", source = "myUserId")
-	ActivityParticipationEntity toActivityParticipationEntity(final ParticipateActivityQuery source);
+	ActivityParticipationEntity toActivityParticipationEntity(ParticipateActivityQuery source);
 
-	ParticipateActivityQuery toParticipateActivityQuery(final ParticipateActivityCommand source);
+	ParticipateActivityQuery toParticipateActivityQuery(ParticipateActivityCommand source);
 
-	List<AttendanceResult.Participant> toParticipants(final List<UserEntity> source);
+	List<AttendanceResult.Participant> toParticipants(List<UserEntity> source);
 
 	@Mapping(target = "userId", source = "id")
 	@Mapping(target = "userName", source = "name")

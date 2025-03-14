@@ -32,28 +32,28 @@ public class ActivityWriterValidationAspect {
 	}
 
 	@Before("onOpenUser() && args(my, activityId, ..)")
-	public void validateOpen(final TokenDetail my, final long activityId) throws IllegalArgumentException {
+	public void validateOpen(TokenDetail my, long activityId) throws IllegalArgumentException {
 		validate(my.getId(), activityId);
 	}
 
 	@Before("onModifyUser() && args(my, activityId, request, ..)")
-	public void validateModify(final TokenDetail my, final long activityId, final ModifyActivityRequest request) throws
+	public void validateModify(TokenDetail my, long activityId, ModifyActivityRequest request) throws
 	  IllegalArgumentException {
 		validate(my.getId(), activityId);
 	}
 
 	@Before("onDeleteUser() && args(my, activityId, ..)")
-	public void validateDelete(final TokenDetail my, final long activityId) throws IllegalArgumentException {
+	public void validateDelete(TokenDetail my, long activityId) throws IllegalArgumentException {
 		validate(my.getId(), activityId);
 	}
 
-	private void validate(final long userId, final long activityId) {
+	private void validate(long userId, long activityId) {
 		if (!isValid(userId, activityId)) {
 			throw new ForBiddenException("잘못된 접근입니다.");
 		}
 	}
 
-	private boolean isValid(final long userId, final long activityId) {
+	private boolean isValid(long userId, long activityId) {
 		return activityRepository.findById(activityId)
 		  .orElseThrow(() -> new NotFoundException("모임을 찾을 수 없습니다."))
 		  .getUserId() == userId;

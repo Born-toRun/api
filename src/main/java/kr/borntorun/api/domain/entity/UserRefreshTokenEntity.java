@@ -38,7 +38,7 @@ public class UserRefreshTokenEntity {
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private UserEntity userEntity;
 
-	public void add(final UserEntity userEntity) {
+	public void add(UserEntity userEntity) {
 		userEntity.setUserRefreshTokenEntity(this);
 		this.userEntity = userEntity;
 	}

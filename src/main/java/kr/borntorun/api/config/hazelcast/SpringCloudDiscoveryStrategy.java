@@ -21,8 +21,8 @@ class SpringCloudDiscoveryStrategy extends AbstractDiscoveryStrategy {
 	private final String serviceId;
 	private final int port;
 
-	public SpringCloudDiscoveryStrategy(final DiscoveryClient discoveryClient, final ILogger logger,
-	  final Map<String, Comparable> properties) {
+	public SpringCloudDiscoveryStrategy(DiscoveryClient discoveryClient, ILogger logger,
+	  Map<String, Comparable> properties) {
 		super(logger, properties);
 		this.discoveryClient = discoveryClient;
 		this.port = Objects.requireNonNull(getOrNull(SpringCloudDiscoveryProperties.PORT));
@@ -31,7 +31,7 @@ class SpringCloudDiscoveryStrategy extends AbstractDiscoveryStrategy {
 
 	@Override
 	public Iterable<DiscoveryNode> discoverNodes() {
-		final List<DiscoveryNode> nodes = new ArrayList<>();
+		List<DiscoveryNode> nodes = new ArrayList<>();
 		for (final ServiceInstance instance : discoveryClient.getInstances(serviceId)) {
 			try {
 				nodes.add(new SimpleDiscoveryNode(new Address(instance.getHost(), port)));

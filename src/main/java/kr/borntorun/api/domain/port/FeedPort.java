@@ -13,15 +13,15 @@ import kr.borntorun.api.domain.port.model.SearchFeedDetailCommand;
 
 public interface FeedPort {
 
-	FeedResult searchDetail(final SearchFeedDetailCommand command);
+	FeedResult searchDetail(SearchFeedDetailCommand command);
 
-	Page<FeedCard> searchAll(final SearchAllFeedCommand command, final Pageable pageable);
+	Page<FeedCard> searchAll(SearchAllFeedCommand command, Pageable pageable);
 
-	void increaseViewQty(final long feedId);
+	void increaseViewQty(long feedId);
 
-	void create(final CreateFeedCommand command);
+	void create(CreateFeedCommand command);
 
-	void remove(final RemoveFeedCommand command);
+	void remove(RemoveFeedCommand command);
 
-	void modify(final ModifyFeedCommand command);
+	void modify(ModifyFeedCommand command);
 }

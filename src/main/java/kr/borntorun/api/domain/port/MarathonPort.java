@@ -11,11 +11,11 @@ import kr.borntorun.api.domain.port.model.SearchMarathonDetailCommand;
 
 public interface MarathonPort {
 
-	List<Marathon> search(final SearchAllMarathonCommand command);
+	List<Marathon> search(SearchAllMarathonCommand command);
 
-	MarathonDetail detail(final SearchMarathonDetailCommand command);
+	MarathonDetail detail(SearchMarathonDetailCommand command);
 
-	long bookmark(final BookmarkMarathonCommand command);
+	long bookmark(BookmarkMarathonCommand command);
 
-	long cancelBookmark(final CancelBookmarkMarathonCommand command);
+	long cancelBookmark(CancelBookmarkMarathonCommand command);
 }

@@ -53,7 +53,7 @@ public class CommentController {
 	@Operation(summary = "댓글 상세 조회", description = "댓글의 상세페이지로 진입합니다.")
 	@GetMapping(value = "/detail/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SearchCommentDetailResponse> detail(@AuthUser TokenDetail my, @PathVariable long commentId) {
-		final CommentDetail commentDetail = commentProxy.detail(commentId, my);
+		CommentDetail commentDetail = commentProxy.detail(commentId, my);
 		SearchCommentDetailResponse response = commentConverter.toSearchCommentDetailResponse(commentDetail,
 		  my.getId());
 		return ResponseEntity.ok(response);

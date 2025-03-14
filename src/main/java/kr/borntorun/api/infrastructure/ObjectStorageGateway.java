@@ -29,10 +29,10 @@ public class ObjectStorageGateway {
 	private final MinioGateway minioGateway;
 	private final ApplicationEventPublisher eventPublisher;
 
-	public ObjectStorageEntity upload(final UploadObjectStorageQuery query) {
-		final String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
+	public ObjectStorageEntity upload(UploadObjectStorageQuery query) {
+		String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
 
-		final String cdnUri = minioProperties.getCdnHost()
+		String cdnUri = minioProperties.getCdnHost()
 		  + "/"
 		  + query.getBucketName()
 		  + "/"
@@ -52,11 +52,11 @@ public class ObjectStorageGateway {
 		  .orElseThrow(() -> new NotFoundException("파일을 찾을 수 없습니다."));
 	}
 
-	public List<ObjectStorageEntity> searchAll(final List<Long> fileIds) {
+	public List<ObjectStorageEntity> searchAll(List<Long> fileIds) {
 		return objectStorageRepository.findAllById(fileIds);
 	}
 
-	public void remove(final RemoveObjectStorageQuery query) {
+	public void remove(RemoveObjectStorageQuery query) {
 		if (0 == query.targetFileId()) {
 			return;
 		}
@@ -76,7 +76,7 @@ public class ObjectStorageGateway {
 			.lastIndexOf("/") + 1)));
 	}
 
-	public void removeAll(final RemoveAllObjectStorageQuery query) {
+	public void removeAll(RemoveAllObjectStorageQuery query) {
 		if (null == query.targetFileIds() || query.targetFileIds().isEmpty()) {
 			return;
 		}
@@ -98,7 +98,7 @@ public class ObjectStorageGateway {
 		  .toList()));
 	}
 
-	public String modify(final ModifyObjectStorageQuery query) {
+	public String modify(ModifyObjectStorageQuery query) {
 		ObjectStorageEntity objectStorage = search(query.targetFileId());
 
 		if (!query.my().getIsAdmin()) {
@@ -107,9 +107,9 @@ public class ObjectStorageGateway {
 			}
 		}
 
-		final String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
-		final String targetCdnUri = objectStorage.getFileUri();
-		final String cdnUri = minioProperties.getCdnHost()
+		String uploadedFileName = minioGateway.uploadObject(objectStorageConverter.toUpload(query));
+		String targetCdnUri = objectStorage.getFileUri();
+		String cdnUri = minioProperties.getCdnHost()
 		  + "/"
 		  + query.bucket()
 		  + "/"

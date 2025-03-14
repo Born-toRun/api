@@ -46,7 +46,7 @@ jobs:
       if: success() || failure()
       uses: Ilshidur/action-discord@master
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
         message: |
           🚀 GitHub Actions 빌드 결과
           - 리포지토리: ${{ github.repository }}

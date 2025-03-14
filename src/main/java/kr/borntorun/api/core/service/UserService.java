@@ -3,18 +3,12 @@ package kr.borntorun.api.core.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.borntorun.api.adapter.out.thirdparty.BornToRunAuthAdapter;
-import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInResponse;
-import kr.borntorun.api.adapter.out.thirdparty.model.AuthTokenResponse;
-import kr.borntorun.api.adapter.out.thirdparty.model.RefreshTokenResponse;
 import kr.borntorun.api.core.converter.UserConverter;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.UserPort;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.CreateUserCommand;
-import kr.borntorun.api.domain.port.model.LoginResult;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
-import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.infrastructure.UserGateway;
 import kr.borntorun.api.infrastructure.model.CreateUserQuery;
@@ -27,18 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserPort {
 
 	private final UserConverter userConverter;
-	private final BornToRunAuthAdapter borntorunAuthAdapter;
 	private final UserGateway userGateway;
-
-	@Transactional
-	@Override
-	public LoginResult signIn(final SignInCommand command) {
-		final AuthSignInResponse authSignInResponse = borntorunAuthAdapter.signIn(
-		  userConverter.toAuthSignUpRequest(command));
-		final AuthTokenResponse authTokenResponse = borntorunAuthAdapter.getToken(authSignInResponse.kakaoId());
-
-		return new LoginResult(authTokenResponse.accessToken(), authSignInResponse.isMember());
-	}
 
 	@Transactional
 	@Override
@@ -50,8 +33,8 @@ public class UserService implements UserPort {
 	@Transactional
 	@Override
 	public String getRefreshToken(String accessToken) {
-		RefreshTokenResponse refreshTokenResponse = borntorunAuthAdapter.refreshToken(accessToken);
-		return refreshTokenResponse.accessToken();
+		// TODO
+		return null;
 	}
 
 	@Transactional

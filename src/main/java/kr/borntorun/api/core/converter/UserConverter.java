@@ -5,15 +5,12 @@ import org.mapstruct.Mapping;
 
 import kr.borntorun.api.adapter.in.web.payload.ModifyUserRequest;
 import kr.borntorun.api.adapter.in.web.payload.ModifyUserResponse;
-import kr.borntorun.api.adapter.in.web.payload.SignInRequest;
 import kr.borntorun.api.adapter.in.web.payload.SignUpRequest;
 import kr.borntorun.api.adapter.in.web.payload.UserDetailResponse;
-import kr.borntorun.api.adapter.out.thirdparty.model.AuthSignInRequest;
 import kr.borntorun.api.domain.entity.UserEntity;
 import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.domain.port.model.ModifyUserCommand;
-import kr.borntorun.api.domain.port.model.SignInCommand;
 import kr.borntorun.api.domain.port.model.SignUpCommand;
 import kr.borntorun.api.infrastructure.model.CreateUserQuery;
 import kr.borntorun.api.infrastructure.model.ModifyUserQuery;
@@ -21,11 +18,6 @@ import kr.borntorun.api.infrastructure.model.SignUpUserQuery;
 
 @Mapper(componentModel = "spring")
 public interface UserConverter {
-
-	SignInCommand toSignInCommand(final SignInRequest source);
-
-	@Mapping(target = "code", source = "kakaoAuthCode")
-	AuthSignInRequest toAuthSignUpRequest(final SignInCommand source);
 
 	SignUpCommand toSignUpCommand(final SignUpRequest source, final long userId);
 

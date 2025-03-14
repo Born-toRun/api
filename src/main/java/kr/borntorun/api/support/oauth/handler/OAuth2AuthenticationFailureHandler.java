@@ -1,6 +1,6 @@
 package kr.borntorun.api.support.oauth.handler;
 
-import static kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REDIRECT_URI;
 
 import java.io.IOException;
 
@@ -27,11 +27,9 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 	  AuthenticationException exception) throws IOException {
-		String targetUrl = CookieSupport.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+		String targetUrl = CookieSupport.getCookie(request, REDIRECT_URI)
 		  .map(Cookie::getValue)
 		  .orElse(("/"));
-
-		exception.printStackTrace();
 
 		targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
 		  .queryParam("error", exception.getLocalizedMessage())
@@ -39,8 +37,9 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
 		authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
+		// TODO: 인증 실패시 회원가입으로 이동하는 건 말이 안됨. 홈으로 이동?
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-		log.info("Authentication failed!");
+		log.info("Authentication failed! {}", exception.getMessage());
 	}
 }

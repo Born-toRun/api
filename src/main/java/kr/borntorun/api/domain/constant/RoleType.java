@@ -1,5 +1,7 @@
 package kr.borntorun.api.domain.constant;
 
+import java.util.Arrays;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,4 +15,11 @@ public enum RoleType {
 
 	private final String code;
 	private final String description;
+
+	public static RoleType of(String code) {
+		return Arrays.stream(RoleType.values())
+		  .filter(r -> r.getCode().equals(code))
+		  .findAny()
+		  .orElse(GUEST);
+	}
 }

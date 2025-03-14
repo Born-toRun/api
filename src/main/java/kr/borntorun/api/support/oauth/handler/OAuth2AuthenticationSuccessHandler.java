@@ -1,6 +1,6 @@
 package kr.borntorun.api.support.oauth.handler;
 
-import static kr.borntorun.api.support.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REDIRECT_URI;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
 
 import java.io.IOException;
@@ -30,7 +30,6 @@ import kr.borntorun.api.domain.port.model.BornToRunUser;
 import kr.borntorun.api.domain.port.model.CreateRefreshTokenCommand;
 import kr.borntorun.api.domain.port.model.CreateUserCommand;
 import kr.borntorun.api.support.CookieSupport;
-import kr.borntorun.api.support.SessionSupport;
 import kr.borntorun.api.support.exception.InternalServerException;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfo;
 import kr.borntorun.api.support.oauth.info.OAuth2UserInfoFactory;
@@ -69,7 +68,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
 	  Authentication authentication) {
-		Optional<String> redirectUri = CookieSupport.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+		Optional<String> redirectUri = CookieSupport.getCookie(request, REDIRECT_URI)
 		  .map(Cookie::getValue);
 
 		if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
@@ -125,10 +124,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		CookieSupport.deleteCookie(request, response, REFRESH_TOKEN);
 		CookieSupport.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-		SessionSupport.setAccessToken(request, accessToken.getToken());
-
 		return UriComponentsBuilder.fromUriString(targetUrl)
 		  .queryParam("isMember", bornToRunUser.crewId() != null)
+		  .queryParam("accessToken", accessToken.getToken())
 		  .build().toUriString();
 	}
 

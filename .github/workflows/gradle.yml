@@ -48,10 +48,10 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        message: |
-          🚀 GitHub Actions 빌드 결과
-          - 리포지토리: ${{ github.repository }}
-          - 브랜치: ${{ github.ref }}
-          - 커밋: ${{ github.sha }}
-          - 상태: ${{ job.status }}
+          args: |
+            🚀 GitHub Actions 빌드 결과
+            - 📂 리포지토리: `${{ github.repository }}`
+            - 🌿 브랜치: `${{ github.ref }}`
+            - 🔗 커밋: `${{ github.sha }}`
+            - ✅ 상태: `${{ job.status }}`
+            - 🔗 [빌드 로그 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

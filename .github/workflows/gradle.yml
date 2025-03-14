@@ -41,14 +41,15 @@ jobs:
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/born-to-run-api
 
-    - name: build notify
-      env:
-        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: |
-        STATUS="${{ github.event.deployment_status.state }}"
-        ENVIRONMENT="${{ github.event.deployment.environment }}"
-        URL="${{ github.event.deployment_status.target_url }}"
-        MESSAGE="🚀 Deployment $STATUS 🚀\nENVIRONMENT: $ENVIRONMENT\nURL: $URL\n"
-        curl -H "Content-Type: application/json" \
-             -d "{\"content\": \"$MESSAGE\"}" \
-             $DISCORD_WEBHOOK_URL
+    # discord notify
+    - name: discord 알림 전송
+      if: success() || failure()
+      uses: Ilshidur/action-discord@master
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        message: |
+          🚀 GitHub Actions 빌드 결과
+          - 리포지토리: ${{ github.repository }}
+          - 브랜치: ${{ github.ref }}
+          - 커밋: ${{ github.sha }}
+          - 상태: ${{ job.status }}

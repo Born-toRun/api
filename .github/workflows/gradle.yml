@@ -40,3 +40,15 @@ jobs:
     # docker hub image push
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/born-to-run-api
+
+    - name: build notify
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ github.event.deployment_status.state }}"
+          ENVIRONMENT="${{ github.event.deployment.environment }}"
+          URL="${{ github.event.deployment_status.target_url }}"
+          MESSAGE="🚀 Deployment $STATUS 🚀\nENVIRONMENT: $ENVIRONMENT\nURL: $URL\n"
+          curl -H "Content-Type: application/json" \
+               -d "{\"content\": \"$MESSAGE\"}" \
+               $DISCORD_WEBHOOK_URL

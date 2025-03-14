@@ -45,6 +45,8 @@ jobs:
     - name: discord 알림 전송
       if: success() || failure()
       uses: Ilshidur/action-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
         message: |

@@ -51,6 +51,11 @@ public class AuthTokenProvider {
 
 		if (authToken.isValidate()) {
 			Claims claims = authToken.getTokenClaims();
+			if (claims == null) {
+				log.info("This request is  guest.");
+				return null;
+			}
+
 			Collection<? extends GrantedAuthority> authorities =
 			  Arrays.stream(new String[] {claims.get(AUTHORITIES_KEY).toString()})
 				.map(SimpleGrantedAuthority::new)

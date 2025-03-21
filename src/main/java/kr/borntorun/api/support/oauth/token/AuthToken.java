@@ -9,6 +9,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import kr.borntorun.api.support.exception.InvalidTokenException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +73,7 @@ public class AuthToken {
 			  .build()
 			  .parseSignedClaims(token)
 			  .getPayload();
-		} catch (SecurityException e) {
+		} catch (SecurityException | SignatureException e) {
 			throw new InvalidTokenException("Invalid JWT signature.");
 		} catch (MalformedJwtException e) {
 			throw new InvalidTokenException("Invalid JWT token.");
